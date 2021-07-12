@@ -1,33 +1,26 @@
-
-
 public class Student {
 
-    private final String name;
-    private final Age age;
+    private String name;
+    private int age;
+    private String group;
 
-    public Student (String name, Age age) {
-        this.name = name;
-        Age ageClone = new Age ();
-        ageClone.setAge(age.getAge());
-        this.age = ageClone;
+    @Override
+    public boolean equals (Object o) {
+        if (o == this) {
+            return true;
+        }
+        if (o == null ) return false;
+        if (o instanceof Student) {
+            Student user = (Student) o;
+            return user.age == this.age && user.name.equals(this.name) && user.group.equals(this.group);
+        }
+        else
+            return false;
     }
 
-    public Student setName(String name) {
-        return new Student (name, this.age);
+    @Override
+    public int hashCode() {
+        int key = 25;
+        return ((name == null ? 0 : name.hashCode())*key + age)*key + group == null ? 0 : group.hashCode();
     }
-
-    public Student setAge(Age age) {
-        return new Student (this.name, age);
-    }
-
-    public String getName (){
-        return this.name;
-    }
-
-    public String getAge (){
-        Age ageClone = new Age ();
-        ageClone.setAge(age.getAge());
-        return ageClone;
-    }
-
 }

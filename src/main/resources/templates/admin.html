@@ -1,5 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="RU">
+
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Latest compiled and minified CSS -->
@@ -9,12 +9,22 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
           integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
 </head>
+
 <body>
 <div class="container">
+    <div align="right" style="margin-right:300px">
+        <a href="/logout" th:text="#{logout}"></a>
+        <a href="/?lang=ru" th:text="#{ru}"></a>
+        <a href="/?lang=en" th:text="#{en}"></a>
+    </div>
     <div class="row">
-        <div class="col-md-12">
-            <h1 class="page-header">Hello World!</h1>
-            <h2>You are logged with username: ${username} and with roles: ${roles}</h2>
+        <div class="col-md-6 col-md-offset-3">
+            <div class="panel panel-default" style="margin-top:45px">
+                <div class="panel-heading">
+                    <h1 th:text="#{hi}"></h1>
+                    <h2 th:text="#{welcome}"></h2>
+                </div>
+            </div>
         </div>
     </div>
 </div>

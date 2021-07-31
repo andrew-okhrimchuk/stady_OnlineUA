@@ -3,8 +3,12 @@ server:
 
 spring:
   mandatory-file-encoding: UTF-8
+  thymeleaf:
+    suffix: .html
+    cache: false
+    encoding: UTF-8
+    prefix: classpath:/templates/
 
 logging:
     level:
         org.hibernate.engine.jdbc.env.internal.LobCreatorBuilderImpl: ERROR
-

@@ -3,11 +3,14 @@ package hospital.services;
 import hospital.domain.Role;
 import hospital.domain.User;
 import hospital.dto.SelectDTO;
+import hospital.dto.UserDTO;
 import hospital.exeption.DaoExeption;
+import hospital.exeption.NotValidExeption;
 import hospital.exeption.ServiceExeption;
 import hospital.persistence.UserJPARepository;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -15,10 +18,12 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -32,6 +37,10 @@ public class UserService implements UserDetailsService, IUserService {
     private UserSpecification userSpecification;
     @Autowired
     private Environment env;
+    @Autowired
+    private ModelMapper modelMapper;
+    @Autowired
+    public PasswordEncoder bcryptPasswordEncoder;
 
 
     @PostConstruct
@@ -42,7 +51,7 @@ public class UserService implements UserDetailsService, IUserService {
             userDao.save(User.builder()
                     .username("admin")
                     .birthDate(LocalDate.now())
-                    .password(new BCryptPasswordEncoder().encode("admin"))
+                    .password(bcryptPasswordEncoder.encode("admin"))
                     .authorities(new ArrayList<>(Arrays.asList(Role.ADMIN)))
                     .accountNonExpired(true)
                     .accountNonLocked(true)
@@ -97,25 +106,49 @@ public class UserService implements UserDetailsService, IUserService {
     }
 
     @Override
-    public User savePatient(User user) throws ServiceExeption {
-        log.debug("Start savePatient of User. user = {}", user);
-        user.getAuthorities().add(Role.PATIENT);
+    public User savePatient(UserDTO userDTO) throws ServiceExeption {
+        log.debug("Start savePatient of User. userDTO = {}", userDTO);
+        User user = null;
         try {
-            User result = userDao.save(user);
-            log.debug("End savePatient of User. Get result = {}", result);
-            return result;
-        } catch (DaoExeption  e) {
+            user = convertToEntity(userDTO);
+            user.getAuthorities().add(Role.PATIENT);
+            user = userDao.save(user);
+            log.debug("End savePatient of User. Get user = {}", user);
+            return user;
+        } catch (DaoExeption | DateTimeParseException | NotValidExeption e) {
             log.error("savePatient {}, {}", env.getProperty("SAVE_NEW_PATIENT"), e.getMessage());
             throw new ServiceExeption(e.getMessage(), e);
-        }
-        catch ( DataIntegrityViolationException e) {
+        } catch (DataIntegrityViolationException e) {
             log.error("savePatient {}, {}, {}", env.getProperty("SAVE_NEW_PATIENT_DUPLICATE"), user, e.getMessage());
             throw new ServiceExeption(env.getProperty("SAVE_NEW_PATIENT_DUPLICATE"), e);
         }
     }
 
     @Override
-    public User getUserById(long id)  {
+    public User getUserById(long id) {
         return userDao.getUserById(id);
+    }
+
+    public User convertToEntity(UserDTO userDTO) throws DateTimeParseException, NotValidExeption {
+        if (!userDTO.isValid()) {
+            throw new NotValidExeption(env.getProperty("SAVE_NEW_PATIENT_NOT_VALOD"));
+        }
+        User user = modelMapper.map(userDTO, User.class);
+        user.setBirthDate(userDTO.convertToEntityAttribute(userDTO.getBirthDate()));
+        user.setCurrentPatient(userDTO.getIsCurrentPatient() != null);
+        user.setPassword(bcryptPasswordEncoder.encode(user.getPassword()));
+        if (userDTO.getId() != null && !userDTO.getId().isEmpty()) {
+            User oldUser = getUserById(Long.parseLong(userDTO.getId()));
+            user.setId(oldUser.getId());
+        }
+        return user;
+    }
+
+    public UserDTO convertToDto(User user) {
+        UserDTO userDTO = modelMapper.map(user, UserDTO.class);
+        userDTO.setBirthDate(userDTO.convertToDatabaseColumn(user.getBirthDate()));
+        userDTO.setIsCurrentPatient(user.isCurrentPatient() ? "on" : null);
+        userDTO.setId(String.valueOf(user.getId()));
+        return userDTO;
     }
 }

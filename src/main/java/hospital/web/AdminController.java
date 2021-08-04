@@ -14,23 +14,25 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.ConstraintViolationException;
 import java.text.ParseException;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
+
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
     @Autowired
     UserService userService;
-    @Autowired
-    private ModelMapper modelMapper;
+
 
     @GetMapping("/patients")
     public String getListPatients(@ModelAttribute @NonNull SelectDTO selectDTO, Model model) {
@@ -39,7 +41,7 @@ public class AdminController {
         try {
             List<User> users = userService.getListPatients(selectDTO);
             selectDTO.setUsers(users);
-        } catch (ServiceExeption e) {
+        } catch (ServiceExeption | ConstraintViolationException e) {
             log.error(e.getMessage());
             model.addAttribute("errorMessage", e.getMessage());
         }
@@ -68,10 +70,9 @@ public class AdminController {
         model.addAttribute("user", userDTO);
         model.addAttribute("add", true);
         try {
-            User user = convertToEntity(userDTO);
-            userService.savePatient(user);
+            userService.savePatient(userDTO);
             return "redirect:/admin/patients";
-        } catch (DateTimeParseException | ServiceExeption e) {
+        } catch (ServiceExeption e) {
             log.error(e.getMessage());
             model.addAttribute("errorMessage", e.getMessage());
         }
@@ -84,23 +85,5 @@ public class AdminController {
         return "admin/admin";
     }
 
-    private User convertToEntity(UserDTO userDTO) throws DateTimeParseException {
-        User user = modelMapper.map(userDTO, User.class);
-        user.setBirthDate(userDTO.convertToEntityAttribute(userDTO.getBirthDate()));
-        user.setCurrentPatient(userDTO.getIsCurrentPatient() != null);
 
-        if (userDTO.getId() != null && !userDTO.getId().isEmpty()) {
-            User oldUser = userService.getUserById(Long.parseLong(userDTO.getId()));
-            user.setId(oldUser.getId());
-        }
-        return user;
-    }
-
-    private UserDTO convertToDto(User user) {
-        UserDTO userDTO = modelMapper.map(user, UserDTO.class);
-        userDTO.setBirthDate(userDTO.convertToDatabaseColumn(user.getBirthDate()));
-        userDTO.setIsCurrentPatient(user.isCurrentPatient() ? "on" : null);
-        userDTO.setId(String.valueOf(user.getId()));
-        return userDTO;
-    }
 }

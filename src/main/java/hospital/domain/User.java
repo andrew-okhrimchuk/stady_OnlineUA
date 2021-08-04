@@ -4,6 +4,8 @@ import lombok.*;
 import org.springframework.security.core.userdetails.UserDetails;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -21,6 +23,9 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    @NotNull
+    @NotEmpty
+    @NotBlank(message = "Name is mandatory")
     private String username;
     private LocalDate birthDate;
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)

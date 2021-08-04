@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${add} ? 'Create a Patient' : 'Edit a Patient'"></title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style type="text/css">
+        th {
+            text-align: center;
+            font-weight: bold;
+            border-top: none !important;
+        }
+
+        th, td {
+            white-space: nowrap;
+        }
+        body {background-color: rgba(133, 191, 211, 0.07)}
+        h2 {color: blue}
+        h5 {color: #9b16ff}
+        p {color: green}
+        b {display: inline-block;}
+        .xx0 {padding-top: 10px}
+        .xxx {padding-left: 20px}
+        .xx1 {padding-left: 50px}
+        .xx2 {display: inline-block;}
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div>
+        <a th:href="@{/admin/patients}">List of Patients</a>
+    </div>
+
+    <h1 th:text="${add} ? 'Create a Patient:' : 'Edit a Patient:'"></h1>
+    <form th:action="@{/admin/patients/add}" th:object="${user}" method="POST">
+
+        <table border="0">
+            <tr>
+                <td><input type="hidden" th:field="*{id}"/></td>
+            </tr>
+            <tr>
+                <td>Full name</td>
+                <td>:</td>
+                <td><input type="text" th:field="*{username}"/></td>
+            </tr>
+            <tr>
+                <td>You birth date</td>
+                <td>:</td>
+                <td><input type="date" th:field="*{birthDate}"/></td>
+            </tr>
+            <tr>
+                <td>password</td>
+                <td>:</td>
+                <td><input type="text" th:field="*{password}"/></td>
+            </tr>
+            <tr>
+                <td>Is current patient</td>
+                <td>:</td>
+                <td><input type="checkbox" th:field="*{isCurrentPatient}" th:value="${{user.isCurrentPatient}}" /></td>
+            </tr>
+
+        </table>
+        <input type="submit" th:value="${add} ? 'Create' : 'Update'"/>
+    </form>
+
+    <br/>
+    <div th:if="${errorMessage}" th:utext="${errorMessage}" class="error"/>
+</div>
+</body>
+
+<script th:inline="javascript">
+    let form = document.forms[0];
+    if (![[${add}]]) {
+        var url = '/admin/patients/edit'
+        form.setAttribute('action', url);
+    }
+    console.log(form.getAttribute('action'));
+</script>
+</html>

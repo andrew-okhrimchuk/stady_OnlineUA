@@ -1,15 +1,9 @@
 package hospital.config.db;
 
-import hospital.exeption.CustomSQLErrorCodeTranslator;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.catalina.Context;
-import org.apache.catalina.startup.Tomcat;
-import org.apache.tomcat.util.descriptor.web.ContextResource;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.jdbc.DataSourceBuilder;
-import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
-import org.springframework.boot.web.embedded.tomcat.TomcatWebServer;
-import org.springframework.boot.web.servlet.server.ServletWebServerFactory;
 import org.springframework.context.annotation.*;
 import org.springframework.core.env.Environment;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
@@ -28,7 +22,8 @@ import javax.sql.DataSource;
 import java.sql.SQLException;
 
 @PropertySource(value = {
-        "classpath:profilesDataSource.properties"
+        "classpath:profilesDataSource.properties",
+        "classpath:sql.properties"
 })
 @Configuration
 @EnableJpaRepositories(basePackages="hospital")
@@ -38,14 +33,6 @@ public class JPAConfig {
     @Autowired
     private Environment env;
 
-    @Bean
-    public JdbcTemplate jdbcTemplate(DataSource dataSource)
-    {
-        log.info("Start jdbcTemplate, dataSource = {}", dataSource);
-        JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-        jdbcTemplate.setExceptionTranslator(new CustomSQLErrorCodeTranslator());
-        return jdbcTemplate;
-    }
 
     @Bean
     @Profile("qa")
@@ -112,6 +99,11 @@ public class JPAConfig {
         transactionManager.setEntityManagerFactory(emf);
 
         return transactionManager;
+    }
+
+    @Bean
+    public ModelMapper modelMapper() {
+        return new ModelMapper();
     }
 
 }

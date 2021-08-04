@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="#{listPatients}"></title>
+    <style>
+        body {background-color: rgba(133, 191, 211, 0.07)}
+        h2 {color: blue}
+        h5 {color: #9b16ff}
+        p {color: green}
+        b {display: inline-block;}
+        .xx0 {padding-top: 10px}
+        .xxx {padding-left: 20px}
+        .xx1 {padding-left: 50px}
+        .xx2 {display: inline-block;}
+    </style>
+</head>
+<body>
+<a th:text="#{onMain}" th:href="@{/}" }></a>
+<h2 th:text="#{listPatients}"></h2>
+<div>
+    <button><a th:text="#{listDoctors}" th:href="@{/admin/doctors}" }></a></button>
+    <button><a th:text="#{addPatient}" th:href="@{/admin/patients/add}" }></a></button>
+</div>
+
+
+<div class="xx0">
+
+    <!--   /*@thymesVar id="SelectDTO" type="hospital.dto.SelectDTO"*/-->
+    <form action="/admin/patients" method="get" th:object="${SelectDTO}" id="form">
+        <div class="xx2">
+            <label for="isHideArchive" class="control-label col-sm-3" th:field="*{{hideArchive}}"
+                   th:text="#{hideArchive}"></label>
+            <input type="checkbox" th:checked="*{hideArchive} ? 'checked'" class="form-control" id="isHideArchive"
+                   th:field="*{hideArchive}" th:value="${{SelectDTO.hideArchive}}"><br/>
+        </div>
+        <div class="xx2">
+            <label for="isHideCurrent" class="control-label col-sm-3" th:field="*{{hideCurrent}}"
+                   th:text="#{hideCurrent}"></label>
+            <input type="checkbox" th:checked="*{{hideCurrent}} ? 'checked'" class="form-control" id="isHideCurrent"
+                   th:field="*{hideCurrent}" th:value="${{SelectDTO.hideCurrent}}"><br/>
+        </div>
+        <div class="xx2">
+            <label for="sortByDateOfBirth" class="control-label col-sm-3" th:field="*{{sortByDateOfBirth}}"
+                   th:text="#{sortByDateOfBirth}"></label>
+            <input type="checkbox" th:checked="*{{sortByDateOfBirth}} ? 'checked'" class="form-control" id="sortByDateOfBirth"
+                   th:field="*{sortByDateOfBirth}" th:value="${{SelectDTO.sortByDateOfBirth}}"><br/>
+        </div>
+
+        <div class="xx0"><b>
+            <input type="submit" th:value="#{listRefresh}" name="submit" onclick="setDefoult()">
+
+        </b></div>
+        <table border="1" class="xx0">
+            <thead>
+            <tr>
+                <th width="8%">#</th>
+                <th width="8%" th:text="#{FIO}"></th>
+                <th width="8%" th:text="#{dateOfBirth}"></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="user, iter : ${SelectDTO.getUsers()}">
+                <td th:text="${iter.count}"></td>
+                <td th:text="${user.getUsername()}"></td>
+                <td th:text="${#temporals.format(user.birthDate, 'dd-MM-yyyy')}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </form>
+</div>
+
+<script type="text/javascript">
+
+    function chekValues() {
+        var num = document.getElementById("num").value;
+        if (num === null || num.length === 0) {
+            return true;
+        }
+        if (num.length > 10) {
+            alert("Слиииишком длинный номер телефона. Не больше 10 цифр.");
+            return false;
+        }
+        if (!num.match(/^\d+$/)) {
+            alert('В поле "Номер телефона" должно стоять числовое значение(только цифры)!');
+            return false;
+        }
+        return true;
+    }
+
+    function setEXEL() {
+        console.log("start setEXEL")
+        var action = document.getElementById("form");
+        action.setAttribute("action", "/download/calls.xlsx")
+        console.log("start setEXEL", document.getElementById("form"));
+
+        //  return chekValues();
+    }
+
+    function setDefoult() {
+        console.log("start setDefoult")
+        var action = document.getElementById("form");
+        console.log("start setDefoult", document.getElementById("form"));
+        action.setAttribute("action", "/admin/patients")
+        console.log(document.getElementById("form"))
+
+        return chekValues();
+    }
+</script>
+<div th:if="${errorMessage}" th:utext="${errorMessage}" class="error"/>
+</body>
+</html>
+

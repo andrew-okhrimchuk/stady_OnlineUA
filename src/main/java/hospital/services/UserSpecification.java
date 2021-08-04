@@ -1,5 +1,6 @@
 package hospital.services;
 
+import hospital.domain.Patient;
 import hospital.domain.User;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +15,7 @@ import org.springframework.stereotype.Component;
 public class UserSpecification {
 //https://www.appsdeveloperblog.com/specification-predicate-advance-search-and-filtering-in-jpa/
 
-    public Specification<User> getUsers(SelectDTO request) {
+    public Specification<Patient> getUsers(SelectDTO request) {
         log.debug("Start getPatients of SelectDTO");
 
         return (root, query, criteriaBuilder) -> {

@@ -1,15 +1,12 @@
 package hospital.dto;
 
-import hospital.domain.Role;
+import hospital.domain.enums.Role;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.annotation.RequestScope;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;

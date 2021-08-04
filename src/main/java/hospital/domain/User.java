@@ -1,12 +1,12 @@
 package hospital.domain;
 
+import hospital.domain.enums.Role;
 import lombok.*;
 import org.springframework.security.core.userdetails.UserDetails;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +19,7 @@ import java.util.List;
 @EqualsAndHashCode
 @Entity
 @Table(name = "users")
+@Inheritance(strategy = InheritanceType.JOINED)
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -27,7 +28,6 @@ public class User implements UserDetails {
     @NotEmpty
     @NotBlank(message = "Name is mandatory")
     private String username;
-    private LocalDate birthDate;
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"))
     @Enumerated(EnumType.STRING)
@@ -37,6 +37,4 @@ public class User implements UserDetails {
     private boolean accountNonLocked;
     private boolean credentialsNonExpired;
     private boolean enabled;
-    @Column ( name = "iscurrentpatient" )
-    private boolean isCurrentPatient;
 }

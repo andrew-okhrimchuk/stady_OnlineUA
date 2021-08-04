@@ -1,10 +1,12 @@
 package hospital.web;
 
+import hospital.domain.Patient;
 import hospital.domain.User;
 import hospital.dto.SelectDTO;
 import hospital.dto.UserDTO;
 import hospital.exeption.DaoExeption;
 import hospital.exeption.ServiceExeption;
+import hospital.services.PatientService;
 import hospital.services.UserService;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -31,7 +33,7 @@ import java.util.List;
 @RequestMapping("/admin")
 public class AdminController {
     @Autowired
-    UserService userService;
+    PatientService userService;
 
 
     @GetMapping("/patients")
@@ -39,7 +41,7 @@ public class AdminController {
         log.debug("Start getListPatients, {}", selectDTO);
 
         try {
-            List<User> users = userService.getListPatients(selectDTO);
+            List<Patient> users = userService.getListPatients(selectDTO);
             selectDTO.setUsers(users);
         } catch (ServiceExeption | ConstraintViolationException e) {
             log.error(e.getMessage());

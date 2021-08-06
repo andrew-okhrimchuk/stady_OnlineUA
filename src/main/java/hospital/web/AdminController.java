@@ -1,30 +1,18 @@
 package hospital.web;
 
 import hospital.domain.Patient;
-import hospital.domain.User;
 import hospital.dto.SelectDTO;
 import hospital.dto.UserDTO;
-import hospital.exeption.DaoExeption;
 import hospital.exeption.ServiceExeption;
+import hospital.services.DoctorService;
 import hospital.services.PatientService;
-import hospital.services.UserService;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
-
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolationException;
-import java.text.ParseException;
-import java.time.format.DateTimeParseException;
-import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -34,6 +22,8 @@ import java.util.List;
 public class AdminController {
     @Autowired
     PatientService userService;
+    @Autowired
+    DoctorService doctorService;
 
 
     @GetMapping("/patients")

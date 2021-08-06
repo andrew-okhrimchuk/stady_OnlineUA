@@ -1,12 +1,9 @@
-package hospital.services;
+package hospital.services.intrface;
 
 import hospital.domain.Patient;
 import hospital.dto.SelectDTO;
 import hospital.dto.UserDTO;
 import hospital.exeption.ServiceExeption;
-import lombok.NonNull;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import java.util.List;
 

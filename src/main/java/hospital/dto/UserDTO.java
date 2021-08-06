@@ -1,5 +1,6 @@
 package hospital.dto;
 
+import hospital.domain.Doctor;
 import hospital.domain.enums.Role;
 import lombok.Getter;
 import lombok.Setter;
@@ -26,6 +27,7 @@ public class UserDTO {
     private String password;
     private String isCurrentPatient;
     private List<Role> authorities = new ArrayList<>();
+    private List<Doctor> doctors = new ArrayList<>();
 
     public String convertToDatabaseColumn(LocalDate entityDate) {
         return entityDate.format(formatter);

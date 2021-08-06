@@ -1,21 +1,21 @@
 package hospital.services;
 
-import hospital.domain.Patient;
-import hospital.domain.User;
-import java.util.ArrayList;
-import java.util.List;
-import javax.persistence.criteria.Predicate;
+import hospital.domain.Doctor;
 import hospital.dto.SelectDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
+import javax.persistence.criteria.Predicate;
+import java.util.ArrayList;
+import java.util.List;
+
 @Slf4j
 @Component
-public class UserSpecification {
+public class DoctorSpecification {
 //https://www.appsdeveloperblog.com/specification-predicate-advance-search-and-filtering-in-jpa/
 
-    public Specification<Patient> getUsers(SelectDTO request) {
+    public Specification<Doctor> getUsers(SelectDTO request) {
         log.debug("Start getPatients of SelectDTO");
 
         return (root, query, criteriaBuilder) -> {

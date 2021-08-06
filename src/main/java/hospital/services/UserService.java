@@ -2,18 +2,13 @@ package hospital.services;
 
 import hospital.domain.enums.Role;
 import hospital.domain.User;
-import hospital.dto.SelectDTO;
-import hospital.dto.UserDTO;
-import hospital.exeption.DaoExeption;
-import hospital.exeption.NotValidExeption;
-import hospital.exeption.ServiceExeption;
 import hospital.persistence.UserJPARepository;
+import hospital.services.intrface.IUserService;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -21,11 +16,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
-import java.time.LocalDate;
-import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 @Slf4j
 @Service
@@ -33,7 +25,7 @@ public class UserService implements UserDetailsService, IUserService {
     @Autowired
     private UserJPARepository userDao;
     @Autowired
-    private UserSpecification userSpecification;
+    private PatientSpecification patientSpecification;
     @Autowired
     private Environment env;
     @Autowired

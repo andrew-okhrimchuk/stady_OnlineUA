@@ -60,7 +60,19 @@
                 <td>:</td>
                 <td><input type="checkbox" th:field="*{isCurrentPatient}" th:value="${{user.isCurrentPatient}}" /></td>
             </tr>
-
+            <tr>
+                <td>professor</td>
+                <td>:</td>
+                <td>
+                    <select th:field="*{professor}"/>
+                    <option th:each="professor : ${professors}"
+                            th:selected="(${professor} == *{professor})"
+                            th:value="${professor.id}"
+                            th:text="${professor.firstName + ' ' + professor.lastName}">
+                    </option>
+                    </select>
+                </td>
+            </tr>
 
         </table>
         <input type="submit" th:value="${add} ? 'Create' : 'Update'"/>

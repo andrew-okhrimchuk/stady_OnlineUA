@@ -2,6 +2,7 @@ package hospital.services;
 
 import hospital.domain.Doctor;
 import hospital.domain.enums.Role;
+import hospital.dto.DoctorDTO;
 import hospital.dto.SelectDTO;
 import hospital.dto.UserDTO;
 import hospital.exeption.DaoExeption;
@@ -18,6 +19,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.time.format.DateTimeParseException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -35,7 +37,7 @@ public class DoctorService implements IDoctorService {
 
 
     @Override
-    public List<Doctor> getListDoctors(SelectDTO selectDTO) throws ServiceExeption {
+    public List<Doctor> getAll(SelectDTO selectDTO) throws ServiceExeption {
         log.debug("Start getListPatients of SelectDTO");
         selectDTO.getAuthorities().add(Role.PATIENT);
         try {
@@ -47,7 +49,7 @@ public class DoctorService implements IDoctorService {
     }
 
     @Override
-    public List<Doctor> getListDoctors() throws ServiceExeption {
+    public List<Doctor> getAll() throws ServiceExeption {
         log.debug("Start getListDoctors of SelectDTO");
         SelectDTO selectDTO = new SelectDTO();
         selectDTO.getAuthorities().add(Role.DOCTOR);
@@ -60,11 +62,11 @@ public class DoctorService implements IDoctorService {
     }
 
     @Override
-    public Doctor saveDoctor(UserDTO userDTO) throws ServiceExeption {
-        log.debug("Start savePatient of User. userDTO = {}", userDTO);
+    public Doctor save(DoctorDTO doctorDTO) throws ServiceExeption {
+        log.debug("Start savePatient of User. userDTO = {}", doctorDTO);
         Doctor user = null;
         try {
-            user = convertToEntity(userDTO);
+            user = convertToEntity(doctorDTO);
             user.getAuthorities().add(Role.PATIENT);
             return userDao.save(user);
 
@@ -79,21 +81,29 @@ public class DoctorService implements IDoctorService {
 
     @Override
     public Doctor getDoctorById(long id) {
-        return userDao.getPatientById(id);
+        return userDao.getDoctorById(id);
     }
 
-    public Doctor convertToEntity(UserDTO userDTO) throws DateTimeParseException, NotValidExeption {
-        if (!userDTO.isValid()) {
-            throw new NotValidExeption(env.getProperty("SAVE_NEW_PATIENT_NOT_VALOD"));
+    public Doctor convertToEntity(DoctorDTO doctorDTO) throws DateTimeParseException, NotValidExeption {
+        // TODO check is all parametres ? !!!
+        if (!doctorDTO.isValid()) {
+            throw new NotValidExeption(env.getProperty("SAVE_NEW_NOT_VALOD"));
         }
-        Doctor doctor = modelMapper.map(userDTO, Doctor.class);
+        Doctor doctor = modelMapper.map(doctorDTO, Doctor.class);
         doctor.setPassword(bcryptPasswordEncoder.encode(doctor.getPassword()));
         return doctor;
     }
 
-    public UserDTO convertToDto(Doctor user) {
-        UserDTO userDTO = modelMapper.map(user, UserDTO.class);
-        userDTO.setId(String.valueOf(user.getId()));
-        return userDTO;
+    public List<DoctorDTO> convertToDto(List<Doctor> doctors) {
+       return doctors
+                .stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
+    }
+
+    public DoctorDTO convertToDto(Doctor user) {
+        DoctorDTO doctorDTO = modelMapper.map(user, DoctorDTO.class);
+        doctorDTO.setId(String.valueOf(user.getId()));
+        return doctorDTO;
     }
 }

@@ -15,6 +15,7 @@ import java.util.List;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @Entity
+//@Builder
 @SuppressWarnings("PMD")
 public class Doctor extends User {
     @Enumerated(EnumType.STRING)

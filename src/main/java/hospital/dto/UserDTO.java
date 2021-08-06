@@ -27,7 +27,7 @@ public class UserDTO {
     private String password;
     private String isCurrentPatient;
     private List<Role> authorities = new ArrayList<>();
-    private List<Doctor> doctors = new ArrayList<>();
+    private DoctorDTO doctorDTO;
 
     public String convertToDatabaseColumn(LocalDate entityDate) {
         return entityDate.format(formatter);
@@ -39,6 +39,10 @@ public class UserDTO {
         return start;
     }
     public boolean isValid () {
-        return this.username !=null && this.birthDate !=null && this.password !=null && !this.username.isEmpty() && !this.birthDate.isEmpty() && !this.password.isEmpty();
+        return this.username !=null
+                && this.birthDate !=null
+                && !this.username.isEmpty()
+                && !this.birthDate.isEmpty()
+                && (this.id != null && !this.id.isEmpty() || this.password != null && !this.password.isEmpty());
     }
 }

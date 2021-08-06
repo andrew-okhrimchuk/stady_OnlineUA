@@ -1,5 +1,6 @@
 package hospital.web;
 
+import hospital.domain.Doctor;
 import hospital.domain.Patient;
 import hospital.dto.SelectDTO;
 import hospital.dto.UserDTO;
@@ -12,7 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
 import javax.validation.ConstraintViolationException;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Slf4j
@@ -31,7 +34,7 @@ public class AdminController {
         log.debug("Start getListPatients, {}", selectDTO);
 
         try {
-            List<Patient> users = userService.getListPatients(selectDTO);
+            List<Patient> users = userService.getAll(selectDTO);
             selectDTO.setUsers(users);
         } catch (ServiceExeption | ConstraintViolationException e) {
             log.error(e.getMessage());
@@ -48,7 +51,9 @@ public class AdminController {
         model.addAttribute("add", true);
         model.addAttribute("user", userDTO);
         try {
-            model.addAttribute("doctors", userService.getListDoctors());
+            List<Doctor> doctor = doctorService.getAll();
+            model.addAttribute("doctors", doctorService.convertToDto(doctor));
+
         } catch (ServiceExeption e) {
             log.error(e.getMessage());
             model.addAttribute("errorMessage", e.getMessage());
@@ -62,8 +67,34 @@ public class AdminController {
         model.addAttribute("user", userDTO);
         model.addAttribute("add", true);
         try {
-            userService.savePatient(userDTO);
+            userService.save(userDTO);
             return "redirect:/admin/patients";
+        } catch (ServiceExeption e) {
+            log.error(e.getMessage());
+            model.addAttribute("errorMessage", e.getMessage());
+        }
+        List<Doctor> doctor = null;
+        // unsucces ->
+        try {
+            doctor = doctorService.getAll();
+        } catch (ServiceExeption e) {
+            log.error(e.getMessage());
+            model.addAttribute("errorMessage", e.getMessage());
+        }
+        model.addAttribute("doctors", doctorService.convertToDto(doctor));
+        return "admin/patient-edit";
+    }
+
+    @GetMapping(value = {"/patients/edit/{user_id}"})
+    public String showEditPatient(Model model,
+                                  @NotNull @PathVariable("user_id") String user_id) {
+        log.debug("Start showEditPatient");
+        model.addAttribute("edit", true);
+        model.addAttribute("user", userService.getPatientById(Long.parseLong(user_id)));
+        try {
+            List<Doctor> doctor = doctorService.getAll();
+            model.addAttribute("doctors", doctorService.convertToDto(doctor));
+
         } catch (ServiceExeption e) {
             log.error(e.getMessage());
             model.addAttribute("errorMessage", e.getMessage());
@@ -71,10 +102,28 @@ public class AdminController {
         return "admin/patient-edit";
     }
 
-    @RequestMapping
-    public String getAdmin2() {
-        log.debug("Start getAdmin2");
-        return "admin/admin";
+    @PostMapping("/patients/edit")
+    public String editPatient(@ModelAttribute("user") @NonNull UserDTO userDTO, Model model) {
+        log.debug("Start editPatient, {}", userDTO);
+        model.addAttribute("user", userDTO);
+        model.addAttribute("edit", true);
+        try {
+            userService.save(userDTO);
+            return "redirect:/admin/patients";
+        } catch (ServiceExeption e) {
+            log.error(e.getMessage());
+            model.addAttribute("errorMessage", e.getMessage());
+        }
+        List<Doctor> doctor = null;
+        // unsucces ->
+        try {
+            doctor = doctorService.getAll();
+        } catch (ServiceExeption e) {
+            log.error(e.getMessage());
+            model.addAttribute("errorMessage", e.getMessage());
+        }
+        model.addAttribute("doctors", doctorService.convertToDto(doctor));
+        return "admin/patient-edit";
     }
 
 

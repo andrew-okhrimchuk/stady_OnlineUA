@@ -17,7 +17,7 @@ public class DoctorSpecification {
 
     public Specification<Doctor> getUsers(SelectDTO request) {
         log.debug("Start getPatients of SelectDTO");
-
+// TODO fixe parametres from Doctor!
         return (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
             if (request.getHideArchive() != null && request.getHideCurrent() != null) {

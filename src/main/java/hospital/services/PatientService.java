@@ -36,7 +36,7 @@ public class PatientService implements IPatientService {
 
 
     @Override
-    public List<Patient> getListPatients(SelectDTO selectDTO) throws ServiceExeption {
+    public List<Patient> getAll(SelectDTO selectDTO) throws ServiceExeption {
         log.debug("Start getListPatients of SelectDTO");
         selectDTO.getAuthorities().add(Role.PATIENT);
         try {
@@ -48,20 +48,20 @@ public class PatientService implements IPatientService {
     }
 
     @Override
-    public List<Patient> getListDoctors() throws ServiceExeption {
-        log.debug("Start getListDoctors of SelectDTO");
+    public List<Patient> getAll() throws ServiceExeption {
+        log.debug("Start getListPatients");
         SelectDTO selectDTO = new SelectDTO();
         selectDTO.getAuthorities().add(Role.DOCTOR);
         try {
             return userDao.findAll(patientSpecification.getUsers(selectDTO));
         } catch (DaoExeption | DataIntegrityViolationException e) {
-            log.error("getListDoctors {}, {}", env.getProperty("GET_ALL_ERROR_MESSAGE_DOCTOR"), e.getMessage());
+            log.error("getListPatients {}, {}", env.getProperty("GET_ALL_ERROR_MESSAGE_PATIENT"), e.getMessage());
             throw new ServiceExeption(e.getMessage(), e);
         }
     }
 
     @Override
-    public Patient savePatient(UserDTO userDTO) throws ServiceExeption {
+    public Patient save(UserDTO userDTO) throws ServiceExeption {
         log.debug("Start savePatient of User. userDTO = {}", userDTO);
         Patient user = null;
         try {
@@ -79,30 +79,27 @@ public class PatientService implements IPatientService {
     }
 
     @Override
-    public Patient getUserById(long id) {
-        return userDao.getPatientById(id);
+    public UserDTO getPatientById(long id) {
+        return convertToDto(userDao.getPatientById(id));
     }
 
     public Patient convertToEntity(UserDTO userDTO) throws DateTimeParseException, NotValidExeption {
         if (!userDTO.isValid()) {
-            throw new NotValidExeption(env.getProperty("SAVE_NEW_PATIENT_NOT_VALOD"));
+            throw new NotValidExeption(env.getProperty("SAVE_NEW_NOT_VALOD"));
         }
         Patient user = modelMapper.map(userDTO, Patient.class);
         user.setBirthDate(userDTO.convertToEntityAttribute(userDTO.getBirthDate()));
         user.setCurrentPatient(userDTO.getIsCurrentPatient() != null);
-        user.setPassword(bcryptPasswordEncoder.encode(user.getPassword()));/*
-        if (userDTO.getId() != null && !userDTO.getId().isEmpty()) {
-            User oldUser = getUserById(Long.parseLong(userDTO.getId()));
-            user.setId(oldUser.getId());
-        }*/
+        user.setPassword(bcryptPasswordEncoder.encode(user.getPassword()));
         return user;
     }
 
-    public UserDTO convertToDto(Patient user) {
-        UserDTO userDTO = modelMapper.map(user, UserDTO.class);
-        userDTO.setBirthDate(userDTO.convertToDatabaseColumn(user.getBirthDate()));
-        userDTO.setIsCurrentPatient(user.isCurrentPatient() ? "on" : null);
-        userDTO.setId(String.valueOf(user.getId()));
+    public UserDTO convertToDto(Patient patient) {
+        UserDTO userDTO = modelMapper.map(patient, UserDTO.class);
+        userDTO.setBirthDate(userDTO.convertToDatabaseColumn(patient.getBirthDate()));
+        userDTO.setIsCurrentPatient(patient.isCurrentPatient() ? "on" : null);
+        userDTO.setId(String.valueOf(patient.getId()));
+        userDTO.setPassword(null);
         return userDTO;
     }
 }

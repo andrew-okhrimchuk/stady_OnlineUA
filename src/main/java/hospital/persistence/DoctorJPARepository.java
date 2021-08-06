@@ -17,5 +17,5 @@ public interface DoctorJPARepository extends CrudRepository<Doctor, Long> , JpaS
      Optional<Doctor> findByUsername(@NonNull String username) ;
      Page<Doctor> findAll(Specification<Doctor> spec, Pageable pageable);
      List<Doctor> findAll(Specification<Doctor> spec);
-     Doctor getPatientById(long id);
+     Doctor getDoctorById(long id);
 }

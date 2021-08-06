@@ -11,5 +11,5 @@ public interface IPatientService extends GenericService <Patient, SelectDTO> {
     List<Patient> getAll(SelectDTO selectDTO) throws ServiceExeption;
     List<Patient> getAll() throws ServiceExeption;
     Patient save(UserDTO userDTO) throws ServiceExeption;
-    Patient getUserById(long id) throws ServiceExeption;
+    UserDTO getPatientById(long id) throws ServiceExeption;
 }

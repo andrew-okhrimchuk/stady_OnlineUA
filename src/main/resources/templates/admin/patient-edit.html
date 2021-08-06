@@ -29,10 +29,6 @@
 <body>
 
 <div class="container">
-    <div>
-        <a th:href="@{/admin/patients}">List of Patients</a>
-    </div>
-
     <h1 th:text="${add} ? 'Create a Patient:' : 'Edit a Patient:'"></h1>
     <form th:action="@{/admin/patients/add}" th:object="${user}" method="POST">
 
@@ -53,7 +49,7 @@
             <tr>
                 <td>password</td>
                 <td>:</td>
-                <td><input type="text" th:field="*{password}"/></td>
+                <td><input th:type="${add} ? 'text' : 'hidden'" th:field="*{password}"/></td>
             </tr>
             <tr>
                 <td>Is current patient</td>
@@ -61,22 +57,23 @@
                 <td><input type="checkbox" th:field="*{isCurrentPatient}" th:value="${{user.isCurrentPatient}}" /></td>
             </tr>
             <tr>
-                <td>professor</td>
+                <td>Select a doctor</td>
                 <td>:</td>
                 <td>
-                    <select th:field="*{professor}"/>
-                    <option th:each="professor : ${professors}"
-                            th:selected="(${professor} == *{professor})"
-                            th:value="${professor.id}"
-                            th:text="${professor.firstName + ' ' + professor.lastName}">
+                    <select th:field="*{doctorDTO}"/>
+                    <option th:each="doctor : ${doctors}"
+                            th:selected="(${doctor} == *{doctorDTO})"
+                            th:value="${doctor.id}"
+                            th:text="${doctor.username}">
                     </option>
                     </select>
                 </td>
             </tr>
 
         </table>
-        <input type="submit" th:value="${add} ? 'Create' : 'Update'"/>
+        <input type="submit" th:value="${add} ? #{create} : #{update}"/>
     </form>
+        <button><a th:text="#{cancel}" th:href="@{/admin/patients}" }></a></button>
 
     <br/>
     <div th:if="${errorMessage}" th:utext="${errorMessage}" class="error"/>

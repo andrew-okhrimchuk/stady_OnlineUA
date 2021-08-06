@@ -60,7 +60,8 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="user, iter : ${SelectDTO.getUsers()}">
+            <tr th:each="user, iter : ${SelectDTO.getUsers()}"
+                th:onclick="'javascript:rowClicked(\'' + ${user.id} + '\');'">
                 <td th:text="${iter.count}"></td>
                 <td th:text="${user.getUsername()}"></td>
                 <td th:text="${#temporals.format(user.birthDate, 'dd-MM-yyyy')}"></td>
@@ -70,43 +71,12 @@
     </form>
 </div>
 
-<script type="text/javascript">
-
-    function chekValues() {
-        var num = document.getElementById("num").value;
-        if (num === null || num.length === 0) {
-            return true;
-        }
-        if (num.length > 10) {
-            alert("Слиииишком длинный номер телефона. Не больше 10 цифр.");
-            return false;
-        }
-        if (!num.match(/^\d+$/)) {
-            alert('В поле "Номер телефона" должно стоять числовое значение(только цифры)!');
-            return false;
-        }
-        return true;
-    }
-
-    function setEXEL() {
-        console.log("start setEXEL")
-        var action = document.getElementById("form");
-        action.setAttribute("action", "/download/calls.xlsx")
-        console.log("start setEXEL", document.getElementById("form"));
-
-        //  return chekValues();
-    }
-
-    function setDefoult() {
-        console.log("start setDefoult")
-        var action = document.getElementById("form");
-        console.log("start setDefoult", document.getElementById("form"));
-        action.setAttribute("action", "/admin/patients")
-        console.log(document.getElementById("form"))
-
-        return chekValues();
+<script>
+    function rowClicked(value) {
+        location.href = "/admin/patients/edit/" + value;
     }
 </script>
+
 <div th:if="${errorMessage}" th:utext="${errorMessage}" class="error"/>
 </body>
 </html>

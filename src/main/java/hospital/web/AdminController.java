@@ -92,8 +92,7 @@ public class AdminController {
         model.addAttribute("edit", true);
         model.addAttribute("user", userService.getPatientById(Long.parseLong(user_id)));
         try {
-            List<Doctor> doctor = doctorService.getAll();
-            model.addAttribute("doctors", doctorService.convertToDto(doctor));
+            model.addAttribute("doctors", doctorService.findAllWithCount());
 
         } catch (ServiceExeption e) {
             log.error(e.getMessage());

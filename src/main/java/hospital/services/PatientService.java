@@ -24,7 +24,7 @@ import java.util.List;
 @Service
 public class PatientService implements IPatientService {
     @Autowired
-    private PatientJPARepository userDao;
+    private PatientJPARepository jpaRepository;
     @Autowired
     private PatientSpecification patientSpecification;
     @Autowired
@@ -40,7 +40,7 @@ public class PatientService implements IPatientService {
         log.debug("Start getListPatients of SelectDTO");
         selectDTO.getAuthorities().add(Role.PATIENT);
         try {
-            return userDao.findAll(patientSpecification.getUsers(selectDTO));
+            return jpaRepository.findAll(patientSpecification.getUsers(selectDTO));
         } catch (DaoExeption | DataIntegrityViolationException e) {
             log.error("getListPatients {}, {}", env.getProperty("GET_ALL_ERROR_MESSAGE_PATIENT"), e.getMessage());
             throw new ServiceExeption(e.getMessage(), e);
@@ -53,7 +53,7 @@ public class PatientService implements IPatientService {
         SelectDTO selectDTO = new SelectDTO();
         selectDTO.getAuthorities().add(Role.DOCTOR);
         try {
-            return userDao.findAll(patientSpecification.getUsers(selectDTO));
+            return jpaRepository.findAll(patientSpecification.getUsers(selectDTO));
         } catch (DaoExeption | DataIntegrityViolationException e) {
             log.error("getListPatients {}, {}", env.getProperty("GET_ALL_ERROR_MESSAGE_PATIENT"), e.getMessage());
             throw new ServiceExeption(e.getMessage(), e);
@@ -67,7 +67,7 @@ public class PatientService implements IPatientService {
         try {
             user = convertToEntity(userDTO);
             user.getAuthorities().add(Role.PATIENT);
-            return userDao.save(user);
+            return jpaRepository.save(user);
 
         } catch (DaoExeption | DateTimeParseException | NotValidExeption e) {
             log.error("savePatient {}, {}", env.getProperty("SAVE_NEW_PATIENT"), e.getMessage());
@@ -80,7 +80,7 @@ public class PatientService implements IPatientService {
 
     @Override
     public UserDTO getPatientById(long id) {
-        return convertToDto(userDao.getPatientById(id));
+        return convertToDto(jpaRepository.getPatientById(id));
     }
 
     public Patient convertToEntity(UserDTO userDTO) throws DateTimeParseException, NotValidExeption {

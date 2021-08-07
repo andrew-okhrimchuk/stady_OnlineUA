@@ -6,15 +6,12 @@ import hospital.persistence.UserJPARepository;
 import hospital.services.intrface.IUserService;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -23,13 +20,7 @@ import java.util.Arrays;
 @Service
 public class UserService implements UserDetailsService, IUserService {
     @Autowired
-    private UserJPARepository userDao;
-    @Autowired
-    private PatientSpecification patientSpecification;
-    @Autowired
-    private Environment env;
-    @Autowired
-    private ModelMapper modelMapper;
+    private UserJPARepository jpaRepository;
     @Autowired
     public PasswordEncoder bcryptPasswordEncoder;
 
@@ -37,9 +28,9 @@ public class UserService implements UserDetailsService, IUserService {
     @PostConstruct
     public void init() {
         log.info("Start init of user");
-        if (!userDao.findByUsername("admin").isPresent()) {
+        if (!jpaRepository.findByUsername("admin").isPresent()) {
 
-            userDao.save(User.builder()
+            jpaRepository.save(User.builder()
                     .username("admin")
                     .password(bcryptPasswordEncoder.encode("admin"))
                     .authorities(new ArrayList<>(Arrays.asList(Role.ADMIN)))
@@ -61,7 +52,7 @@ public class UserService implements UserDetailsService, IUserService {
      */
     @Override
     public UserDetails loadUserByUsername(@NonNull String username) throws UsernameNotFoundException {
-        return userDao.findByUsername(username).orElseThrow(() ->
+        return jpaRepository.findByUsername(username).orElseThrow(() ->
                 new UsernameNotFoundException("user " + username + " was not found!"));
     }
 }

@@ -20,6 +20,11 @@ public class Patient extends User {
     @Column ( name = "iscurrentpatient" )
     private boolean isCurrentPatient;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    private Doctor doctor;
+
     @Builder(builderMethodName = "chilerBuilder")
     public Patient(Long id, @NotNull @NotEmpty @NotBlank(message = "Name is mandatory") String username, List<Role> authorities, String password, boolean accountNonExpired, boolean accountNonLocked, boolean credentialsNonExpired, boolean enabled, LocalDate birthDate, boolean isCurrentPatient) {
         super(id, username, authorities, password, accountNonExpired, accountNonLocked, credentialsNonExpired, enabled);

@@ -64,7 +64,7 @@
                     <option th:each="doctor : ${doctors}"
                             th:selected="(${doctor} == *{doctorDTO})"
                             th:value="${doctor.id}"
-                            th:text="${doctor.username}">
+                            th:text="${doctor.username + ', Count Of Patients - ' + doctor.countOfPatients }">
                     </option>
                     </select>
                 </td>

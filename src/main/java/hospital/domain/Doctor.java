@@ -15,11 +15,14 @@ import java.util.List;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @Entity
-//@Builder
 @SuppressWarnings("PMD")
 public class Doctor extends User {
+
     @Enumerated(EnumType.STRING)
     private Speciality speciality;
+
+    @Transient
+    private String countOfPatients;
 
     @Builder(builderMethodName = "chilerBuilder")
     public Doctor(Long id, @NotNull @NotEmpty @NotBlank(message = "Name is mandatory") String username, List<Role> authorities, String password, boolean accountNonExpired, boolean accountNonLocked, boolean credentialsNonExpired, boolean enabled, Speciality speciality) {

@@ -1,7 +1,8 @@
-package hospital.web;
+package hospital.web.admin;
 
 import hospital.domain.Doctor;
 import hospital.domain.Patient;
+import hospital.dto.DoctorDTO;
 import hospital.dto.SelectDTO;
 import hospital.dto.UserDTO;
 import hospital.exeption.ServiceExeption;
@@ -22,31 +23,32 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/admin")
-public class AdminController {
+public class AdminDoctorsController {
     @Autowired
     PatientService userService;
     @Autowired
     DoctorService doctorService;
 
 
-    @GetMapping("/patients")
-    public String getListPatients(@ModelAttribute @NonNull SelectDTO selectDTO, Model model) {
-        log.debug("Start getListPatients, {}", selectDTO);
+    @GetMapping("/doctors")
+    public String getListDoctors(@ModelAttribute @NonNull SelectDTO selectDTO, Model model) {
+        log.debug("Start getListDoctors, {}", selectDTO);
 
         try {
-            List<Patient> users = userService.getAll(selectDTO);
+            List<Doctor> doctors = doctorService.getAll(selectDTO);
+            List<DoctorDTO> users = doctorService.convertToDto(doctors);
             selectDTO.setUsers(users);
         } catch (ServiceExeption | ConstraintViolationException e) {
             log.error(e.getMessage());
             model.addAttribute("errorMessage", e.getMessage());
         }
         model.addAttribute("SelectDTO", selectDTO);
-        return "admin/patients";
+        return "admin/doctors";
     }
 
-    @GetMapping(value = {"/patients/add"})
-    public String showAddPatient(Model model) {
-        log.debug("Start showAddPatient");
+    @GetMapping(value = {"/doctors/add"})
+    public String showAddDoctor(Model model) {
+        log.debug("Start showAddDoctor");
         UserDTO userDTO = new UserDTO();
         model.addAttribute("add", true);
         model.addAttribute("user", userDTO);
@@ -58,17 +60,17 @@ public class AdminController {
             log.error(e.getMessage());
             model.addAttribute("errorMessage", e.getMessage());
         }
-        return "admin/patient-edit";
+        return "admin/doctors-edit";
     }
 
-    @PostMapping("/patients/add")
-    public String addPatient(@ModelAttribute("user") @NonNull UserDTO userDTO, Model model) {
-        log.debug("Start addPatient, {}", userDTO);
+    @PostMapping("/doctors/add")
+    public String addDoctor (@ModelAttribute("user") @NonNull UserDTO userDTO, Model model) {
+        log.debug("Start addDoctor, {}", userDTO);
         model.addAttribute("user", userDTO);
         model.addAttribute("add", true);
         try {
             userService.save(userDTO);
-            return "redirect:/admin/patients";
+            return "redirect:/admin/doctors";
         } catch (ServiceExeption e) {
             log.error(e.getMessage());
             model.addAttribute("errorMessage", e.getMessage());
@@ -82,15 +84,15 @@ public class AdminController {
             model.addAttribute("errorMessage", e.getMessage());
         }
         model.addAttribute("doctors", doctorService.convertToDto(doctor));
-        return "admin/patient-edit";
+        return "admin/doctors-edit";
     }
 
-    @GetMapping(value = {"/patients/edit/{user_id}"})
-    public String showEditPatient(Model model,
+    @GetMapping(value = {"/doctors/edit/{user_id}"})
+    public String showEditDoctor(Model model,
                                   @NotNull @PathVariable("user_id") String user_id) {
-        log.debug("Start showEditPatient");
+        log.debug("Start showEditDoctor");
         model.addAttribute("edit", true);
-        model.addAttribute("user", userService.getPatientById(Long.parseLong(user_id)));
+        model.addAttribute("user", doctorService.getDoctorById(Long.parseLong(user_id)));
         try {
             model.addAttribute("doctors", doctorService.findAllWithCount());
 
@@ -98,17 +100,17 @@ public class AdminController {
             log.error(e.getMessage());
             model.addAttribute("errorMessage", e.getMessage());
         }
-        return "admin/patient-edit";
+        return "admin/doctors-edit";
     }
 
-    @PostMapping("/patients/edit")
-    public String editPatient(@ModelAttribute("user") @NonNull UserDTO userDTO, Model model) {
-        log.debug("Start editPatient, {}", userDTO);
+    @PostMapping("/doctors/edit")
+    public String editDoctor(@ModelAttribute("user") @NonNull UserDTO userDTO, Model model) {
+        log.debug("Start editDoctor, {}", userDTO);
         model.addAttribute("user", userDTO);
         model.addAttribute("edit", true);
         try {
             userService.save(userDTO);
-            return "redirect:/admin/patients";
+            return "redirect:/admin/doctors";
         } catch (ServiceExeption e) {
             log.error(e.getMessage());
             model.addAttribute("errorMessage", e.getMessage());
@@ -122,7 +124,7 @@ public class AdminController {
             model.addAttribute("errorMessage", e.getMessage());
         }
         model.addAttribute("doctors", doctorService.convertToDto(doctor));
-        return "admin/patient-edit";
+        return "admin/doctors-edit";
     }
 
 

@@ -2,6 +2,7 @@ package hospital.services;
 
 import hospital.domain.Doctor;
 import hospital.domain.enums.Role;
+import hospital.domain.enums.Speciality;
 import hospital.dto.DoctorDTO;
 import hospital.dto.SelectDTO;
 import hospital.exeption.DaoExeption;
@@ -44,11 +45,11 @@ public class DoctorService implements IDoctorService {
     @Override
     public List<Doctor> getAll(SelectDTO selectDTO) throws ServiceExeption {
         log.debug("Start getListPatients of SelectDTO");
-        selectDTO.getAuthorities().add(Role.PATIENT);
+        selectDTO.getAuthorities().add(Role.DOCTOR);
         try {
             return jpaRepository.findAll(specification.getUsers(selectDTO));
         } catch (DaoExeption | DataIntegrityViolationException e) {
-            log.error("getListPatients {}, {}", env.getProperty("GET_ALL_ERROR_MESSAGE_PATIENT"), e.getMessage());
+            log.error("getListPatients {}, {}", env.getProperty("GET_ALL_ERROR_MESSAGE_DOCTORS"), e.getMessage());
             throw new ServiceExeption(e.getMessage(), e);
         }
     }
@@ -90,7 +91,6 @@ public class DoctorService implements IDoctorService {
     }
 
     public Doctor convertToEntity(DoctorDTO doctorDTO) throws DateTimeParseException, NotValidExeption {
-        // TODO check is all parametres ? !!!
         if (!doctorDTO.isValid()) {
             throw new NotValidExeption(env.getProperty("SAVE_NEW_NOT_VALOD"));
         }
@@ -99,7 +99,6 @@ public class DoctorService implements IDoctorService {
         return doctor;
     }
 
- //
     public List<DoctorDTO> findAllWithCount() throws ServiceExeption {
         EntityManager entityManager = emf.createEntityManager();
         Query query = entityManager.createQuery("select u.username, u.id, count(u.id) from User u join Doctor d on u.id = d.id left join Patient p on d.id = p.doctor.id group by u.id");
@@ -132,8 +131,13 @@ public class DoctorService implements IDoctorService {
     }
 
     public DoctorDTO convertToDto(Doctor doctor) {
+        List<String> speciality = doctor.getSpeciality()
+                .stream()
+                .map(Enum::name)
+                .collect(Collectors.toList());
+
         DoctorDTO doctorDTO = modelMapper.map(doctor, DoctorDTO.class);
-        doctorDTO.setId(String.valueOf(doctor.getId()));
+        doctorDTO.setSpeciality(speciality);
         return doctorDTO;
     }
 }

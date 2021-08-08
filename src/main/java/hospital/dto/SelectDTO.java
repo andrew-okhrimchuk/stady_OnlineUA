@@ -16,7 +16,7 @@ import java.util.List;
 @RequestScope
 @ToString
 public class SelectDTO {
-    private List<Patient> users = new ArrayList<>();
+    private List users = new ArrayList<>();
     private String hideArchive;
     private String hideCurrent;
     private String sortByDateOfBirth;

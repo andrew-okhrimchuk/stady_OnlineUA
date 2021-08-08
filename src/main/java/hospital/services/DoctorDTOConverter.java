@@ -14,7 +14,7 @@ public class DoctorDTOConverter implements Converter<String, DoctorDTO> {
     public DoctorDTO convert(String id) {
         log.debug("Trying to convert id =" + id + " into a DoctorDTO");
         DoctorDTO doctorDTO = new DoctorDTO();
-        doctorDTO.setId(id);
+     //   doctorDTO.setId(id);
         return doctorDTO;
     }
 }

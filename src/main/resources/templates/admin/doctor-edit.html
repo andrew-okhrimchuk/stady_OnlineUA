@@ -27,7 +27,7 @@
     </style>
 </head>
 <body>
-
+<a href="/logout" th:text="#{logout}"></a>
 <div class="container">
     <h1 th:text="${add} ? 'Create a Doctor:' : 'Edit a Doctor:'"></h1>
     <form th:action="@{/admin/doctors/add}" th:object="${user}" method="POST">
@@ -53,8 +53,8 @@
                     <select th:field="*{speciality}"/>
                     <option th:each="special : ${T(hospital.domain.enums.Speciality).values()}"
                             th:selected="(${special} == *{speciality})"
-                            th:value="${special.name()}"
-                            th:text="${special.name()}">
+                            th:value="${special.name().toString()}"
+                            th:text="${special.name().toString()}">
                     </option>
                     </select>
                 </td>

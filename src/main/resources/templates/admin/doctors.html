@@ -23,10 +23,10 @@
 <div>
     <a th:text="#{onMain}" th:href="@{/}" }></a>
     <a th:text="#{listPatients}" th:href="@{/admin/patients}"}></a>
+    <a href="/logout" th:text="#{logout}"></a>
 </div>
 <h2 th:text="#{listDoctors}" ></h2>
 <button><a th:text="#{addPatient}" th:href="@{/admin/doctors/add}" }></a></button>
-
 <div class="xx0">
 
     <!--   /*@thymesVar id="SelectDTO" type="hospital.dto.SelectDTO"*/-->
@@ -47,7 +47,7 @@
                 th:onclick="'javascript:rowClicked(\'' + ${user.id} + '\');'">
             <td th:text="${iter.count}"></td>
                 <td th:text="${user.username}"></td>
-                <td th:text="${user.speciality}"></td>
+                <td th:text="${user.getSpeciality().toString()}"></td>
             </tr>
             </tbody>
         </table>

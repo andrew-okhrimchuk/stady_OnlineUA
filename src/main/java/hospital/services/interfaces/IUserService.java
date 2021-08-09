@@ -1,4 +1,4 @@
-package hospital.services.intrface;
+package hospital.services.interfaces;
 
 import lombok.NonNull;
 import org.springframework.security.core.userdetails.UserDetails;

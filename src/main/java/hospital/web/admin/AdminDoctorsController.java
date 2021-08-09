@@ -1,26 +1,27 @@
 package hospital.web.admin;
 
-import hospital.domain.Doctor;
-import hospital.domain.Patient;
+import hospital.domain.enums.Speciality;
 import hospital.dto.DoctorDTO;
 import hospital.dto.SelectDTO;
 import hospital.dto.UserDTO;
 import hospital.exeption.ServiceExeption;
-import hospital.services.DoctorService;
-import hospital.services.PatientService;
+import hospital.services.doctor.DoctorService;
+import hospital.services.patient.PatientService;
+import hospital.web.MainController;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.ConstraintViolationException;
 import javax.validation.constraints.NotNull;
-import java.util.List;
+import java.util.Optional;
 
 @Slf4j
-
 @Controller
 @RequestMapping("/admin")
 public class AdminDoctorsController {
@@ -31,13 +32,16 @@ public class AdminDoctorsController {
 
 
     @GetMapping("/doctors")
-    public String getListDoctors(@ModelAttribute @NonNull SelectDTO selectDTO, Model model) {
+    public String getListDoctors(@RequestParam("page1") Optional<Integer> page1,
+                                 @RequestParam("size") Optional<Integer> size,
+                                 @ModelAttribute @NonNull SelectDTO selectDTO, Model model) {
         log.debug("Start getListDoctors, {}", selectDTO);
+        int currentPage = page1.orElse(1);
+        int pageSize = size.orElse(15);
 
         try {
-            List<Doctor> doctors = doctorService.getAll(selectDTO);
-            List<DoctorDTO> users = doctorService.convertToDto(doctors);
-            selectDTO.setUsers(users);
+            Page<DoctorDTO> doctors = doctorService.getAll(selectDTO, PageRequest.of(currentPage - 1, pageSize));
+            selectDTO.setPage(doctors);
         } catch (ServiceExeption | ConstraintViolationException e) {
             log.error(e.getMessage());
             model.addAttribute("errorMessage", e.getMessage());
@@ -49,65 +53,43 @@ public class AdminDoctorsController {
     @GetMapping(value = {"/doctors/add"})
     public String showAddDoctor(Model model) {
         log.debug("Start showAddDoctor");
-        UserDTO userDTO = new UserDTO();
-        model.addAttribute("add", true);
-        model.addAttribute("user", userDTO);
-        try {
-            List<Doctor> doctor = doctorService.getAll();
-            model.addAttribute("doctors", doctorService.convertToDto(doctor));
-
-        } catch (ServiceExeption e) {
-            log.error(e.getMessage());
-            model.addAttribute("errorMessage", e.getMessage());
-        }
-        return "admin/doctors-edit";
+        model.addAttribute("add", true)
+                .addAttribute("user", new DoctorDTO());
+        return "admin/doctor-edit";
     }
 
     @PostMapping("/doctors/add")
-    public String addDoctor (@ModelAttribute("user") @NonNull UserDTO userDTO, Model model) {
-        log.debug("Start addDoctor, {}", userDTO);
-        model.addAttribute("user", userDTO);
-        model.addAttribute("add", true);
+    public String addDoctor(@ModelAttribute("user") @NonNull DoctorDTO doctorDTO, Model model) {
+        log.debug("Start addDoctor, Username = {}", doctorDTO.getUsername());
+        model.addAttribute("user", doctorDTO)
+             .addAttribute("add", true);
         try {
-            userService.save(userDTO);
+            doctorService.save(doctorDTO);
             return "redirect:/admin/doctors";
         } catch (ServiceExeption e) {
             log.error(e.getMessage());
             model.addAttribute("errorMessage", e.getMessage());
         }
-        List<Doctor> doctor = null;
-        // unsucces ->
-        try {
-            doctor = doctorService.getAll();
-        } catch (ServiceExeption e) {
-            log.error(e.getMessage());
-            model.addAttribute("errorMessage", e.getMessage());
-        }
-        model.addAttribute("doctors", doctorService.convertToDto(doctor));
-        return "admin/doctors-edit";
+        return "admin/doctor-edit";
     }
 
     @GetMapping(value = {"/doctors/edit/{user_id}"})
-    public String showEditDoctor(Model model,
-                                  @NotNull @PathVariable("user_id") String user_id) {
+    public String showEditDoctor(Model model, @NotNull @PathVariable("user_id") String user_id) {
         log.debug("Start showEditDoctor");
-        model.addAttribute("edit", true);
-        model.addAttribute("user", doctorService.getDoctorById(Long.parseLong(user_id)));
         try {
-            model.addAttribute("doctors", doctorService.findAllWithCount());
-
+            model.addAttribute("edit", true).addAttribute("user", doctorService.getDoctorById(Long.parseLong(user_id)));
         } catch (ServiceExeption e) {
             log.error(e.getMessage());
             model.addAttribute("errorMessage", e.getMessage());
         }
-        return "admin/doctors-edit";
+        return "admin/doctor-edit";
     }
 
     @PostMapping("/doctors/edit")
     public String editDoctor(@ModelAttribute("user") @NonNull UserDTO userDTO, Model model) {
-        log.debug("Start editDoctor, {}", userDTO);
-        model.addAttribute("user", userDTO);
-        model.addAttribute("edit", true);
+        log.debug("Start editDoctor, id = {}", userDTO.getId());
+        model.addAttribute("user", userDTO).
+                addAttribute("edit", true);
         try {
             userService.save(userDTO);
             return "redirect:/admin/doctors";
@@ -115,17 +97,6 @@ public class AdminDoctorsController {
             log.error(e.getMessage());
             model.addAttribute("errorMessage", e.getMessage());
         }
-        List<Doctor> doctor = null;
-        // unsucces ->
-        try {
-            doctor = doctorService.getAll();
-        } catch (ServiceExeption e) {
-            log.error(e.getMessage());
-            model.addAttribute("errorMessage", e.getMessage());
-        }
-        model.addAttribute("doctors", doctorService.convertToDto(doctor));
-        return "admin/doctors-edit";
+        return "admin/doctor-edit";
     }
-
-
 }

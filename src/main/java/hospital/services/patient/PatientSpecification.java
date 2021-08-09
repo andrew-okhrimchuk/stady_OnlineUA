@@ -1,4 +1,4 @@
-package hospital.services;
+package hospital.services.patient;
 
 import hospital.domain.Patient;
 import java.util.ArrayList;
@@ -19,6 +19,7 @@ public class PatientSpecification {
 
         return (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
+            // Where
             if (request.getHideArchive() != null && request.getHideCurrent() != null) {
                 predicates.add(criteriaBuilder.equal(root.get("username"), ""));
             }
@@ -28,6 +29,10 @@ public class PatientSpecification {
             if (request.getHideArchive() == null && request.getHideCurrent() != null) {
                 predicates.add(criteriaBuilder.equal(root.get("isCurrentPatient"), false));
             }
+            if (request.getUserNameDoctor() != null && !request.getUserNameDoctor().isEmpty()) {
+              //  predicates.add(criteriaBuilder.equal(root.get("userName"), request.getUserNameDoctor()));
+            }
+            // Order By
             if (request.getSortByDateOfBirth() != null) {
                 query.orderBy(criteriaBuilder.asc(root.get("birthDate")));
             } else {
@@ -37,3 +42,4 @@ public class PatientSpecification {
         };
     }
 }
+

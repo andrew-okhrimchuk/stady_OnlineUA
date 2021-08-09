@@ -1,4 +1,4 @@
-package hospital.services;
+package hospital.services.doctor;
 
 import hospital.dto.DoctorDTO;
 import lombok.Data;
@@ -14,7 +14,6 @@ public class DoctorDTOConverter implements Converter<String, DoctorDTO> {
     public DoctorDTO convert(String id) {
         log.debug("Trying to convert id =" + id + " into a DoctorDTO");
         DoctorDTO doctorDTO = new DoctorDTO();
-     //   doctorDTO.setId(id);
         return doctorDTO;
     }
 }

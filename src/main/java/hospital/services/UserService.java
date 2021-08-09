@@ -3,7 +3,7 @@ package hospital.services;
 import hospital.domain.enums.Role;
 import hospital.domain.User;
 import hospital.persistence.UserJPARepository;
-import hospital.services.intrface.IUserService;
+import hospital.services.interfaces.IUserService;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +24,14 @@ public class UserService implements UserDetailsService, IUserService {
     @Autowired
     public PasswordEncoder bcryptPasswordEncoder;
 
+    /**
+     *
+     * method added admin user to DB when app start
+     *
+     * @param not param
+     * @return not return
+     * @throws not throws
+     */
 
     @PostConstruct
     public void init() {

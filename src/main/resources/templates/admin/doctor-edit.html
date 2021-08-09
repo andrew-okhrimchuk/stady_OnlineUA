@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title th:text="${add} ? 'Create a Patient' : 'Edit a Patient'"></title>
+    <title th:text="${add} ? 'Create a Doctor' : 'Edit a Doctor'"></title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style type="text/css">
         th {
@@ -29,8 +29,8 @@
 <body>
 
 <div class="container">
-    <h1 th:text="${add} ? 'Create a Patient:' : 'Edit a Patient:'"></h1>
-    <form th:action="@{/admin/patients/add}" th:object="${user}" method="POST">
+    <h1 th:text="${add} ? 'Create a Doctor:' : 'Edit a Doctor:'"></h1>
+    <form th:action="@{/admin/doctors/add}" th:object="${user}" method="POST">
 
         <table border="0">
             <tr>
@@ -42,24 +42,19 @@
                 <td><input type="text" th:field="*{username}"/></td>
             </tr>
             <tr>
-                <td>You birth date</td>
-                <td>:</td>
-                <td><input type="date" th:field="*{birthDate}"/></td>
-            </tr>
-            <tr>
                 <td>password</td>
                 <td>:</td>
                 <td><input th:type="${add} ? 'text' : 'hidden'" th:field="*{password}"/></td>
             </tr>
             <tr>
-                <td>Select a doctor</td>
+                <td>Select a speciality</td>
                 <td>:</td>
                 <td>
-                    <select th:field="*{doctorDTO}"/>
-                    <option th:each="doctor : ${doctors}"
-                            th:selected="(${doctor} == *{doctorDTO})"
-                            th:value="${doctor.id}"
-                            th:text="${doctor.username + ', Count Of Patients - ' + doctor.countOfPatients }">
+                    <select th:field="*{speciality}"/>
+                    <option th:each="special : ${T(hospital.domain.enums.Speciality).values()}"
+                            th:selected="(${special} == *{speciality})"
+                            th:value="${special.name()}"
+                            th:text="${special.name()}">
                     </option>
                     </select>
                 </td>
@@ -68,7 +63,7 @@
         </table>
         <input type="submit" th:value="${add} ? #{create} : #{update}"/>
     </form>
-        <button><a th:text="#{cancel}" th:href="@{/admin/patients}" }></a></button>
+        <button><a th:text="#{cancel}" th:href="@{/admin/doctors}" }></a></button>
 
     <br/>
     <div th:if="${errorMessage}" th:utext="${errorMessage}" class="error"/>
@@ -78,7 +73,7 @@
 <script th:inline="javascript">
     let form = document.forms[0];
     if (![[${add}]]) {
-        var url = '/admin/patients/edit'
+        var url = '/admin/doctors/edit'
         form.setAttribute('action', url);
     }
     console.log(form.getAttribute('action'));

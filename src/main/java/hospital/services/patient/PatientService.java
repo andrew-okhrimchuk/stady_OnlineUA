@@ -1,4 +1,4 @@
-package hospital.services;
+package hospital.services.patient;
 
 import hospital.domain.Patient;
 import hospital.domain.enums.Role;
@@ -8,39 +8,47 @@ import hospital.exeption.DaoExeption;
 import hospital.exeption.NotValidExeption;
 import hospital.exeption.ServiceExeption;
 import hospital.persistence.PatientJPARepository;
-import hospital.services.intrface.IPatientService;
+import hospital.services.interfaces.IPatientService;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Slf4j
 @Service
 public class PatientService implements IPatientService {
-    @Autowired
-    private PatientJPARepository jpaRepository;
-    @Autowired
-    private PatientSpecification patientSpecification;
-    @Autowired
-    private Environment env;
-    @Autowired
-    private ModelMapper modelMapper;
-    @Autowired
-    public PasswordEncoder bcryptPasswordEncoder;
+    private final PatientJPARepository jpaRepository;
+    private final PatientSpecification patientSpecification;
+    private final Environment env;
+    private final ModelMapper modelMapper;
+    public final PasswordEncoder bcryptPasswordEncoder;
+
+    public PatientService(PatientJPARepository jpaRepository, PatientSpecification patientSpecification, Environment env, ModelMapper modelMapper, PasswordEncoder bcryptPasswordEncoder) {
+        this.jpaRepository = jpaRepository;
+        this.patientSpecification = patientSpecification;
+        this.env = env;
+        this.modelMapper = modelMapper;
+        this.bcryptPasswordEncoder = bcryptPasswordEncoder;
+    }
 
 
     @Override
-    public List<Patient> getAll(SelectDTO selectDTO) throws ServiceExeption {
+    public Page<Patient> getAll(SelectDTO selectDTO, Pageable pageable) throws ServiceExeption {
         log.debug("Start getListPatients of SelectDTO");
         selectDTO.getAuthorities().add(Role.PATIENT);
         try {
-            return jpaRepository.findAll(patientSpecification.getUsers(selectDTO));
+            return jpaRepository.findAll(patientSpecification.getUsers(selectDTO), pageable);
         } catch (DaoExeption | DataIntegrityViolationException e) {
             log.error("getListPatients {}, {}", env.getProperty("GET_ALL_ERROR_MESSAGE_PATIENT"), e.getMessage());
             throw new ServiceExeption(e.getMessage(), e);
@@ -48,12 +56,11 @@ public class PatientService implements IPatientService {
     }
 
     @Override
-    public List<Patient> getAll() throws ServiceExeption {
+    public Page<Patient> getAll(Pageable pageable) throws ServiceExeption {
         log.debug("Start getListPatients");
-        SelectDTO selectDTO = new SelectDTO();
-        selectDTO.getAuthorities().add(Role.DOCTOR);
+        SelectDTO selectDTO =  SelectDTO.builder().authorities(new ArrayList<>(Collections.singletonList(Role.PATIENT))).build();
         try {
-            return jpaRepository.findAll(patientSpecification.getUsers(selectDTO));
+            return jpaRepository.findAll(patientSpecification.getUsers(selectDTO), pageable);
         } catch (DaoExeption | DataIntegrityViolationException e) {
             log.error("getListPatients {}, {}", env.getProperty("GET_ALL_ERROR_MESSAGE_PATIENT"), e.getMessage());
             throw new ServiceExeption(e.getMessage(), e);

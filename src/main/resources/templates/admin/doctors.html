@@ -19,9 +19,13 @@
 
 </head>
 <body>
-<a th:text="#{onMain}" th:href="@{/}" }></a>
+
+<div>
+    <a th:text="#{onMain}" th:href="@{/}" }></a>
+    <a th:text="#{listPatients}" th:href="@{/admin/patients}"}></a>
+</div>
 <h2 th:text="#{listDoctors}" ></h2>
-<button ><a th:text="#{listPatients}" th:href="@{/admin/patients}"}></a></button>
+<button><a th:text="#{addPatient}" th:href="@{/admin/doctors/add}" }></a></button>
 
 <div class="xx0">
 
@@ -39,7 +43,7 @@
             </thead>
 
             <tbody>
-            <tr th:each="user, iter : ${SelectDTO.getUsers()}"
+            <tr th:each="user, iter : ${SelectDTO.page.content}"
                 th:onclick="'javascript:rowClicked(\'' + ${user.id} + '\');'">
             <td th:text="${iter.count}"></td>
                 <td th:text="${user.username}"></td>
@@ -47,15 +51,14 @@
             </tr>
             </tbody>
         </table>
+        <div th:if="${SelectDTO.page.totalPages > 0}" class="pagination"
+             th:each="pageNumber : ${pageNumbers}">
+            <a th:href="@{/admin/patients(size=${SelectDTO.page.size}, page1=${pageNumber})}"
+               th:text=${pageNumber}
+               th:class="${pageNumber==SelectDTO.page.number + 1} ? active"></a>
+        </div>
   </form>
 </div>
-
-<script>
-    function rowClicked(value) {
-        location.href = "/admin/doctors/edit/" + value;
-    }
-</script>
-
 
 <script type="text/javascript">
     function chekValues() {

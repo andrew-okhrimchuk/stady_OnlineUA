@@ -19,7 +19,7 @@ import java.util.List;
 @RequestScope
 @ToString
 public class UserDTO {
-    static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    public static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     private String id;
     private String username;

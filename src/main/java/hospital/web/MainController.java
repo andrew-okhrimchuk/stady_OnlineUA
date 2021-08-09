@@ -1,6 +1,9 @@
 package hospital.web;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -13,6 +16,11 @@ import java.util.Set;
 @Slf4j
 @Controller
 public class MainController {
+    @Autowired
+    private Environment env;
+
+    public static int countItemOnPage = 15;
+
     @RequestMapping("/")
     public String getMainPage(Model model) {
         log.debug("Start getMainPage");

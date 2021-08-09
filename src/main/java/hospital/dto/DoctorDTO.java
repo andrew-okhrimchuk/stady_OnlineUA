@@ -16,10 +16,11 @@ import java.util.List;
 public class DoctorDTO {
     private Long id;
     private String username;
+    private String password;
     private String countOfPatients;
     private List<String> speciality;
 
     public boolean isValid () {
-        return this.countOfPatients !=null && !this.countOfPatients.isEmpty() ;
+        return this.username !=null && !this.username.isEmpty() && this.password !=null && !this.password.isEmpty() ;
     }
 }

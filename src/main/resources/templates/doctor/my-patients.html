@@ -16,12 +16,12 @@
     </style>
 </head>
 <body>
-<div>
-    <a th:text="#{onMain}" th:href="@{/}" }></a>
-    <a th:text="#{listDoctors}" th:href="@{/admin/doctors}" }></a>
-</div>
+<a th:text="#{onMain}" th:href="@{/}" }></a>
 <h2 th:text="#{listPatients}"></h2>
-<button><a th:text="#{addPatient}" th:href="@{/admin/patients/add}" }></a></button>
+<div>
+    <button><a th:text="#{listDoctors}" th:href="@{/admin/doctors}" }></a></button>
+    <button><a th:text="#{addPatient}" th:href="@{/admin/patients/add}" }></a></button>
+</div>
 
 
 <div class="xx0">
@@ -60,20 +60,14 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="user, iter : ${SelectDTO.getPage().getContent()}"
+            <tr th:each="user, iter : ${SelectDTO.getPage()}"
                 th:onclick="'javascript:rowClicked(\'' + ${user.id} + '\');'">
                 <td th:text="${iter.count}"></td>
-                <td th:text="${user.getUsername()}"></td>
+                <td th:text="${user.username}"></td>
                 <td th:text="${#temporals.format(user.birthDate, 'dd-MM-yyyy')}"></td>
             </tr>
             </tbody>
         </table>
-        <div th:if="${SelectDTO.getPage().totalPages > 0}" class="pagination"
-             th:each="pageNumber : ${pageNumbers}">
-            <a th:href="@{/admin/patients(size=${SelectDTO.getPage().size}, page1=${pageNumber})}"
-               th:text=${pageNumber}
-               th:class="${pageNumber==SelectDTO.getPage().number + 1} ? active"></a>
-        </div>
     </form>
 </div>
 

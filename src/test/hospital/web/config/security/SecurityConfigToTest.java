@@ -11,14 +11,15 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import java.util.Set;
 
-@Profile("dev")
+@Profile("qa")
 @Configuration
 @EnableWebSecurity
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
+public class SecurityConfigToTest extends WebSecurityConfigurerAdapter {
     public static final String ADMIN = "ADMIN";
     public static final String DOCTOR = "DOCTOR";
     public static final String NURSE = "NURSE";
@@ -28,38 +29,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private UserService userService;
 
     @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http
-                .csrf().disable()
-                .authorizeRequests()
-                .antMatchers( "/", "/login", "/css/*").permitAll()
-                .antMatchers("/admin/**").hasAnyAuthority(ADMIN)
-                .antMatchers("/doctor/**").hasAnyAuthority(DOCTOR)
-                .antMatchers("/nurse/**").hasAnyAuthority(NURSE)
-                .antMatchers("/patient/**").hasAnyAuthority(PATIENT)
-                .anyRequest().authenticated()
-                .and()
-                .formLogin().loginPage("/login").permitAll()
-                .successHandler((request, response, authentication) -> {
-                    Set<String> roles = AuthorityUtils.authorityListToSet(authentication.getAuthorities());
-                    if (roles.contains(ADMIN)) {
-                        response.sendRedirect("/admin/patients");
-                    }
-                    if (roles.contains(DOCTOR)) {
-                        response.sendRedirect("/doctor/my-patients");
-                    }
-                    if (roles.contains(NURSE)) {
-                        response.sendRedirect("/nurse" );
-                    }
-                    if (roles.contains(PATIENT)) {
-                        response.sendRedirect("/patient");
-                    }
-                })
-                .and()
-                .logout()
-                .logoutSuccessUrl("/login")
-                .logoutRequestMatcher(new AntPathRequestMatcher("/logout")).permitAll();
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
+        auth.inMemoryAuthentication()
+                .passwordEncoder(encoder)
+                .withUser("spring")
+                .password(encoder.encode("secret"))
+                .roles(ADMIN);
     }
+
     @Bean
     public PasswordEncoder bcryptPasswordEncoder() {
         return new BCryptPasswordEncoder();

@@ -11,12 +11,10 @@ import hospital.persistence.DoctorJPARepository;
 import hospital.services.interfaces.IDoctorService;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -26,7 +24,6 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Query;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -34,16 +31,16 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 public class DoctorService implements IDoctorService {
-    private final DoctorJPARepository jpaRepository;
-    private final DoctorSpecification specification;
+    private final DoctorJPARepository doctorJPARepository;
+    private final DoctorSpecification doctorSpecification;
     private final Environment env;
     private final ModelMapper modelMapper;
     public final PasswordEncoder bcryptPasswordEncoder;
     private final EntityManagerFactory emf;
 
-    public DoctorService(DoctorJPARepository jpaRepository, DoctorSpecification specification, Environment env, ModelMapper modelMapper, PasswordEncoder bcryptPasswordEncoder, EntityManagerFactory emf) {
-        this.jpaRepository = jpaRepository;
-        this.specification = specification;
+    public DoctorService(DoctorJPARepository doctorJPARepository, DoctorSpecification doctorSpecification, Environment env, ModelMapper modelMapper, PasswordEncoder bcryptPasswordEncoder, EntityManagerFactory emf) {
+        this.doctorJPARepository = doctorJPARepository;
+        this.doctorSpecification = doctorSpecification;
         this.env = env;
         this.modelMapper = modelMapper;
         this.bcryptPasswordEncoder = bcryptPasswordEncoder;
@@ -56,7 +53,7 @@ public class DoctorService implements IDoctorService {
         log.debug("Start getListPatients of SelectDTO");
         selectDTO.getAuthorities().add(Role.DOCTOR);
         try {
-            return convertToDto(jpaRepository.findAll(specification.getUsers(selectDTO), pageable));
+            return convertToDto(doctorJPARepository.findAll(doctorSpecification.getUsers(selectDTO), pageable));
         } catch (DaoExeption | DataIntegrityViolationException e) {
             log.error("getListPatients {}, {}", env.getProperty("GET_ALL_ERROR_MESSAGE_DOCTORS"), e.getMessage());
             throw new ServiceExeption(e.getMessage(), e);
@@ -68,7 +65,7 @@ public class DoctorService implements IDoctorService {
         log.debug("Start getListDoctors of SelectDTO");
         SelectDTO selectDTO = SelectDTO.builder().authorities(new ArrayList<>(Collections.singletonList(Role.DOCTOR))).build();
         try {
-            return convertToDto(jpaRepository.findAll(specification.getUsers(selectDTO), pageable));
+            return convertToDto(doctorJPARepository.findAll(doctorSpecification.getUsers(selectDTO), pageable));
         } catch (DaoExeption | DataIntegrityViolationException e) {
             log.error("getListDoctors {}, {}", env.getProperty("GET_ALL_ERROR_MESSAGE_DOCTOR"), e.getMessage());
             throw new ServiceExeption(e.getMessage(), e);
@@ -81,8 +78,8 @@ public class DoctorService implements IDoctorService {
         Doctor user = null;
         try {
             user = convertToEntity(doctorDTO);
-            user.getAuthorities().add(Role.PATIENT);
-            return jpaRepository.save(user);
+            user.getAuthorities().add(Role.DOCTOR);
+            return doctorJPARepository.save(user);
 
         } catch (DaoExeption | DateTimeParseException | NotValidExeption e) {
             log.error("savePatient {}, {}", env.getProperty("SAVE_NEW_PATIENT"), e.getMessage());
@@ -95,8 +92,9 @@ public class DoctorService implements IDoctorService {
 
     @Override
     public Doctor getDoctorById(long id) throws ServiceExeption {
+        log.debug("Start getDoctorById id = {}", id);
         try {
-        return jpaRepository.getDoctorById(id);
+        return doctorJPARepository.getDoctorById(id);
         } catch (DaoExeption | DataIntegrityViolationException e) {
             log.error("getListDoctors {}, {}", env.getProperty("GET_ERROR_MESSAGE_DOCTOR"), e.getMessage());
             throw new ServiceExeption(e.getMessage(), e);
@@ -109,17 +107,14 @@ public class DoctorService implements IDoctorService {
         }
         Doctor doctor = modelMapper.map(doctorDTO, Doctor.class);
         doctor.setPassword(bcryptPasswordEncoder.encode(doctor.getPassword()));
-      //  doctor.setSpeciality(new ArrayList<>(Arrays.asList(doctorDTO.getSpeciality())));
         return doctor;
     }
 
+    @Override
     public List<DoctorDTO> findAllWithCount() throws ServiceExeption {
-        EntityManager entityManager = emf.createEntityManager();
-        Query query = entityManager.createQuery("select u.username, u.id, count(u.id) from User u join Doctor d on u.id = d.id left join Patient p on d.id = p.doctor.id group by u.id");
-        List<Object[]> resultList;
+        log.debug("Start findAllWithCount ");
         try {
-            resultList = query.getResultList();
-            return resultList
+            return doctorJPARepository.findAllWithCount()
                     .stream()
                     .map(item -> {
                         Doctor doctor = new Doctor();
@@ -129,6 +124,7 @@ public class DoctorService implements IDoctorService {
                         return doctor;
                     })
                     .map(this::convertToDto)
+                    .peek(x ->log.debug("Start findAllWithCount item = {}" , x))
                     .collect(Collectors.toList());
 
         } catch (DaoExeption | DataIntegrityViolationException e) {

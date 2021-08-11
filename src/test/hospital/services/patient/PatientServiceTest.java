@@ -43,11 +43,9 @@ class PatientServiceTest {
     void init () {
         patientList = new ArrayList<Patient>();
         Patient patient = new Patient();
-        patient.setCurrentPatient(true);
         patient.setId(1L);
         patientList.add(patient);
         Patient patient2 = new Patient();
-        patient2.setCurrentPatient(true);
         patient2.setId(2L);
         patientList.add(patient2);
     }

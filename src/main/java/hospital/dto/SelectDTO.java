@@ -21,8 +21,6 @@ import java.util.List;
 @AllArgsConstructor
 public class SelectDTO {
     private Page page;
-    private String hideArchive;
-    private String hideCurrent;
     private String sortByDateOfBirth;
     private String userNameDoctor;
     private List<Role> authorities = new ArrayList<>();

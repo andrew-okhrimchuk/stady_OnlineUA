@@ -29,18 +29,7 @@
 
     <!--   /*@thymesVar id="SelectDTO" type="hospital.dto.SelectDTO"*/-->
     <form action="/admin/patients" method="get" th:object="${SelectDTO}" id="form">
-        <div class="xx2">
-            <label for="isHideArchive" class="control-label col-sm-3" th:field="*{{hideArchive}}"
-                   th:text="#{hideArchive}"></label>
-            <input type="checkbox" th:checked="*{hideArchive} ? 'checked'" class="form-control" id="isHideArchive"
-                   th:field="*{hideArchive}" th:value="${{SelectDTO.hideArchive}}"><br/>
-        </div>
-        <div class="xx2">
-            <label for="isHideCurrent" class="control-label col-sm-3" th:field="*{{hideCurrent}}"
-                   th:text="#{hideCurrent}"></label>
-            <input type="checkbox" th:checked="*{{hideCurrent}} ? 'checked'" class="form-control" id="isHideCurrent"
-                   th:field="*{hideCurrent}" th:value="${{SelectDTO.hideCurrent}}"><br/>
-        </div>
+
         <div class="xx2">
             <label for="sortByDateOfBirth" class="control-label col-sm-3" th:field="*{{sortByDateOfBirth}}"
                    th:text="#{sortByDateOfBirth}"></label>

@@ -16,30 +16,18 @@
     </style>
 </head>
 <body>
-<a th:text="#{onMain}" th:href="@{/}" }></a>
-<h2 th:text="#{listPatients}"></h2>
 <div>
-    <button><a th:text="#{listDoctors}" th:href="@{/admin/doctors}" }></a></button>
-    <button><a th:text="#{addPatient}" th:href="@{/admin/patients/add}" }></a></button>
+<a th:text="#{onMain}" th:href="@{/}" }></a>
+<a href="/logout" th:text="#{logout}"></a>
 </div>
+
+<h2 th:text="#{listPatients}"></h2>
 
 
 <div class="xx0">
 
     <!--   /*@thymesVar id="SelectDTO" type="hospital.dto.SelectDTO"*/-->
-    <form action="/admin/patients" method="get" th:object="${SelectDTO}" id="form">
-        <div class="xx2">
-            <label for="isHideArchive" class="control-label col-sm-3" th:field="*{{hideArchive}}"
-                   th:text="#{hideArchive}"></label>
-            <input type="checkbox" th:checked="*{hideArchive} ? 'checked'" class="form-control" id="isHideArchive"
-                   th:field="*{hideArchive}" th:value="${{SelectDTO.hideArchive}}"><br/>
-        </div>
-        <div class="xx2">
-            <label for="isHideCurrent" class="control-label col-sm-3" th:field="*{{hideCurrent}}"
-                   th:text="#{hideCurrent}"></label>
-            <input type="checkbox" th:checked="*{{hideCurrent}} ? 'checked'" class="form-control" id="isHideCurrent"
-                   th:field="*{hideCurrent}" th:value="${{SelectDTO.hideCurrent}}"><br/>
-        </div>
+    <form action="/doctor/patients" method="get" th:object="${SelectDTO}" id="form">
         <div class="xx2">
             <label for="sortByDateOfBirth" class="control-label col-sm-3" th:field="*{{sortByDateOfBirth}}"
                    th:text="#{sortByDateOfBirth}"></label>
@@ -60,7 +48,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="user, iter : ${SelectDTO.getPage()}"
+            <tr th:each="user, iter : ${SelectDTO.getPage().getContent()}"
                 th:onclick="'javascript:rowClicked(\'' + ${user.id} + '\');'">
                 <td th:text="${iter.count}"></td>
                 <td th:text="${user.username}"></td>
@@ -68,12 +56,18 @@
             </tr>
             </tbody>
         </table>
+        <div th:if="${SelectDTO.getPage().totalPages > 0}" class="pagination"
+             th:each="pageNumber : ${pageNumbers}">
+            <a th:href="@{/doctor/patients(size=${SelectDTO.getPage().size}, page1=${pageNumber})}"
+               th:text=${pageNumber}
+               th:class="${pageNumber==SelectDTO.getPage().number + 1} ? active"></a>
+        </div>
     </form>
 </div>
 
 <script>
     function rowClicked(value) {
-        location.href = "/admin/patients/edit/" + value;
+        location.href = "/doctor/patients/edit/" + value;
     }
 </script>
 

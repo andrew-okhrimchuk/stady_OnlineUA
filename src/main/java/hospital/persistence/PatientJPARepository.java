@@ -6,7 +6,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
@@ -16,4 +18,6 @@ public interface PatientJPARepository extends CrudRepository<Patient, Long> , Jp
      Page<Patient> findAll(Specification<Patient> spec, Pageable pageable);
      Patient getPatientById(long id);
 
+     @Query("select p from User u join Patient p on u.id = p.id where p.doctor.id =(select d.id from Doctor d join User u on u.id = d.id where u.username  = :username)")
+     Page<Patient> findAllPatientsByNameDoctor(@Param("username") String username, Pageable pageable);
 }

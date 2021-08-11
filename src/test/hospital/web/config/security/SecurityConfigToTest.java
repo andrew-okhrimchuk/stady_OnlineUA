@@ -1,4 +1,4 @@
-package hospital.config.security;
+package hospital.web.config.security;
 
 import hospital.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,9 +33,9 @@ public class SecurityConfigToTest extends WebSecurityConfigurerAdapter {
         PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
         auth.inMemoryAuthentication()
                 .passwordEncoder(encoder)
-                .withUser("spring")
+                .withUser("doc")
                 .password(encoder.encode("secret"))
-                .roles(ADMIN);
+                .roles(DOCTOR);
     }
 
     @Bean
@@ -43,7 +43,7 @@ public class SecurityConfigToTest extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
 
-    @Autowired
+   @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         auth
                 .userDetailsService(userService)

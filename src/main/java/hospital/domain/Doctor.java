@@ -20,12 +20,14 @@ import java.util.Set;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @Entity
-@SuppressWarnings("PMD")
+//@SuppressWarnings("PMD")
+@PrimaryKeyJoinColumn(name = "user_id", referencedColumnName ="id")
 public class Doctor extends User {
 
     @LazyCollection(LazyCollectionOption.FALSE)
     @ElementCollection(targetClass = Speciality.class)
-    @CollectionTable(name = "speciality", joinColumns = @JoinColumn(name = "user_id"))
+    @CollectionTable(name = "speciality", joinColumns = @JoinColumn(name = "user_id"),
+            foreignKey = @ForeignKey(name = "speciality_fk", foreignKeyDefinition = "FOREIGN KEY (user_id) REFERENCES users(id) ON UPDATE CASCADE ON DELETE CASCADE"))
     @Enumerated(EnumType.STRING)
     private List<Speciality> speciality = new ArrayList<>();
 

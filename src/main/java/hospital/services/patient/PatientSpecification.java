@@ -20,17 +20,9 @@ public class PatientSpecification {
         return (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
             // Where
-            if (request.getHideArchive() != null && request.getHideCurrent() != null) {
-                predicates.add(criteriaBuilder.equal(root.get("username"), ""));
-            }
-            if (request.getHideArchive() != null && request.getHideCurrent() == null) {
-                predicates.add(criteriaBuilder.equal(root.get("isCurrentPatient"), true));
-            }
-            if (request.getHideArchive() == null && request.getHideCurrent() != null) {
-                predicates.add(criteriaBuilder.equal(root.get("isCurrentPatient"), false));
-            }
             if (request.getUserNameDoctor() != null && !request.getUserNameDoctor().isEmpty()) {
-              //  predicates.add(criteriaBuilder.equal(root.get("userName"), request.getUserNameDoctor()));
+                root.join("doctor");
+                predicates.add(criteriaBuilder.equal(root.get("userName"), request.getUserNameDoctor()));
             }
             // Order By
             if (request.getSortByDateOfBirth() != null) {

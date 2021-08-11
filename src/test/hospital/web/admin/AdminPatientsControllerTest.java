@@ -1,12 +1,12 @@
 package hospital.web.admin;
 
-import hospital.config.security.SecurityConfigToTest;
 import hospital.dto.SelectDTO;
 import hospital.dto.UserDTO;
 import hospital.exeption.ServiceExeption;
 import hospital.services.UserService;
 import hospital.services.doctor.DoctorService;
 import hospital.services.patient.PatientService;
+import hospital.web.config.security.SecurityConfigToTest;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

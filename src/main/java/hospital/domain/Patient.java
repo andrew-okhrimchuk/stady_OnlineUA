@@ -14,11 +14,10 @@ import java.util.List;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @Entity
-@SuppressWarnings("PMD")
+//@SuppressWarnings("PMD")
+@PrimaryKeyJoinColumn(name = "user_id", referencedColumnName ="id")
 public class Patient extends User {
     private LocalDate birthDate;
-    @Column ( name = "iscurrentpatient" )
-    private boolean isCurrentPatient;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @ToString.Exclude
@@ -26,9 +25,8 @@ public class Patient extends User {
     private Doctor doctor;
 
     @Builder(builderMethodName = "chilerBuilder")
-    public Patient(Long id, @NotNull @NotEmpty @NotBlank(message = "Name is mandatory") String username, List<Role> authorities, String password, boolean accountNonExpired, boolean accountNonLocked, boolean credentialsNonExpired, boolean enabled, LocalDate birthDate, boolean isCurrentPatient) {
+    public Patient(Long id, @NotNull @NotEmpty @NotBlank(message = "Name is mandatory") String username, List<Role> authorities, String password, boolean accountNonExpired, boolean accountNonLocked, boolean credentialsNonExpired, boolean enabled, LocalDate birthDate) {
         super(id, username, authorities, password, accountNonExpired, accountNonLocked, credentialsNonExpired, enabled);
         this.birthDate = birthDate;
-        this.isCurrentPatient = isCurrentPatient;
     }
 }

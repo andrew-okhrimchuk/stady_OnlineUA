@@ -39,6 +39,7 @@ public class UserService implements UserDetailsService, IUserService {
         if (!jpaRepository.findByUsername("admin").isPresent()) {
 
             jpaRepository.save(User.builder()
+                    .id(15L)
                     .username("admin")
                     .password(bcryptPasswordEncoder.encode("admin"))
                     .authorities(new ArrayList<>(Arrays.asList(Role.ADMIN)))

@@ -101,7 +101,7 @@ public class AdminPatientsController {
         return "admin/patient-edit";
     }
 
-    @GetMapping(value = {"/patients/edit/{user_id}"})
+    @GetMapping("/patients/edit/{user_id}")
     public String showEditPatient(Model model,
                                   @NotNull @PathVariable("user_id") String user_id) {
         log.debug("Start showEditPatient");

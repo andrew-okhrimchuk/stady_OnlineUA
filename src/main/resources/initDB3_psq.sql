@@ -1,60 +1,3 @@
-DROP TABLE IF EXISTS USERS CASCADE;
-DROP TABLE IF EXISTS PATIENT CASCADE;
-DROP TABLE IF EXISTS DOCTOR CASCADE;
-DROP TABLE IF EXISTS USER_ROLE CASCADE;
-DROP TABLE IF EXISTS Speciality CASCADE;
-DROP TABLE IF EXISTS Nurse CASCADE;
-
-
-CREATE TABLE IF NOT EXISTS USERS
-(
-    id                    SERIAL PRIMARY KEY,
-    username              VARCHAR(255) NOT NULL,
-    password              VARCHAR(255) NOT NULL,
-    accountNonExpired     boolean      NOT NULL default true,
-    accountNonLocked      boolean      NOT NULL default true,
-    credentialsNonExpired boolean      NOT NULL default true,
-    enabled               boolean      NOT NULL default true
-);
-CREATE UNIQUE INDEX USERS_UNIQUE_NAME ON USERS (username);
-
-
-
-CREATE TABLE IF NOT EXISTS DOCTOR
-(
-    id            SERIAL PRIMARY KEY references USERS ON UPDATE CASCADE ON DELETE CASCADE
-);
-
-CREATE TABLE IF NOT EXISTS Speciality
-(
-    user_id INTEGER UNIQUE ,
-    FOREIGN KEY (user_id) REFERENCES DOCTOR (id) ON UPDATE CASCADE ON DELETE CASCADE,
-    speciality              VARCHAR(255) NOT NULL
-);
-
-
-CREATE TABLE IF NOT EXISTS PATIENT
-(
-    id               SERIAL PRIMARY KEY references USERS ON UPDATE CASCADE ON DELETE CASCADE,
-    iscurrentpatient boolean default false,
-    birthDate        date not null,
-    doctor_id        integer,
-    FOREIGN KEY (doctor_id) REFERENCES DOCTOR (id)
-);
-CREATE INDEX birthDate_index ON PATIENT (birthDate);
-
-CREATE TABLE IF NOT EXISTS USER_ROLE
-(
-    user_id INTEGER,
-    FOREIGN KEY (user_id) REFERENCES USERS (id) ON UPDATE CASCADE ON DELETE CASCADE,
-    authorities VARCHAR(255) NOT NULL
-);
-
-CREATE TABLE IF NOT EXISTS Nurse
-(
-    id            SERIAL PRIMARY KEY references USERS ON UPDATE CASCADE ON DELETE CASCADE
-);
-
 
 INSERT INTO USERS (id, username, password, accountNonExpired, accountNonLocked, credentialsNonExpired, enabled)
 VALUES (1, 'Jon Dou', '$2a$10$iMPOwJjVRZR4IeWES4.vgO5eFA/7kTjrSFPhE701T9jlULoXq6EIC', true,true,true,true),
@@ -92,13 +35,8 @@ VALUES (7, 'LORE'),
 
 
 INSERT INTO USER_ROLE (user_id, authorities)
-VALUES (1, 'PATIENT'),
+VALUES (1, 'ADMIN'),
        (2, 'PATIENT'),
        (7, 'DOCTOR'),
        (8, 'DOCTOR');
 
-INSERT INTO Nurse (id)
-VALUES (11),
-       (12),
-       (13),
-       (14);

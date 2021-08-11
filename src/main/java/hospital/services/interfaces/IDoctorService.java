@@ -14,4 +14,5 @@ public interface IDoctorService extends GenericService <DoctorDTO, SelectDTO> {
     Page<DoctorDTO> getAll(Pageable pageable) throws ServiceExeption;
     Doctor save(DoctorDTO doctorDTO) throws ServiceExeption;
     Doctor getDoctorById(long id) throws ServiceExeption;
+    List<DoctorDTO> findAllWithCount() throws ServiceExeption;
 }

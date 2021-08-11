@@ -43,9 +43,3 @@ public class MainController {
         return "login";
     }
 }
-
-/*
-            User user = (User) authentication.getPrincipal();
-            model.addAttribute("username", user.getUsername());
-            model.addAttribute("roles", user.getAuthorities().stream().map(Role::getAuthority).collect(joining(",")));
-*/

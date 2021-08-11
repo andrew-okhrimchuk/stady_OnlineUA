@@ -81,7 +81,6 @@ public class JPAConfig {
 
     @Bean
     public EntityManagerFactory entityManagerFactory(DataSource dataSource) {
-
         HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
         vendorAdapter.setGenerateDdl(true);
 
@@ -90,14 +89,12 @@ public class JPAConfig {
         factory.setPackagesToScan("hospital");
         factory.setDataSource(dataSource);
         factory.afterPropertiesSet();
-
         return factory.getObject();
     }
     @Bean
     public PlatformTransactionManager transactionManager(EntityManagerFactory emf) {
         JpaTransactionManager transactionManager = new JpaTransactionManager();
         transactionManager.setEntityManagerFactory(emf);
-
         return transactionManager;
     }
 

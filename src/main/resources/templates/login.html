@@ -21,29 +21,29 @@
         <div class="col-md-6 col-md-offset-3">
             <div class="panel panel-default" style="margin-top:45px">
                 <div class="panel-heading">
-                    <h3 class="panel-title">Login with Username and Password</h3>
+                    <h3 class="panel-title" th:text="#{panel-title}"></h3>
                 </div>
                 <div class="panel-body">
                     <div th:if="${logout}">
-                        <div class="alert alert-info" role="alert">You've been logged out successfully.</div>
+                        <div class="alert alert-info" role="alert" th:text="#{successfully}"></div>
                     </div>
                     <div th:if="${error}">
-                        <div class="alert alert-danger" role="alert">Invalid Username or Password!</div>
+                        <div class="alert alert-danger" role="alert" th:text="#{Invalid}"></div>
                     </div>
 
 
                     <form method="post">
                         <div class="form-group">
-                            <label for="username">Username</label>
+                            <label for="username" th:text="#{Username}"></label>
                             <input type="text" class="form-control" id="username" placeholder="Username"
                                    name="username">
                         </div>
                         <div class="form-group">
-                            <label for="password">Password</label>
+                            <label for="password" th:text="#{Password}"></label>
                             <input type="password" class="form-control" id="password" placeholder="Password"
                                    name="password">
                         </div>
-                        <button type="submit" class="btn btn-default">Log in</button>
+                        <button  type="submit" class="btn btn-default" th:text="#{log}"></button>
                     </form>
                 </div>
             </div>

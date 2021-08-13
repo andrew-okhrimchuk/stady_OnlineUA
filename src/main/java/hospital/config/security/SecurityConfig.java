@@ -47,7 +47,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         response.sendRedirect("/admin/patients");
                     }
                     if (roles.contains(DOCTOR)) {
-                        response.sendRedirect("/doctor/my-patients");
+                        response.sendRedirect("/doctor/patients");
                     }
                     if (roles.contains(NURSE)) {
                         response.sendRedirect("/nurse" );

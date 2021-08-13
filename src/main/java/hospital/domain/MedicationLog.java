@@ -17,7 +17,13 @@ import java.util.List;
 public class MedicationLog {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long medicationlog_id;
+    private Long medicationlogId;
+    private Long hospitallistid;
     private String description;
     private LocalDateTime dateCreate = LocalDateTime.now();
+
+    public boolean isValid (){
+        return this.description !=null
+                && !this.description.isEmpty();
+    }
 }

@@ -28,7 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(SpringRunner.class)
 @ActiveProfiles(profiles = "qa")
-@WebMvcTest({ AdminDoctorsController.class, SecurityConfigToTest.class})
+@WebMvcTest({ DoctorsController.class, SecurityConfigToTest.class})
 class AdminDoctorsControllerTest {
     @MockBean
     private PatientService patientService;

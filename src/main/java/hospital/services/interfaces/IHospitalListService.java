@@ -8,5 +8,4 @@ import java.util.Optional;
 
 public interface IHospitalListService  {
     Optional<HospitalList> findByParientIdAndDoctorName(String parientId, String doctorName) throws ServiceExeption;
-
 }

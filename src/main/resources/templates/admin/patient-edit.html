@@ -1,78 +1,79 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
     <title th:text="${add} ? 'Create a Patient' : 'Edit a Patient'"></title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <style type="text/css">
-        th {
-            text-align: center;
-            font-weight: bold;
-            border-top: none !important;
-        }
+    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
+          integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
 
-        th, td {
-            white-space: nowrap;
-        }
-        body {background-color: rgba(133, 191, 211, 0.07)}
-        h2 {color: blue}
-        h5 {color: #9b16ff}
-        p {color: green}
-        b {display: inline-block;}
-        .xx0 {padding-top: 10px}
-        .xxx {padding-left: 20px}
-        .xx1 {padding-left: 50px}
-        .xx2 {display: inline-block;}
-
-    </style>
 </head>
 <body>
-<a href="/logout" th:text="#{logout}"></a>
+<div>
+    <button type="button" class="btn btn-light"><a th:text="#{onMain}" th:href="@{/}" }></a></button>
+    <button type="button" class="btn btn-light"> <a th:text="#{listDoctors}" th:href="@{/admin/doctors}" }></a></button>
+    <button type="button" class="btn btn-light"><a href="/logout" th:text="#{logout}"></a></button>
+</div>
 
 <div class="container">
-    <h1 th:text="${add} ? 'Create a Patient:' : 'Edit a Patient:'"></h1>
-    <form th:action="@{/admin/patients/add}" th:object="${user}" method="POST">
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+            <div class="panel panel-default" style="margin-top:45px">
+                <div class="panel-heading">
+                    <h3 class="panel-title" th:text="${add} ? 'Create a Patient:' : 'Edit a Patient:'"></h3>
+                </div>
+                <div class="panel-body">
+                    <form th:action="@{/admin/patients/add}" th:object="${user}" method="POST">
 
-        <table border="0">
-            <tr>
-                <td><input type="hidden" th:field="*{id}"/></td>
-            </tr>
-            <tr>
-                <td>Full name</td>
-                <td>:</td>
-                <td><input type="text" th:field="*{username}"/></td>
-            </tr>
-            <tr>
-                <td>You birth date</td>
-                <td>:</td>
-                <td><input type="date" th:field="*{birthDate}"/></td>
-            </tr>
-            <tr>
-                <td>password</td>
-                <td>:</td>
-                <td><input th:type="${add} ? 'text' : 'hidden'" th:field="*{password}"/></td>
-            </tr>
-            <tr>
-                <td>Select a doctor</td>
-                <td>:</td>
-                <td>
-                    <select th:field="*{doctorDTO}"/>
-                    <option th:each="doctor : ${doctors}"
-                            th:selected="(${doctor} == *{doctorDTO})"
-                            th:value="${doctor.id}"
-                            th:text="${doctor.username + ', Count Of Patients - ' + doctor.countOfPatients }">
-                    </option>
-                    </select>
-                </td>
-            </tr>
+                        <table class="table" border="0">
+                            <tr>
+                                <td><input type="hidden" th:field="*{id}"/></td>
+                            </tr>
+                            <tr>
+                                <td th:text="#{Username}" ></td>
+                                <td>:</td>
+                                <td><input type="text" th:field="*{username}"/></td>
+                            </tr>
+                            <tr>
+                                <td th:text="#{dateOfBirth}" ></td>
+                                <td>:</td>
+                                <td><input type="date" th:field="*{birthDate}"/></td>
+                            </tr>
+                            <tr>
+                                <td th:text="#{Password}" ></td>
+                                <td></td>
+                                <td><input th:type='text'/></td>
+                            </tr>
+                            <tr>
+                                <td>Select a doctor</td>
+                                <td>:</td>
+                                <td>
+                                    <select th:field="*{doctorDTO}"/>
+                                    <option th:each="doctor : ${doctors}"
+                                            th:selected="(${doctor} == *{doctorDTO})"
+                                            th:value="${doctor.id}"
+                                            th:text="${doctor.username + ', Count Of Patients - ' + doctor.countOfPatients }">
+                                    </option>
+                                    </select>
+                                </td>
+                            </tr>
 
-        </table>
-        <input type="submit" th:value="${add} ? #{create} : #{update}"/>
-    </form>
-        <button><a th:text="#{cancel}" th:href="@{/admin/patients}" }></a></button>
+                        </table>
+                        <input type="submit" class="btn btn-success" th:value="${add} ? #{create} : #{update}"/>
+                        <button type="button" class="btn btn-light"><a th:text="#{cancel}" th:href="@{/admin/patients}" }></a></button>
+                    </form>
 
-    <br/>
-    <div th:if="${errorMessage}" th:utext="${errorMessage}" class="error"/>
+                    <br/>
+                    <div th:if="${errorMessage}" th:utext="${errorMessage}" class="error"/>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 </body>
 

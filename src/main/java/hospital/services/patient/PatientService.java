@@ -3,7 +3,7 @@ package hospital.services.patient;
 import hospital.domain.Patient;
 import hospital.domain.enums.Role;
 import hospital.dto.SelectDTO;
-import hospital.dto.UserDTO;
+import hospital.dto.PatientDTO;
 import hospital.exeption.DaoExeption;
 import hospital.exeption.NotValidExeption;
 import hospital.exeption.ServiceExeption;
@@ -70,11 +70,11 @@ public class PatientService implements IPatientService {
     }
 
     @Override
-    public Patient save(UserDTO userDTO) throws ServiceExeption {
-        log.debug("Start savePatient of User. userDTO = {}", userDTO);
+    public Patient save(PatientDTO patientDTO) throws ServiceExeption {
+        log.debug("Start savePatient of User. userDTO = {}", patientDTO);
         Patient user = null;
         try {
-            user = convertToEntity(userDTO);
+            user = convertToEntity(patientDTO);
             user.getAuthorities().add(Role.PATIENT);
             return patientJPARepository.save(user);
 
@@ -88,7 +88,7 @@ public class PatientService implements IPatientService {
     }
 
     @Override
-    public UserDTO getPatientById(long id) throws ServiceExeption {
+    public PatientDTO getPatientById(long id) throws ServiceExeption {
         try {
         return convertToDto(patientJPARepository.getPatientById(id));
         } catch (DaoExeption | DataIntegrityViolationException e) {
@@ -107,29 +107,29 @@ public class PatientService implements IPatientService {
         }
     }
 
-    private Patient convertToEntity(UserDTO userDTO) throws DateTimeParseException, NotValidExeption {
-        if (!userDTO.isValid()) {
-            throw new NotValidExeption(env.getProperty("SAVE_NEW_NOT_VALOD"));
+    private Patient convertToEntity(PatientDTO patientDTO) throws DateTimeParseException, NotValidExeption {
+        if (!patientDTO.isValid()) {
+            throw new NotValidExeption(env.getProperty("SAVE_NEW_NOT_VALID"));
         }
-        Patient user = modelMapper.map(userDTO, Patient.class);
-        user.setBirthDate(userDTO.convertToEntityAttribute(userDTO.getBirthDate()));
+        Patient user = modelMapper.map(patientDTO, Patient.class);
+        user.setBirthDate(patientDTO.convertToEntityAttribute(patientDTO.getBirthDate()));
         user.setPassword(bcryptPasswordEncoder.encode(user.getPassword()));
         return user;
     }
 
-    public Page<UserDTO> convertToDto(Page<Patient> patients) {
-        List<UserDTO> doctorDTO = patients.getContent()
+    public Page<PatientDTO> convertToDto(Page<Patient> patients) {
+        List<PatientDTO> doctorDTO = patients.getContent()
                 .stream()
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
         return new PageImpl<>(doctorDTO);
     }
 
-    private UserDTO convertToDto(Patient patient) {
-        UserDTO userDTO = modelMapper.map(patient, UserDTO.class);
-        userDTO.setBirthDate(userDTO.convertToDatabaseColumn(patient.getBirthDate()));
-        userDTO.setId(String.valueOf(patient.getId()));
-        userDTO.setPassword(null);
-        return userDTO;
+    private PatientDTO convertToDto(Patient patient) {
+        PatientDTO patientDTO = modelMapper.map(patient, PatientDTO.class);
+        patientDTO.setBirthDate(patientDTO.convertToDatabaseColumn(patient.getBirthDate()));
+        patientDTO.setId(String.valueOf(patient.getId()));
+        patientDTO.setPassword(null);
+        return patientDTO;
     }
 }

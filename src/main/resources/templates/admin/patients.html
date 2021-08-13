@@ -1,79 +1,98 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
+          integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
     <title th:text="#{listPatients}"></title>
     <style>
-        body {background-color: rgba(133, 191, 211, 0.07)}
-        h2 {color: blue}
-        h5 {color: #9b16ff}
-        p {color: green}
-        b {display: inline-block;}
-        .xx0 {padding-top: 10px}
-        .xxx {padding-left: 20px}
-        .xx1 {padding-left: 50px}
-        .xx2 {display: inline-block;}
+
+        tbody tr:hover {
+            background: #c4c7bd; /* Цвет фона */
+        }
     </style>
+
 </head>
 <body>
+
 <div>
-    <a th:text="#{onMain}" th:href="@{/}" }></a>
-    <a th:text="#{listDoctors}" th:href="@{/admin/doctors}" }></a>
-    <a href="/logout" th:text="#{logout}"></a>
+    <button type="button" class="btn btn-light"><a th:text="#{onMain}" th:href="@{/}" }></a></button>
+    <button type="button" class="btn btn-light"> <a th:text="#{listDoctors}" th:href="@{/admin/doctors}" }></a></button>
+    <button type="button" class="btn btn-light"><a href="/logout" th:text="#{logout}"></a></button>
 </div>
-<h2 th:text="#{listPatients}"></h2>
-<button><a th:text="#{addPatient}" th:href="@{/admin/patients/add}" }></a></button>
+<div class="row">
+    <div class="col-md-6 col-md-offset-3">
+        <div class="panel panel-default" style="margin-top:45px">
+            <div class="panel-heading">
+                <h3 class="panel-title" th:text="#{listPatients}"></h3>
+            </div>
+            <div class="panel-body">
 
 
-<div class="xx0">
+                <!--   /*@thymesVar id="SelectDTO" type="hospital.dto.SelectDTO"*/-->
+                <form action="/admin/patients" method="get" th:object="${SelectDTO}" id="form">
 
-    <!--   /*@thymesVar id="SelectDTO" type="hospital.dto.SelectDTO"*/-->
-    <form action="/admin/patients" method="get" th:object="${SelectDTO}" id="form">
+                    <div class="custom-control custom-checkbox">
+                        <label for="sortByDateOfBirth" class="control-label col-sm-3"
+                               th:field="*{{sortByDateOfBirth}}"
+                               th:text="#{sortByDateOfBirth}"></label>
+                        <input type="checkbox" th:checked="*{{sortByDateOfBirth}} ? 'checked'"
+                               class="custom-control-input"
+                               id="sortByDateOfBirth"
+                               th:field="*{sortByDateOfBirth}" th:value="${{SelectDTO.sortByDateOfBirth}}"><br/>
+                    </div>
 
-        <div class="xx2">
-            <label for="sortByDateOfBirth" class="control-label col-sm-3" th:field="*{{sortByDateOfBirth}}"
-                   th:text="#{sortByDateOfBirth}"></label>
-            <input type="checkbox" th:checked="*{{sortByDateOfBirth}} ? 'checked'" class="form-control" id="sortByDateOfBirth"
-                   th:field="*{sortByDateOfBirth}" th:value="${{SelectDTO.sortByDateOfBirth}}"><br/>
+                    <div><b>
+                        <input type="submit" th:value="#{listRefresh}" name="submit" onclick="setDefoult()"
+                               style="float:right">
+
+                    </b></div>
+                    <table class="table" border="1">
+                        <thead>
+                        <tr>
+                            <th width="8%">#</th>
+                            <th width="8%" th:text="#{FIO}"></th>
+                            <th width="8%" th:text="#{dateOfBirth}"></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="user, iter : ${SelectDTO.getPage().getContent()}"
+                            th:onclick="'javascript:rowClicked(\'' + ${user.id} + '\');'">
+                            <td th:text="${iter.count}"></td>
+                            <td th:text="${user.getUsername()}"></td>
+                            <td th:text="${#temporals.format(user.birthDate, 'dd-MM-yyyy')}"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <div th:if="${SelectDTO.getPage().totalPages > 0}" class="pagination"
+                         th:each="pageNumber : ${pageNumbers}">
+                        <a th:href="@{/admin/patients(size=${SelectDTO.getPage().size}, page1=${pageNumber})}"
+                           th:text="${pageNumber}"
+                           th:class="${pageNumber==SelectDTO.getPage().number + 1} ? active"></a>
+                    </div>
+                </form>
+                <button type="button" class="btn btn-warning">
+                    <a th:text="#{addPatient}" th:href="@{/admin/patients/add}" }>
+                    </a></button>
+                <div>
+                </div>
+
+                <script>
+                    function rowClicked(value) {
+                        location.href = "/admin/patients/edit/" + value;
+                    }
+                </script>
+
+                <div th:if="${errorMessage}" th:utext="${errorMessage}" class="error"/>
+            </div>
         </div>
-
-        <div class="xx0"><b>
-            <input type="submit" th:value="#{listRefresh}" name="submit" onclick="setDefoult()">
-
-        </b></div>
-        <table border="1" class="xx0">
-            <thead>
-            <tr>
-                <th width="8%">#</th>
-                <th width="8%" th:text="#{FIO}"></th>
-                <th width="8%" th:text="#{dateOfBirth}"></th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="user, iter : ${SelectDTO.getPage().getContent()}"
-                th:onclick="'javascript:rowClicked(\'' + ${user.id} + '\');'">
-                <td th:text="${iter.count}"></td>
-                <td th:text="${user.getUsername()}"></td>
-                <td th:text="${#temporals.format(user.birthDate, 'dd-MM-yyyy')}"></td>
-            </tr>
-            </tbody>
-        </table>
-        <div th:if="${SelectDTO.getPage().totalPages > 0}" class="pagination"
-             th:each="pageNumber : ${pageNumbers}">
-            <a th:href="@{/admin/patients(size=${SelectDTO.getPage().size}, page1=${pageNumber})}"
-               th:text=${pageNumber}
-               th:class="${pageNumber==SelectDTO.getPage().number + 1} ? active"></a>
-        </div>
-    </form>
+    </div>
 </div>
-
-<script>
-    function rowClicked(value) {
-        location.href = "/admin/patients/edit/" + value;
-    }
-</script>
-
-<div th:if="${errorMessage}" th:utext="${errorMessage}" class="error"/>
 </body>
 </html>
 

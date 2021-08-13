@@ -1,13 +1,11 @@
 package hospital.web.admin;
 
-import hospital.domain.enums.Speciality;
 import hospital.dto.DoctorDTO;
 import hospital.dto.SelectDTO;
-import hospital.dto.UserDTO;
+import hospital.dto.PatientDTO;
 import hospital.exeption.ServiceExeption;
 import hospital.services.doctor.DoctorService;
 import hospital.services.patient.PatientService;
-import hospital.web.MainController;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +22,7 @@ import java.util.Optional;
 @Slf4j
 @Controller
 @RequestMapping("/admin")
-public class AdminDoctorsController {
+public class DoctorsController {
     @Autowired
     PatientService userService;
     @Autowired
@@ -86,12 +84,12 @@ public class AdminDoctorsController {
     }
 
     @PostMapping("/doctors/edit")
-    public String editDoctor(@ModelAttribute("user") @NonNull UserDTO userDTO, Model model) {
-        log.debug("Start editDoctor, id = {}", userDTO.getId());
-        model.addAttribute("user", userDTO).
+    public String editDoctor(@ModelAttribute("user") @NonNull PatientDTO patientDTO, Model model) {
+        log.debug("Start editDoctor, id = {}", patientDTO.getId());
+        model.addAttribute("user", patientDTO).
                 addAttribute("edit", true);
         try {
-            userService.save(userDTO);
+            userService.save(patientDTO);
             return "redirect:/admin/doctors";
         } catch (ServiceExeption e) {
             log.error(e.getMessage());

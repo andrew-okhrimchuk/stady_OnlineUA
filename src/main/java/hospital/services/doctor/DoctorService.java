@@ -19,9 +19,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import javax.persistence.Query;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -103,7 +101,7 @@ public class DoctorService implements IDoctorService {
 
     public Doctor convertToEntity(DoctorDTO doctorDTO) throws DateTimeParseException, NotValidExeption {
         if (!doctorDTO.isValid()) {
-            throw new NotValidExeption(env.getProperty("SAVE_NEW_NOT_VALOD"));
+            throw new NotValidExeption(env.getProperty("SAVE_NEW_NOT_VALID"));
         }
         Doctor doctor = modelMapper.map(doctorDTO, Doctor.class);
         doctor.setPassword(bcryptPasswordEncoder.encode(doctor.getPassword()));

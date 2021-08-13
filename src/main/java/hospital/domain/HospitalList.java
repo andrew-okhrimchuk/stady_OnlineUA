@@ -12,26 +12,30 @@ import java.util.List;
 @AllArgsConstructor
 @EqualsAndHashCode
 @Entity
+/*@Table(uniqueConstraints={
+        @UniqueConstraint(columnNames = {"patientId", "dateCreate"})
+})*/
 public class HospitalList {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long hospitalListIid;
+    private Long hospitalListId;
     private String primaryDiagnosis;
     private String finalDiagnosis;
     private String medicine;
+    private String operations;
     private String doctorName;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id", foreignKey = @ForeignKey(name = "patientId_fk", foreignKeyDefinition = "FOREIGN KEY (patientid) REFERENCES HospitalList(hospitalListIid)"))
+    @JoinColumn(name = "patientId"  )  //, foreignKey = @ForeignKey(name = "patientId_fk", foreignKeyDefinition = "FOREIGN KEY (patientid) REFERENCES HospitalList(hospitalListIid)"))
     private Patient patientId;
-    private LocalDateTime dateCreate = LocalDateTime.now();
+    private LocalDateTime dateCreate;
 
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "medicationlog_id")
+    @JoinColumn(name = "hospitallistid")
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
-    private List<MedicationLog> medicationLog;
+    private List<MedicationLog> hospitallistid;
 
     public boolean isValid (){
         return this.primaryDiagnosis !=null

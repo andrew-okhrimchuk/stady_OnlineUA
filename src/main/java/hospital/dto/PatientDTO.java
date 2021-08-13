@@ -18,7 +18,7 @@ import java.util.List;
 @Setter
 @RequestScope
 @ToString
-public class UserDTO {
+public class PatientDTO {
     public static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     private String id;

@@ -3,7 +3,7 @@ package hospital.web.admin;
 import hospital.domain.Patient;
 import hospital.dto.DoctorDTO;
 import hospital.dto.SelectDTO;
-import hospital.dto.UserDTO;
+import hospital.dto.PatientDTO;
 import hospital.exeption.ServiceExeption;
 import hospital.services.doctor.DoctorService;
 import hospital.services.patient.PatientService;
@@ -27,7 +27,7 @@ import java.util.stream.IntStream;
 
 @Controller
 @RequestMapping("/admin")
-public class AdminPatientsController {
+public class PatientsController {
     @Autowired
     PatientService userService;
     @Autowired
@@ -67,8 +67,8 @@ public class AdminPatientsController {
     @GetMapping(value = {"/patients/add"})
     public String showAddPatient(Model model) {
         log.debug("Start showAddPatient");
-        UserDTO userDTO = new UserDTO();
-        model.addAttribute("add", true).addAttribute("user", userDTO);
+        PatientDTO patientDTO = new PatientDTO();
+        model.addAttribute("add", true).addAttribute("user", patientDTO);
         try {
             model.addAttribute("doctors", doctorService.findAllWithCount());
         } catch (ServiceExeption e) {
@@ -79,11 +79,11 @@ public class AdminPatientsController {
     }
 
     @PostMapping("/patients/add")
-    public String addPatient(@ModelAttribute("user") @NonNull UserDTO userDTO, Model model) {
-        log.debug("Start addPatient, {}", userDTO);
-        model.addAttribute("user", userDTO).addAttribute("add", true);
+    public String addPatient(@ModelAttribute("user") @NonNull PatientDTO patientDTO, Model model) {
+        log.debug("Start addPatient, {}", patientDTO);
+        model.addAttribute("user", patientDTO).addAttribute("add", true);
         try {
-            userService.save(userDTO);
+            userService.save(patientDTO);
             return "redirect:/admin/patients";
         } catch (ServiceExeption e) {
             log.error(e.getMessage());
@@ -118,11 +118,11 @@ public class AdminPatientsController {
     }
 
     @PostMapping("/patients/edit")
-    public String editPatient(@ModelAttribute("user") @NonNull UserDTO userDTO, Model model) {
-        log.debug("Start editPatient, {}", userDTO);
-        model.addAttribute("user", userDTO).addAttribute("edit", true);
+    public String editPatient(@ModelAttribute("user") @NonNull PatientDTO patientDTO, Model model) {
+        log.debug("Start editPatient, {}", patientDTO);
+        model.addAttribute("user", patientDTO).addAttribute("edit", true);
         try {
-            userService.save(userDTO);
+            userService.save(patientDTO);
             return "redirect:/admin/patients";
         } catch (ServiceExeption e) {
             log.error(e.getMessage());

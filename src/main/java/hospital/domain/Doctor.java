@@ -21,7 +21,7 @@ import java.util.Set;
 @EqualsAndHashCode(callSuper = true)
 @Entity
 //@SuppressWarnings("PMD")
-@PrimaryKeyJoinColumn(name = "user_id", referencedColumnName ="id")
+@PrimaryKeyJoinColumn(referencedColumnName ="id")
 public class Doctor extends User {
 
     @LazyCollection(LazyCollectionOption.FALSE)

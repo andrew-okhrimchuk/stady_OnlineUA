@@ -1,7 +1,7 @@
 package hospital.web.admin;
 
 import hospital.dto.SelectDTO;
-import hospital.dto.UserDTO;
+import hospital.dto.PatientDTO;
 import hospital.exeption.ServiceExeption;
 import hospital.services.UserService;
 import hospital.services.doctor.DoctorService;
@@ -30,9 +30,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(SpringRunner.class)
 @ActiveProfiles(profiles = "qa")
-@WebMvcTest({ AdminPatientsController.class, SecurityConfigToTest.class})
+@WebMvcTest({ PatientsController.class, SecurityConfigToTest.class})
 
-class AdminPatientsControllerTest {
+class PatientsControllerTest {
     @MockBean
     private PatientService patientService;
     @MockBean
@@ -87,7 +87,7 @@ class AdminPatientsControllerTest {
     @Test
     @WithMockUser(value = "spring")
     void addPatientThrows() throws Exception{
-        when(patientService.save(any(UserDTO.class))).thenThrow(new ServiceExeption("", new Exception()));
+        when(patientService.save(any(PatientDTO.class))).thenThrow(new ServiceExeption("", new Exception()));
         when(doctorService.getAll(any(PageRequest.class))).thenReturn(new PageImpl<>(new ArrayList<>()));
         mvc.perform(post("/admin/patients/add")
                 .with(csrf())
@@ -104,7 +104,7 @@ class AdminPatientsControllerTest {
     @WithMockUser(value = "spring")
     void showEditPatient() throws Exception{
         when(doctorService.findAllWithCount()).thenReturn(new ArrayList<>());
-        when(patientService.getPatientById(anyLong())).thenReturn(new UserDTO());
+        when(patientService.getPatientById(anyLong())).thenReturn(new PatientDTO());
 
         mvc.perform(get("/admin/patients/edit/{user_id}", 1)
                 .contentType(MediaType.ALL_VALUE))
@@ -132,7 +132,7 @@ class AdminPatientsControllerTest {
     @Test
     @WithMockUser(value = "spring")
     void editPatientThrows() throws Exception{
-        when(patientService.save(any(UserDTO.class))).thenThrow(new ServiceExeption("", new Exception()));
+        when(patientService.save(any(PatientDTO.class))).thenThrow(new ServiceExeption("", new Exception()));
         when(doctorService.getAll(any(PageRequest.class))).thenReturn(new PageImpl<>(new ArrayList<>()));
         mvc.perform(post("/admin/patients/edit")
                 .with(csrf())

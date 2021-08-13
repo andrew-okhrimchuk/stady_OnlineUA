@@ -1,99 +1,102 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title th:text="#{listDoctors}"></title>
-    <style>
-        body {background-color: rgba(133, 191, 211, 0.07) }
-        h2   {color:blue}
-        h5   {color: #9b16ff
-        }
-        p    {color:green}
-        b    {display: inline-block;}
-        .xx0 {padding-top: 10px}
-        .xxx {padding-left: 20px}
-        .xx1 {padding-left: 50px}
-        .xx2 {display: inline-block;}
-
-    </style>
+    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
+          integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+    <title th:text="#{listPatients}"></title>
 
 </head>
 <body>
-
 <div>
-    <a th:text="#{onMain}" th:href="@{/}" }></a>
-    <a th:text="#{listPatients}" th:href="@{/admin/patients}"}></a>
-    <a href="/logout" th:text="#{logout}"></a>
+    <button type="button" class="btn btn-light"><a th:text="#{onMain}" th:href="@{/}" }></a></button>
+    <button type="button" class="btn btn-light"> <a th:text="#{listPatients}" th:href="@{/admin/patients}" }></a></button>
+    <button type="button" class="btn btn-light"><a href="/logout" th:text="#{logout}"></a></button>
 </div>
-<h2 th:text="#{listDoctors}" ></h2>
-<button><a th:text="#{addPatient}" th:href="@{/admin/doctors/add}" }></a></button>
-<div class="xx0">
+<div class="row">
+    <div class="col-md-6 col-md-offset-3">
+        <div class="panel panel-default" style="margin-top:45px">
+            <div class="panel-heading">
+                <h3 class="panel-title" th:text="#{listDoctors}"></h3>
+            </div>
+            <div class="panel-body">
 
-    <!--   /*@thymesVar id="SelectDTO" type="hospital.dto.SelectDTO"*/-->
+                <!--   /*@thymesVar id="SelectDTO" type="hospital.dto.SelectDTO"*/-->
 
-    <form  action="/admin/patients" method="get" th:object="${SelectDTO}" id="form" >
+                <form action="/admin/patients" method="get" th:object="${SelectDTO}" id="form">
 
-        <table border="1" class="xx0">
-            <thead>
-            <tr>
-                <th width="8%">#</th>
-                <th width="8%" th:text="#{FIO}"></th>
-                <th width="8%" th:text="#{speciality}"></th>
-            </tr>
-            </thead>
+                    <table  class="table" border="1">
+                        <thead>
+                        <tr>
+                            <th width="8%">#</th>
+                            <th width="8%" th:text="#{FIO}"></th>
+                            <th width="8%" th:text="#{speciality}"></th>
+                        </tr>
+                        </thead>
 
-            <tbody>
-            <tr th:each="user, iter : ${SelectDTO.page.content}"
-                th:onclick="'javascript:rowClicked(\'' + ${user.id} + '\');'">
-            <td th:text="${iter.count}"></td>
-                <td th:text="${user.username}"></td>
-                <td th:text="${user.getSpeciality().toString()}"></td>
-            </tr>
-            </tbody>
-        </table>
-        <div th:if="${SelectDTO.page.totalPages > 0}" class="pagination"
-             th:each="pageNumber : ${pageNumbers}">
-            <a th:href="@{/admin/patients(size=${SelectDTO.page.size}, page1=${pageNumber})}"
-               th:text=${pageNumber}
-               th:class="${pageNumber==SelectDTO.page.number + 1} ? active"></a>
+                        <tbody>
+                        <tr th:each="user, iter : ${SelectDTO.page.content}"
+                            th:onclick="'javascript:rowClicked(\'' + ${user.id} + '\');'">
+                            <td th:text="${iter.count}"></td>
+                            <td th:text="${user.username}"></td>
+                            <td th:text="${user.getSpeciality().toString()}"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <div th:if="${SelectDTO.page.totalPages > 0}" class="pagination"
+                         th:each="pageNumber : ${pageNumbers}">
+                        <a th:href="@{/admin/patients(size=${SelectDTO.page.size}, page1=${pageNumber})}"
+                           th:text=${pageNumber}
+                           th:class="${pageNumber==SelectDTO.page.number + 1} ? active"></a>
+                    </div>
+                </form>
+                <button type="button" class="btn btn-warning"><a th:text="#{addPatient}" th:href="@{/admin/doctors/add}" }></a></button>
+
+            </div>
+
+            <script type="text/javascript">
+                function chekValues() {
+                    var num = document.getElementById("num").value;
+                    if (num === null || num.length === 0) {
+                        return true;
+                    }
+                    if (num.length > 10) {
+                        alert("Слиииишком длинный номер телефона. Не больше 10 цифр.");
+                        return false;
+                    }
+                    if (!num.match(/^\d+$/)) {
+                        alert('В поле "Номер телефона" должно стоять числовое значение(только цифры)!');
+                        return false;
+                    }
+                    return true;
+                }
+
+                function setEXEL() {
+                    console.log("start setEXEL")
+                    var action = document.getElementById("form");
+                    action.setAttribute("action", "/download/calls.xlsx")
+                    console.log("start setEXEL", document.getElementById("form"));
+
+                    //  return chekValues();
+                }
+
+                function setDefoult() {
+                    console.log("start setDefoult")
+                    var action = document.getElementById("form");
+                    console.log("start setDefoult", document.getElementById("form"));
+                    action.setAttribute("action", "/admin/doctors")
+                    console.log(document.getElementById("form"))
+                    return chekValues();
+                }
+            </script>
         </div>
-  </form>
+    </div>
 </div>
-
-<script type="text/javascript">
-    function chekValues() {
-        var num = document.getElementById("num").value;
-        if(num === null || num.length === 0 ){
-            return true;
-        }
-        if(num.length > 10){
-            alert("Слиииишком длинный номер телефона. Не больше 10 цифр.");
-            return false;
-        }
-        if(!num.match(/^\d+$/)) {
-            alert('В поле "Номер телефона" должно стоять числовое значение(только цифры)!');
-            return false;
-        }
-        return  true;
-    }
-
-    function setEXEL() {
-        console.log("start setEXEL")
-        var action = document.getElementById("form");
-        action.setAttribute("action", "/download/calls.xlsx" )
-        console.log("start setEXEL", document.getElementById("form") );
-
-      //  return chekValues();
-    }
-    function setDefoult() {
-        console.log("start setDefoult")
-        var action = document.getElementById("form");
-        console.log("start setDefoult", document.getElementById("form") );
-        action.setAttribute("action", "/admin/doctors" )
-        console.log(document.getElementById("form"))
-        return chekValues();
-    }
-</script>
 </body>
 </html>
 

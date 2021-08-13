@@ -2,8 +2,6 @@ package hospital.services.hospitalList;
 
 import hospital.domain.HospitalList;
 import hospital.domain.Patient;
-import hospital.domain.enums.Role;
-import hospital.dto.UserDTO;
 import hospital.exeption.DaoExeption;
 import hospital.exeption.NotValidExeption;
 import hospital.exeption.ServiceExeption;
@@ -36,7 +34,7 @@ public class HospitalListService implements IHospitalListService {
             log.error("saveHospitalList {}, {}", env.getProperty("SAVE_NEW_PATIENT"), e.getMessage());
             throw new ServiceExeption(e.getMessage(), e);
         } catch (DataIntegrityViolationException e) {
-            log.error("saveHospitalList {}, {}, {}", env.getProperty("SAVE_NEW_PATIENT_DUPLICATE"), hospitalList.getHospitalListIid(), e.getMessage());
+            log.error("saveHospitalList {}, {}, {}", env.getProperty("SAVE_NEW_PATIENT_DUPLICATE"), hospitalList.getHospitalListId(), e.getMessage());
             throw new ServiceExeption(env.getProperty("SAVE_NEW_PATIENT_DUPLICATE"), e);
         }
     }
@@ -57,7 +55,7 @@ public class HospitalListService implements IHospitalListService {
 
     private void validation(HospitalList hospitalList) throws NotValidExeption {
         if (!hospitalList.isValid()) {
-            throw new NotValidExeption(env.getProperty("SAVE_NEW_NOT_VALOD_HOSPITAL_LIST"));
+            throw new NotValidExeption(env.getProperty("SAVE_NEW_NOT_VALID_HOSPITAL_LIST"));
         }
     }
 }

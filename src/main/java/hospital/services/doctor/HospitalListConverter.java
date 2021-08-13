@@ -14,6 +14,6 @@ public class HospitalListConverter implements Converter<String, HospitalList> {
     @Override
     public HospitalList convert(String id) {
         log.debug("Trying to convert id =" + id + " into a HospitalList");
-        return HospitalList.builder().hospitalListIid(Long.parseLong(id)).build();
+        return HospitalList.builder().hospitalListId(Long.parseLong(id)).build();
     }
 }

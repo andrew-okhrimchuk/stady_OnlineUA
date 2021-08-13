@@ -28,6 +28,7 @@ public class User implements UserDetails {
     @NotNull
     @NotEmpty
     @NotBlank(message = "Name is mandatory")
+    @Column(unique = true)
     private String username;
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"),

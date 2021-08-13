@@ -35,11 +35,12 @@ public class MedicationLogController {
     HospitalListService hospitalListService;
 
 
-    @GetMapping("/medicationLog/{hospitalListId}")
-    public String getMedicationLog(@NotNull @PathVariable("hospitalListId") String hospitalListId,
+    @GetMapping("/medicationLog/{hospitalListId}/{user_id}")
+    public String getMedicationLog(@NotNull @PathVariable("user_id") String user_id,
+                                   @NotNull @PathVariable("hospitalListId") String hospitalListId,
                                    @RequestParam("page1") Optional<Integer> page1,
-                                        @RequestParam("size") Optional<Integer> size,
-                                        @ModelAttribute @NonNull SelectDTO selectDTO, Model model) {
+                                   @RequestParam("size") Optional<Integer> size,
+                                   @ModelAttribute @NonNull SelectDTO selectDTO, Model model) {
         log.debug("Start getMedicationLog");
         int currentPage = page1.orElse(1);
         int pageSize = size.orElse(15);
@@ -48,32 +49,37 @@ public class MedicationLogController {
             selectDTO.setPage(medicationLogs);
             setPageNumbers(model, medicationLogs);
             model.addAttribute("SelectDTO", selectDTO)
-                    .addAttribute("hospitalListId", Long.valueOf(hospitalListId));
+                    .addAttribute("hospitalListId", Long.valueOf(hospitalListId))
+                    .addAttribute("user_id", user_id);
         } catch (ServiceExeption | ConstraintViolationException e) {
-            log.error("getMedicationLog  {}" , e.getMessage());
+            log.error("getMedicationLog  {}", e.getMessage());
             model.addAttribute("errorMessage", e.getMessage());
         }
         log.debug("End getMedicationLog");
         return "doctor/medicationLog";
     }
 
-    @GetMapping("/medicationLog/add/{hospitalListId}")
-    public String addMedicationLog(Model model,
-                                            @NotNull @PathVariable("hospitalListId") String hospitalListId) {
+    @GetMapping("/medicationLog/add/{hospitalListId}/{user_id}")
+    public String addMedicationLog(Model model, @NotNull @PathVariable("user_id") String user_id,
+                                   @NotNull @PathVariable("hospitalListId") String hospitalListId) {
         log.debug("Start addMedicationLog, hospitalListId = {}", hospitalListId);
-        model.addAttribute("medicationLog", MedicationLog.builder().hospitallistid(Long.valueOf(hospitalListId)).dateCreate(LocalDateTime.now()).build());
+        model.addAttribute("medicationLog", MedicationLog.builder().hospitallistid(Long.valueOf(hospitalListId)).dateCreate(LocalDateTime.now()).build())
+                .addAttribute("user_id", user_id);
         return "doctor/medicationLog-add";
     }
 
-    @PostMapping("/medicationLog/add/{hospitalList}")
-    public String addMedicationLogPost(@ModelAttribute("medicationLog") @NonNull MedicationLog medicationLog,
-                                   Model model) {
+    @PostMapping("/medicationLog/add/{hospitalList}/{user_id}")
+    public String addMedicationLogPost(@NotNull @PathVariable("user_id") String user_id,
+                                       @ModelAttribute("medicationLog") @NonNull MedicationLog medicationLog,
+                                       Model model) {
         log.debug("Start addMedicationLogPost, {}", medicationLog);
-       // medicationLog.setMedicationlogId(Long.valueOf(hospitalList));
         try {
             medicationLogService.save(medicationLog);
-            model.addAttribute("errorMessage", "Save Ok.");
-            return "redirect:/doctor/medicationLog/"+ medicationLog.getHospitallistid();
+            model.addAttribute("errorMessage", "Save Ok.")
+                    .addAttribute("user_id", user_id);
+            StringBuilder sb = new StringBuilder();
+            sb.append("redirect:/doctor/medicationLog/").append( medicationLog.getHospitallistid()).append("/").append(user_id);
+            return sb.toString();
         } catch (ServiceExeption e) {
             log.error(e.getMessage());
             model.addAttribute("errorMessage", e.getMessage());

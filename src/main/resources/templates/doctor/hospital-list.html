@@ -65,7 +65,7 @@
                             </tr>
                         </table>
                         <div>
-                            <input type="submit" class="btn btn-success" th:value="#{save}" onclick="rowClicked()"/>
+                            <input type="submit" class="btn btn-success" th:value="#{save}"/>
                             <button type="button" class="btn btn-light"><a th:text="#{cancel}"
                                                                            th:href="@{/doctor/patients}" }></a>
                             </button>
@@ -78,7 +78,7 @@
                         </a></button>
                         <button type="button" class="btn btn-light">
                             <a
-                                    th:onclick="'javascript:rowClicked(\'' + ${hospitalList.hospitalListId} + '\');'"
+                                    th:onclick="'javascript:rowClickedCheckMedicationLog(\'' + ${hospitalList.hospitalListId} + '\');'"
                                     th:text="#{medicationLog}" }>
                             </a>
                         </button>
@@ -96,14 +96,14 @@
     </div>
 
     <script>
-        function rowClicked(value) {
+        function rowClickedCheckMedicationLog(value) {
             if (isEmpty(value)) {
                 console.log("isEmpty " + value)
                 location.href = "/doctor/hospital-list/edit/" + [[${user_id}]];
             }
             if (!isEmpty(value)) {
                 console.log("not isEmpty " + value)
-                location.href = "/doctor/medicationLog/" + value;
+                location.href = "/doctor/medicationLog/" + value + '/' + [[${user_id}]];
             }
         }
         function isEmpty(value) {

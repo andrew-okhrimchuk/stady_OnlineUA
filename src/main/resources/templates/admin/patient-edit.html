@@ -30,24 +30,24 @@
                 <div class="panel-body">
                     <form th:action="@{/admin/patients/add}" th:object="${user}" method="POST">
 
-                        <table class="table" border="0">
+                        <table class="table">
                             <tr>
                                 <td><input type="hidden" th:field="*{id}"/></td>
                             </tr>
                             <tr>
-                                <td th:text="#{Username}" ></td>
+                                <td th:text="#{Username}"></td>
                                 <td>:</td>
                                 <td><input type="text" th:field="*{username}"/></td>
                             </tr>
                             <tr>
-                                <td th:text="#{dateOfBirth}" ></td>
+                                <td th:text="#{dateOfBirth}"></td>
                                 <td>:</td>
                                 <td><input type="date" th:field="*{birthDate}"/></td>
                             </tr>
                             <tr>
-                                <td th:text="#{Password}" ></td>
+                                <td th:text="#{Password}"></td>
                                 <td></td>
-                                <td><input th:type='text'/></td>
+                                <td><input th:type='text' th:field="*{password}"/></td>
                             </tr>
                             <tr>
                                 <td>Select a doctor</td>

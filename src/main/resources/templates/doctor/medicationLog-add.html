@@ -31,7 +31,7 @@
 
     <!--   /*@thymesVar id="hospitalList" type="hospital.domain.HospitalList"*/-->
 
-    <form th:action="@{/doctor/medicationLog/add/{path}(path=${medicationLog.hospitallistid})}" th:object="${medicationLog}" method="POST">
+    <form th:action="@{/doctor/medicationLog/add/{hospitallistid}/{user_id}(hospitallistid=${medicationLog.hospitallistid}, user_id=${user_id} )}" th:object="${medicationLog}" method="POST">
 
         <table class="table" border="0">
             <tr>
@@ -51,7 +51,7 @@
             </tr>
         </table>
         <div>
-            <input type="submit" class="btn btn-success" th:value="#{save}" onclick="rowClicked()"/>
+            <input type="submit" class="btn btn-success" th:value="#{save}" />
             <button type="button" class="btn btn-light"><a th:text="#{cancel}" th:href="@{/doctor/patients}" }></a></button>
         </div>
 

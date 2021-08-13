@@ -50,14 +50,14 @@
                 </table>
                 <div th:if="${SelectDTO.getPage().totalPages > 0}" class="pagination"
                      th:each="pageNumber : ${pageNumbers}">
-                    <a th:href="@{/doctor/medicationLog/{path}(path=${hospitalListId}, size=${SelectDTO.getPage().size}, page1=${pageNumber})}"
+                    <a th:href="@{/doctor/medicationLog/{path}/{user_id}(path=${hospitalListId}, user_id=${user_id}, size=${SelectDTO.getPage().size}, page1=${pageNumber})}"
                        th:text="${pageNumber}"
                        th:class="${pageNumber==SelectDTO.getPage().number + 1} ? active"></a>
                 </div>
                 <div class="xx0"><b>
                     <button type="button" class="btn btn-warning">
                         <a th:text="#{addPatient}"
-                           th:href="@{/doctor/medicationLog/add/{path}(path=${hospitalListId})}" }>
+                           th:href="@{/doctor/medicationLog/add/{hospitalListId}/{user_id}(hospitalListId=${hospitalListId},user_id=${user_id})}" }>
                         </a>
                     </button>
                 </b></div>

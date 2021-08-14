@@ -74,7 +74,8 @@
                     <div>
                         <button type="button" class="btn btn-light"><a
                                 th:text="#{appointNurse}"
-                                th:href="@{/doctor/nurses/{path}(path=${hospitalList.hospitalListId})}" }>
+                                href="#" }>
+                            <!--th:href="@{/doctor/nurses/{path}(path=${hospitalList.hospitalListId})}"-->
                         </a></button>
                         <button type="button" class="btn btn-light">
                             <a
@@ -84,8 +85,9 @@
                         </button>
                         <button type="button" class="btn btn-light">
                             <a
-                                    th:text="#{activityLog}"
-                                    th:href="@{/doctor/activityLog/{path}(path=${hospitalList.hospitalListId})}" }>
+                                    th:text="#{activityLog}"  href="#"
+                             }>
+                                <!-- th:href="@{/doctor/activityLog/{path}(path=${hospitalList.hospitalListId})}"-->
                             </a>
                         </button>
 

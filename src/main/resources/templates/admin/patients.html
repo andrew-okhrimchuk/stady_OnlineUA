@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html th:with="lang=${#locale.language}" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -65,7 +65,8 @@
                             th:onclick="'javascript:rowClicked(\'' + ${user.id} + '\');'">
                             <td th:text="${iter.count}"></td>
                             <td th:text="${user.getUsername()}"></td>
-                            <td th:text="${#temporals.format(user.birthDate, 'dd-MM-yyyy')}"></td>
+                            <td th:text="${#strings.equals(#locale, 'ru')} ? ${#temporals.format(user.birthDate, 'dd-MM-yyyy')} : ${#temporals.format(user.birthDate, 'MMMM-dd-yyyy')}"></td>
+
                         </tr>
                         </tbody>
                     </table>

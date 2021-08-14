@@ -20,6 +20,7 @@ public class MedicationLog {
     private Long medicationlogId;
     private Long hospitallistid;
     private String description;
+    private String executor;
     private LocalDateTime dateCreate = LocalDateTime.now();
 
     public boolean isValid (){

@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
+    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
@@ -12,7 +13,9 @@
 <body>
 
 <div class="container">
-    <a th:text="#{onMain}" th:href="@{/}" }></a>
+    <div>
+        <button type="button" class="btn btn-light"><a th:text="#{onMain}" th:href="@{/}" }></a></button>
+    </div>
     <div align="right" style="margin-right:300px">
         <a href="/?lang=ru" th:text="#{ru}"></a>
         <a href="/?lang=en" th:text="#{en}"></a>

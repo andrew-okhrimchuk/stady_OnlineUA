@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -69,8 +70,9 @@ public class MedicationLogController {
     public String addMedicationLogPost(@ModelAttribute("medicationLog") @NonNull MedicationLog medicationLog,
                                    Model model) {
         log.debug("Start addMedicationLogPost, {}", medicationLog);
-       // medicationLog.setMedicationlogId(Long.valueOf(hospitalList));
+        String doctorName = SecurityContextHolder.getContext().getAuthentication().getName();
         try {
+            medicationLog.setExecutor(doctorName);
             medicationLogService.save(medicationLog);
             model.addAttribute("errorMessage", "Save Ok.");
             return "redirect:/doctor/medicationLog/"+ medicationLog.getHospitallistid();

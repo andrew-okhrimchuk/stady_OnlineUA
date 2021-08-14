@@ -18,6 +18,6 @@ public interface PatientJPARepository extends CrudRepository<Patient, Long> , Jp
      Page<Patient> findAll(Specification<Patient> spec, Pageable pageable);
      Patient getPatientById(long id);
 
-     @Query("select p from User u join Patient p on u.id = p.id where p.doctor.id =(select d.id from Doctor d join User u on u.id = d.id where u.username  = :username)")
+     @Query("select p from User u join Patient p on u.id = p.id  where p.doctor.id =(select d.id from Doctor d join User u on u.id = d.id where u.username  = :username) order by p.username")
      Page<Patient> findAllPatientsByNameDoctor(@Param("username") String username, Pageable pageable);
 }

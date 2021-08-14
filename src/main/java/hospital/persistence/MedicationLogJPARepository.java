@@ -8,5 +8,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface MedicationLogJPARepository extends CrudRepository<MedicationLog, Long>  {
-    Page<MedicationLog> findAllByHospitallistid(Long hospitalListId, Pageable pageable);
+    Page<MedicationLog> findAllByHospitallistidOrderByDateCreateDesc (Long hospitalListId, Pageable pageable);
 }

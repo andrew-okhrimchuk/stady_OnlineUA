@@ -43,7 +43,7 @@ public class MedicationLogService implements IMedicationLogService {
     public Page<MedicationLog> findByMedicationlogId(Long hospitalListId, Pageable pageable) throws ServiceExeption {
         log.debug("Start findByMedicationlogId. hospitalListId {}", hospitalListId);
         try {
-            return medicationLogJPARepository.findAllByHospitallistid(hospitalListId, pageable);
+            return medicationLogJPARepository.findAllByHospitallistidOrderByDateCreateDesc(hospitalListId, pageable);
         } catch (DaoExeption | DateTimeParseException e) {
             log.error("findByMedicationlogId {}, {}", env.getProperty("SAVE_NEW_PATIENT"), e.getMessage());
             throw new ServiceExeption(e.getMessage(), e);

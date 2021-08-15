@@ -34,15 +34,13 @@ public class PatientService implements IPatientService {
     private final Environment env;
     private final ModelMapper modelMapper;
     private final PasswordEncoder bcryptPasswordEncoder;
-    private final EntityManagerFactory emf;
 
-    public PatientService(PatientJPARepository patientJPARepository, PatientSpecification patientSpecification, Environment env, ModelMapper modelMapper, PasswordEncoder bcryptPasswordEncoder, EntityManagerFactory emf) {
+    public PatientService(PatientJPARepository patientJPARepository, PatientSpecification patientSpecification, Environment env, ModelMapper modelMapper, PasswordEncoder bcryptPasswordEncoder) {
         this.patientJPARepository = patientJPARepository;
         this.patientSpecification = patientSpecification;
         this.env = env;
         this.modelMapper = modelMapper;
         this.bcryptPasswordEncoder = bcryptPasswordEncoder;
-        this.emf = emf;
     }
 
 

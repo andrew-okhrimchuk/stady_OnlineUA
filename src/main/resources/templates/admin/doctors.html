@@ -61,18 +61,7 @@
 
             <script type="text/javascript">
                 function chekValues() {
-                    var num = document.getElementById("num").value;
-                    if (num === null || num.length === 0) {
-                        return true;
-                    }
-                    if (num.length > 10) {
-                        alert("Слиииишком длинный номер телефона. Не больше 10 цифр.");
-                        return false;
-                    }
-                    if (!num.match(/^\d+$/)) {
-                        alert('В поле "Номер телефона" должно стоять числовое значение(только цифры)!');
-                        return false;
-                    }
+
                     return true;
                 }
 

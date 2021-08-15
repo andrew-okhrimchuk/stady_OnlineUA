@@ -61,7 +61,8 @@ public class DoctorsController {
     }
 
     @PostMapping("/doctors/add")
-    public String addDoctor(@ModelAttribute("user") @NonNull DoctorDTO doctorDTO, Model model) {
+    public String addDoctor(@ModelAttribute @NonNull SelectDTO selectDTO,
+                            @ModelAttribute("user") @NonNull DoctorDTO doctorDTO, Model model) {
         log.debug("Start addDoctor, Username = {}", doctorDTO.getUsername());
         model.addAttribute("user", doctorDTO)
              .addAttribute("add", true);
@@ -72,6 +73,9 @@ public class DoctorsController {
             log.error(e.getMessage());
             model.addAttribute("errorMessage", e.getMessage());
         }
+        selectDTO.setSpecialities(Speciality.getAllSpeciality());
+        selectDTO.getSpecialities().remove(Speciality.ALL);
+        model.addAttribute("SelectDTO", selectDTO);
         return "admin/doctor-edit";
     }
 

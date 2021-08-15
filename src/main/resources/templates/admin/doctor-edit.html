@@ -20,6 +20,7 @@
     <button type="button" class="btn btn-light"><a href="/logout" th:text="#{logout}"></a></button>
 </div>
 
+<!--   /*@thymesVar id="SelectDTO" type="hospital.dto.SelectDTO"*/-->
 
 <div class="container">
     <div class="row">
@@ -50,10 +51,10 @@
                                 <td>:</td>
                                 <td>
                                     <select th:field="*{speciality}"/>
-                                    <option th:each="special : ${T(hospital.domain.enums.Speciality).values()}"
+                                    <option th:each="special : ${SelectDTO.specialities}"
                                             th:selected="(${special} == *{speciality})"
-                                            th:value="${special.name().toString()}"
-                                            th:text="${special.name().toString()}">
+                                            th:value="${special}"
+                                            th:text="${special}">
                                     </option>
                                     </select>
                                 </td>

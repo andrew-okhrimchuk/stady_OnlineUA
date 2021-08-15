@@ -138,6 +138,4 @@ public class PatientsController {
         }
         return "admin/patient-edit";
     }
-
-
 }

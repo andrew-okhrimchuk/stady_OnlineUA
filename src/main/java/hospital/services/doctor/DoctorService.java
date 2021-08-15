@@ -19,8 +19,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import javax.persistence.EntityManagerFactory;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -35,15 +33,13 @@ public class DoctorService implements IDoctorService {
     private final Environment env;
     private final ModelMapper modelMapper;
     public final PasswordEncoder bcryptPasswordEncoder;
-    private final EntityManagerFactory emf;
 
-    public DoctorService(DoctorJPARepository doctorJPARepository, DoctorSpecification doctorSpecification, Environment env, ModelMapper modelMapper, PasswordEncoder bcryptPasswordEncoder, EntityManagerFactory emf) {
+    public DoctorService(DoctorJPARepository doctorJPARepository, DoctorSpecification doctorSpecification, Environment env, ModelMapper modelMapper, PasswordEncoder bcryptPasswordEncoder) {
         this.doctorJPARepository = doctorJPARepository;
         this.doctorSpecification = doctorSpecification;
         this.env = env;
         this.modelMapper = modelMapper;
         this.bcryptPasswordEncoder = bcryptPasswordEncoder;
-        this.emf = emf;
     }
 
 
@@ -52,7 +48,10 @@ public class DoctorService implements IDoctorService {
         log.debug("Start getListPatients of SelectDTO");
         selectDTO.getAuthorities().add(Role.DOCTOR);
         try {
-            return convertToDto(doctorJPARepository.findAll(doctorSpecification.getUsers(selectDTO), pageable));
+            if (selectDTO.getSpeciality() != null && !selectDTO.getSpeciality().equals(Speciality.ALL)) {
+                return convertToDto(doctorJPARepository.findAllDoctors(selectDTO.getSpeciality(), pageable));
+            }
+                return convertToDto(doctorJPARepository.findAll(doctorSpecification.getUsers(selectDTO), pageable));
         } catch (DaoExeption | DataIntegrityViolationException e) {
             log.error("getListPatients {}, {}", env.getProperty("GET_ALL_ERROR_MESSAGE_DOCTORS"), e.getMessage());
             throw new ServiceExeption(e.getMessage(), e);
@@ -141,13 +140,6 @@ public class DoctorService implements IDoctorService {
     }
 
     public DoctorDTO convertToDto(Doctor doctor) {
-        List<String> speciality = doctor.getSpeciality()
-                .stream()
-                .map(Enum::name)
-                .collect(Collectors.toList());
-
-        DoctorDTO doctorDTO = modelMapper.map(doctor, DoctorDTO.class);
-        doctorDTO.setSpeciality(speciality);
-        return doctorDTO;
+        return modelMapper.map(doctor, DoctorDTO.class);
     }
 }

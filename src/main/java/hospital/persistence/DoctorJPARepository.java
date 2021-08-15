@@ -19,6 +19,9 @@ public interface DoctorJPARepository extends CrudRepository<Doctor, Long> , JpaS
      Page<Doctor> findAll(Specification<Doctor> spec, Pageable pageable);
      Doctor getDoctorById(long id);
 
+     @Query("select d from Doctor d join User u on d.id = u.id where d.speciality =:speciality")
+     Page<Doctor> findAllDoctors(String speciality, Pageable pageable);
+
      @Query("select u.username, d.id, count( p.doctor.id) from Doctor d join User u on u.id = d.id left join Patient p on d.id = p.doctor.id group by p.doctor.id, u.username, d.id")
      List<Object[]> findAllWithCount();
 

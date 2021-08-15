@@ -28,8 +28,20 @@
 
                 <!--   /*@thymesVar id="SelectDTO" type="hospital.dto.SelectDTO"*/-->
 
-                <form action="/admin/patients" method="get" th:object="${SelectDTO}" id="form">
+                <form action="/admin/doctors" method="get" th:object="${SelectDTO}" id="form">
+                    <div><b>
+                        <input type="submit" th:value="#{listRefresh}" name="submit"
+                               style="float:left">
 
+                        <select th:field="*{speciality}" style="float:right"/>
+                        <option th:each="special : ${SelectDTO.specialities}"
+                                th:selected="(${special} == *{speciality})"
+                                th:value="${special}"
+                                th:text="${special}">
+                        </option>
+                        </select>
+
+                    </b></div>
                     <table  class="table" border="1">
                         <thead>
                         <tr>

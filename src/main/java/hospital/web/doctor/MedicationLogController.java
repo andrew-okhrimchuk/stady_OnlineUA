@@ -1,6 +1,5 @@
 package hospital.web.doctor;
 
-import hospital.domain.HospitalList;
 import hospital.domain.MedicationLog;
 import hospital.dto.SelectDTO;
 import hospital.exeption.ServiceExeption;
@@ -15,7 +14,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
 import javax.validation.ConstraintViolationException;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;

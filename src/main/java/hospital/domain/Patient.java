@@ -14,7 +14,6 @@ import java.util.List;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @Entity
-//@SuppressWarnings("PMD")
 @PrimaryKeyJoinColumn(name = "user_id", referencedColumnName ="id")
 public class Patient extends User {
     private LocalDate birthDate;

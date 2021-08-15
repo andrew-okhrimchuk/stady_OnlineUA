@@ -18,7 +18,7 @@ public class DoctorDTO {
     private String username;
     private String password;
     private String countOfPatients;
-    private List<String> speciality;
+    private String speciality;
 
     public boolean isValid () {
         return this.username !=null && !this.username.isEmpty() && this.password !=null && !this.password.isEmpty() ;

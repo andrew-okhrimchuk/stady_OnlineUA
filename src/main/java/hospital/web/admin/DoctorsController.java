@@ -15,12 +15,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
 import javax.validation.ConstraintViolationException;
 import javax.validation.constraints.NotNull;
-import java.sql.Array;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Optional;
 
 @Slf4j
@@ -42,7 +38,7 @@ public class DoctorsController {
         int pageSize = size.orElse(15);
 
         try {
-            selectDTO.setSpecialities(new ArrayList<>(Arrays.asList(Speciality.values())));
+            selectDTO.setSpecialities(Speciality.getAllSpeciality());
             Page<DoctorDTO> doctors = doctorService.getAll(selectDTO, PageRequest.of(currentPage - 1, pageSize));
             selectDTO.setPage(doctors);
         } catch (ServiceExeption | ConstraintViolationException e) {
@@ -56,7 +52,7 @@ public class DoctorsController {
     @GetMapping(value = {"/doctors/add"})
     public String showAddDoctor(@ModelAttribute @NonNull SelectDTO selectDTO, Model model) {
         log.debug("Start showAddDoctor");
-        selectDTO.setSpecialities(new ArrayList<>(Arrays.asList(Speciality.values())));
+        selectDTO.setSpecialities(Speciality.getAllSpeciality());
         selectDTO.getSpecialities().remove(Speciality.ALL);
         model.addAttribute("add", true)
                 .addAttribute("user", new DoctorDTO())

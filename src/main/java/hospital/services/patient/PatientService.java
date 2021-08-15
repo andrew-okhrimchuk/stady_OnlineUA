@@ -18,8 +18,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import javax.persistence.EntityManagerFactory;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Collections;

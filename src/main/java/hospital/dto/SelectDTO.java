@@ -25,6 +25,6 @@ public class SelectDTO {
     private String sortByDateOfBirth;
     private String userNameDoctor;
     private List<Role> authorities = new ArrayList<>();
-    private List<Speciality> specialities;
-    private Speciality speciality;
+    private List<String> specialities;
+    private String speciality;
 }

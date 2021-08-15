@@ -1,7 +1,6 @@
 package hospital.services.doctor;
 
 import hospital.domain.HospitalList;
-import hospital.dto.DoctorDTO;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.convert.converter.Converter;

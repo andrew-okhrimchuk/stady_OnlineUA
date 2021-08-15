@@ -5,5 +5,5 @@ import org.springframework.security.core.GrantedAuthority;
 
 @ToString
 public enum Speciality {
-    LORE, SPECIALITY, GYNECOLOGIST;
+    ALL, LORE, SPECIALITY, GYNECOLOGIST;
 }

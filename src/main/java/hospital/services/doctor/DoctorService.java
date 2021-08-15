@@ -2,6 +2,7 @@ package hospital.services.doctor;
 
 import hospital.domain.Doctor;
 import hospital.domain.enums.Role;
+import hospital.domain.enums.Speciality;
 import hospital.dto.DoctorDTO;
 import hospital.dto.SelectDTO;
 import hospital.exeption.DaoExeption;

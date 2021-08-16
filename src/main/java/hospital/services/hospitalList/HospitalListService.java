@@ -6,12 +6,14 @@ import hospital.exeption.DaoExeption;
 import hospital.exeption.NotValidExeption;
 import hospital.exeption.ServiceExeption;
 import hospital.persistence.HospitalListJPARepository;
+import hospital.persistence.UserJPARepository;
 import hospital.services.interfaces.IHospitalListService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.format.DateTimeParseException;
 import java.util.Optional;
@@ -21,14 +23,18 @@ import java.util.Optional;
 public class HospitalListService implements IHospitalListService {
 
     @Autowired
+    UserJPARepository userJPARepository;
+    @Autowired
     private HospitalListJPARepository hospitalListJPARepository;
     @Autowired
     private Environment env;
 
-    public HospitalList save(HospitalList hospitalList) throws ServiceExeption {
+    @Transactional
+    public HospitalList save(HospitalList hospitalList, Long userId) throws ServiceExeption {
         log.debug("Start saveHospitalList of User. userDTO = {}", hospitalList);
         try {
             validation(hospitalList);
+            if (userId != 0L) {userJPARepository.updateCurrent(userId);}
             return hospitalListJPARepository.save(hospitalList);
         } catch (DaoExeption | DateTimeParseException | NotValidExeption e) {
             log.error("saveHospitalList {}, {}", env.getProperty("SAVE_NEW_PATIENT"), e.getMessage());
@@ -43,7 +49,11 @@ public class HospitalListService implements IHospitalListService {
     public Optional<HospitalList> findByParientIdAndDoctorName(String parientId, String doctorName) throws ServiceExeption {
         log.debug("Start findByParientIdAndDoctorId. parientId {}, doctorName {}", parientId, doctorName);
         try {
-            return hospitalListJPARepository.findByDoctorNameAndPatientId(doctorName, Patient.chilerBuilder().id(Long.parseLong(parientId)).build());
+            Optional<HospitalList> result = hospitalListJPARepository.findByDoctorNameAndPatientId(doctorName, Patient.chilerBuilder().id(Long.parseLong(parientId)).build());
+            if (result.isPresent() && result.get().getDateDischarge()!=null){
+                return Optional.of(new HospitalList());
+            }
+            return result;
         } catch (DaoExeption | DateTimeParseException e) {
             log.error("findByParientIdAndDoctorId {}, {}", env.getProperty("SAVE_NEW_PATIENT"), e.getMessage());
             throw new ServiceExeption(e.getMessage(), e);

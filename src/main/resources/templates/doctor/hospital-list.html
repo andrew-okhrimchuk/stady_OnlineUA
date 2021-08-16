@@ -65,7 +65,7 @@
                             </tr>
                         </table>
                         <div>
-                            <input type="submit" class="btn btn-success" th:value="#{save}" onclick="rowClicked()"/>
+                            <input type="submit" class="btn btn-success" th:value="#{save}" />
                             <button type="button" class="btn btn-light"><a th:text="#{cancel}"
                                                                            th:href="@{/doctor/patients}" }></a>
                             </button>
@@ -92,8 +92,7 @@
                         </button>
 
                         <button type="button" class="btn btn-light">
-                            <a
-                                    th:onclick="'javascript:rowClickedDischarge(\'' + ${user_id} + '\');'"
+                            <a      onclick=rowClickedDischarge({${user_id}})
                                     th:text="#{discharge}"}>
                             </a>
                         </button>
@@ -107,21 +106,22 @@
     <script>
         function rowClicked(value) {
             if (isEmpty(value)) {
-                console.log("isEmpty " + value)
+                console.log("isEmpty 0" + value)
                 location.href = "/doctor/hospital-list/edit/" + [[${user_id}]];
             }
             if (!isEmpty(value)) {
-                console.log("not isEmpty " + value)
+                console.log("not isEmpty 1" + value)
                 location.href = "/doctor/medicationLog/" + value;
             }
         }
         function rowClickedDischarge(value) {
             if (isEmpty(value)) {
-                console.log("isEmpty " + value)
+                console.log("isEmpty 2 " + value)
+                console.log("[[${user_id}]] = " + [[${user_id}]])
                 location.href = "/doctor/hospital-list/edit/" + [[${user_id}]];
             }
             if (!isEmpty(value)) {
-                console.log("not isEmpty " + value)
+                console.log("not isEmpty 3" + value)
                 location.href = "/doctor/discharge/" + value;
             }
         }

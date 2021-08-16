@@ -15,6 +15,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 import java.util.Optional;
 
@@ -49,9 +50,9 @@ public class HospitalListService implements IHospitalListService {
     public Optional<HospitalList> findByParientIdAndDoctorName(String parientId, String doctorName) throws ServiceExeption {
         log.debug("Start findByParientIdAndDoctorId. parientId {}, doctorName {}", parientId, doctorName);
         try {
-            Optional<HospitalList> result = hospitalListJPARepository.findByDoctorNameAndPatientId(doctorName, Patient.chilerBuilder().id(Long.parseLong(parientId)).build());
+            Optional<HospitalList> result = hospitalListJPARepository.findFirstByDoctorNameAndPatientIdOrderByDateCreateDesc(doctorName, Patient.chilerBuilder().id(Long.parseLong(parientId)).build());
             if (result.isPresent() && result.get().getDateDischarge()!=null){
-                return Optional.of(new HospitalList());
+                return Optional.of(HospitalList.builder().dateCreate(LocalDateTime.now()).build());
             }
             return result;
         } catch (DaoExeption | DateTimeParseException e) {

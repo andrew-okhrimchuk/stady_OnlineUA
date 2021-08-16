@@ -36,13 +36,13 @@ public class HospitalListController {
 
     @GetMapping("/hospital-list/edit/{user_id}")
     public String showHospitalLis(Model model,
-                                            @NotNull @PathVariable("user_id") String user_id) {
+                                            @NotNull @PathVariable("user_id") String userId) {
         log.debug("Start showHospitalLis");
         String userNameDoctor = SecurityContextHolder.getContext().getAuthentication().getName();
 
         try {
-            model.addAttribute("hospitalList", hospitalListService.findByParientIdAndDoctorName(user_id, userNameDoctor).orElse(HospitalList.builder().dateCreate(LocalDateTime.now()).build()))
-                    .addAttribute("user_id", Long.valueOf(user_id));
+            model.addAttribute("hospitalList", hospitalListService.findByParientIdAndDoctorName(userId, userNameDoctor).orElse(HospitalList.builder().dateCreate(LocalDateTime.now()).build()))
+                    .addAttribute("user_id", Long.valueOf(userId));
         } catch (ServiceExeption e) {
             log.error(e.getMessage());
             model.addAttribute("errorMessage", e.getMessage());
@@ -51,13 +51,13 @@ public class HospitalListController {
     }
 
     @PostMapping("/hospital-list/edit/{user_id}")
-    public String editHospitalList(@NotNull @PathVariable("user_id") String user_id,
+    public String editHospitalList(@NotNull @PathVariable("user_id") String userId,
                                    @ModelAttribute("hospitalList") @NonNull HospitalList hospitalList,
                                    Model model) {
         log.debug("Start editHospitalList, {}", hospitalList);
         String userNameDoctor = SecurityContextHolder.getContext().getAuthentication().getName();
         hospitalList.setDoctorName(userNameDoctor);
-        hospitalList.setPatientId(Patient.chilerBuilder().id(Long.valueOf(user_id)).build());
+        hospitalList.setPatientId(Patient.chilerBuilder().id(Long.valueOf(userId)).build());
         try {
             hospitalListService.save(hospitalList, 0L);
             model.addAttribute("errorMessage", "Save Ok.");

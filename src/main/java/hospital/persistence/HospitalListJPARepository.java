@@ -12,5 +12,5 @@ import java.util.Optional;
 
 @Repository
 public interface HospitalListJPARepository extends CrudRepository<HospitalList, Long>  {
-    Optional<HospitalList> findByDoctorNameAndPatientId(String doctorName, Patient patientId);
+    Optional<HospitalList> findFirstByDoctorNameAndPatientIdOrderByDateCreateDesc(String doctorName, Patient patientId);
 }

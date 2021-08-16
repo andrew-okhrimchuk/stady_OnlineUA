@@ -32,13 +32,13 @@ public class DischargeController {
 
     @GetMapping("/discharge/{user_id}")
     public String showdDischargeList(Model model,
-                                            @NotNull @PathVariable("user_id") String user_id) {
+                                            @NotNull @PathVariable("user_id") String userId) {
         log.debug("Start showdDischargeList");
         String userNameDoctor = SecurityContextHolder.getContext().getAuthentication().getName();
 
         try {
-            model.addAttribute("hospitalList", hospitalListService.findByParientIdAndDoctorName(user_id, userNameDoctor).orElse(HospitalList.builder().dateCreate(LocalDateTime.now()).build()))
-                    .addAttribute("user_id", Long.valueOf(user_id));
+            model.addAttribute("hospitalList", hospitalListService.findByParientIdAndDoctorName(userId, userNameDoctor).orElse(HospitalList.builder().dateCreate(LocalDateTime.now()).build()))
+                    .addAttribute("user_id", Long.valueOf(userId));
         } catch (ServiceExeption e) {
             log.error(e.getMessage());
             model.addAttribute("errorMessage", e.getMessage());

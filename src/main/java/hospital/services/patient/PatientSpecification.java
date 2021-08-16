@@ -22,8 +22,21 @@ public class PatientSpecification {
             // Where
             if (request.getUserNameDoctor() != null && !request.getUserNameDoctor().isEmpty()) {
                 root.join("doctor");
-                predicates.add(criteriaBuilder.equal(root.get("userName"), request.getUserNameDoctor()));
+                predicates.add(criteriaBuilder.equal(root.get("username"), request.getUserNameDoctor()));
             }
+            if (!request.getIsShowAllDischargePatients() && !request.getIsShowAllCurrentPatients()) {
+                predicates.add(criteriaBuilder.equal(root.get("username"), ""));
+            }
+
+            if (!request.getIsShowAllDischargePatients() && request.getIsShowAllCurrentPatients()) {
+                predicates.add(criteriaBuilder.equal(root.get("isactualpatient"), true));
+            }
+
+            if (request.getIsShowAllDischargePatients() && !request.getIsShowAllCurrentPatients()) {
+                predicates.add(criteriaBuilder.equal(root.get("isactualpatient"), false));
+            }
+
+
             // Order By
             if (request.getIsSortByDateOfBirth()) {
                 query.orderBy(criteriaBuilder.asc(root.get("birthDate")));

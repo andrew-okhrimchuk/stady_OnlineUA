@@ -16,6 +16,7 @@ import java.util.Optional;
 public interface PatientJPARepository extends CrudRepository<Patient, Long> , JpaSpecificationExecutor<Patient> {
      Optional<Patient> findByUsername(@NonNull String username) ;
      Page<Patient> findAll(Specification<Patient> spec, Pageable pageable);
+
      Patient getPatientById(long id);
 
      @Query("select p from User u join Patient p on u.id = p.id  where p.doctor.id =(select d.id from Doctor d join User u on u.id = d.id where u.username  = :username) order by p.username")

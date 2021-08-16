@@ -22,7 +22,6 @@ public class Doctor extends User {
 
     @Builder(builderMethodName = "chilerBuilder")
     public Doctor(Long id, @NotNull @NotEmpty @NotBlank(message = "Name is mandatory") String username, List<Role> authorities, String password, boolean accountNonExpired, boolean accountNonLocked, boolean credentialsNonExpired, boolean enabled) {
-        super(id, username, authorities, password, accountNonExpired, accountNonLocked, credentialsNonExpired, enabled);
-
+        super(id, username, authorities, password, accountNonExpired, accountNonLocked, credentialsNonExpired, enabled, false);
     }
 }

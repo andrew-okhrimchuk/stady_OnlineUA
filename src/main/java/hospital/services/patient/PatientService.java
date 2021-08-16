@@ -41,7 +41,6 @@ public class PatientService implements IPatientService {
         this.bcryptPasswordEncoder = bcryptPasswordEncoder;
     }
 
-
     @Override
     public Page<Patient> getAll(SelectDTO selectDTO, Pageable pageable) throws ServiceExeption {
         log.debug("Start getListPatients of SelectDTO");

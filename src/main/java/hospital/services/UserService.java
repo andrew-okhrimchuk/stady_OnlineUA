@@ -47,6 +47,7 @@ public class UserService implements UserDetailsService, IUserService {
                     .accountNonLocked(true)
                     .credentialsNonExpired(true)
                     .enabled(true)
+                    .isactualpatient(false)
                     .build());
         }
         log.info("End init of user");

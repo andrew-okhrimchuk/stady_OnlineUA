@@ -25,7 +25,7 @@ public class PatientDTO {
     private String username;
     private String birthDate;
     private String password;
-    private String isCurrentPatient;
+    private Boolean isActualPatient;
     private List<Role> authorities = new ArrayList<>();
     private DoctorDTO doctorDTO;
 

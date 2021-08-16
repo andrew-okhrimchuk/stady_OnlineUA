@@ -16,7 +16,7 @@
 <body>
 <div style="text-align: center;">
     <button type="button" class="btn btn-light"><a th:text="#{onMain}" th:href="@{/}" }></a></button>
-    <button type="button" class="btn btn-light"> <a th:text="#{listDoctors}" th:href="@{/admin/doctors}" }></a></button>
+    <button type="button" class="btn btn-light"><a th:text="#{listDoctors}" th:href="@{/admin/doctors}" }></a></button>
     <button type="button" class="btn btn-light"><a href="/logout" th:text="#{logout}"></a></button>
 </div>
 
@@ -35,19 +35,29 @@
                                 <td><input type="hidden" th:field="*{id}"/></td>
                             </tr>
                             <tr>
-                                <td th:text="#{Username}" ></td>
+                                <td th:text="#{Username}"></td>
                                 <td>:</td>
                                 <td><input type="text" th:field="*{username}"/></td>
                             </tr>
                             <tr>
-                                <td th:text="#{dateOfBirth}" ></td>
+                                <td th:text="#{dateOfBirth}"></td>
                                 <td>:</td>
                                 <td><input type="date" th:field="*{birthDate}"/></td>
                             </tr>
                             <tr>
-                                <td th:text="#{Password}" ></td>
+                                <td th:text="#{Password}"></td>
                                 <td></td>
-                                <td><input th:type='text' th:field="*{password}" /></td>
+                                <td><input th:type='text' th:field="*{password}"/></td>
+                            </tr>
+                            <tr>
+                                <td th:text="#{isActualPatient}"></td>
+                                <td></td>
+                                <td><input type="checkbox" th:checked="*{{isActualPatient}} ? 'checked'"
+                                           class="custom-control-input" id="isActualPatient"
+                                           th:field="*{isActualPatient}">
+                                    <label for="isActualPatient" class="custom-control-label"
+                                           th:field="*{{isActualPatient}}"></label>
+                                </td>
                             </tr>
                             <tr>
                                 <td>Select a doctor</td>
@@ -65,7 +75,8 @@
 
                         </table>
                         <input type="submit" class="btn btn-success" th:value="${add} ? #{create} : #{update}"/>
-                        <button type="button" class="btn btn-light"><a th:text="#{cancel}" th:href="@{/admin/patients}" }></a></button>
+                        <button type="button" class="btn btn-light"><a th:text="#{cancel}" th:href="@{/admin/patients}"
+                                                                       }></a></button>
                     </form>
 
                     <br/>

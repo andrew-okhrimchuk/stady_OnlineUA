@@ -44,7 +44,7 @@ public class CurrentPatientController {
 
         String userNameDoctor = SecurityContextHolder.getContext().getAuthentication().getName();
         try {
-            Page<Patient> patients = userService.findAllCurrentPatientsByNameDoctor(userNameDoctor, PageRequest.of(currentPage - 1, pageSize));
+            Page<Patient> patients = userService.findAllPatientsByNameDoctor(userNameDoctor, PageRequest.of(currentPage - 1, pageSize));
             selectDTO.setPage(patients);
             setPageNumbers(model, patients);
             model.addAttribute("SelectDTO", selectDTO);

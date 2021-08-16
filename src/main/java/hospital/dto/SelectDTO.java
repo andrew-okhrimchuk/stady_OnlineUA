@@ -22,7 +22,9 @@ import java.util.List;
 @AllArgsConstructor
 public class SelectDTO {
     private Page page;
-    private String sortByDateOfBirth;
+    private Boolean isSortByDateOfBirth = false;
+    private Boolean isShowAllDischargePatients = false;
+    private Boolean isShowAllCurrentPatients = true;
     private String userNameDoctor;
     private List<Role> authorities = new ArrayList<>();
     private List<String> specialities;

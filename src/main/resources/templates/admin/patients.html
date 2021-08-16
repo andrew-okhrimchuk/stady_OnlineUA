@@ -36,15 +36,33 @@
 
                 <!--   /*@thymesVar id="SelectDTO" type="hospital.dto.SelectDTO"*/-->
                 <form action="/admin/patients" method="get" th:object="${SelectDTO}" id="form">
+                    <div class="custom-control custom-checkbox">
+                        <input type="checkbox"  class="custom-control-input" id="showAllCurrentPatients"
+                               th:checked="*{{isShowAllCurrentPatients}} ? 'checked'"
+                               th:field="*{isShowAllCurrentPatients}"
+                               th:value="${{SelectDTO.isShowAllCurrentPatients}}">
+                        <label for="showAllCurrentPatients" class="custom-control-label"
+                               th:field="*{{isShowAllCurrentPatients}}"
+                               th:text="#{showAllCurrentPatients}"></label>
+                    </div>
 
                     <div class="custom-control custom-checkbox">
-                        <label for="sortByDateOfBirth" class="control-label col-sm-3"
-                               th:field="*{{sortByDateOfBirth}}"
+                        <input type="checkbox" th:checked="*{{isShowAllDischargePatients}} ? 'checked'"
+                               class="custom-control-input" id="showAllDischargePatients"
+                               th:field="*{isShowAllDischargePatients}"
+                               th:value="${{SelectDTO.isShowAllDischargePatients}}">
+                        <label for="showAllDischargePatients" class="custom-control-label"
+                               th:field="*{{isShowAllDischargePatients}}"
+                               th:text="#{showAllDischargePatients}"></label>
+                    </div>
+                    <div class="custom-control custom-checkbox">
+                        <input type="checkbox" th:checked="*{{isSortByDateOfBirth}} ? 'checked'"
+                               class="custom-control-input" id="sortByDateOfBirth"
+                               th:field="*{isSortByDateOfBirth}"
+                               th:value="${{SelectDTO.isSortByDateOfBirth}}">
+                        <label for="sortByDateOfBirth" class="custom-control-label"
+                               th:field="*{{isSortByDateOfBirth}}"
                                th:text="#{sortByDateOfBirth}"></label>
-                        <input type="checkbox" th:checked="*{{sortByDateOfBirth}} ? 'checked'"
-                               class="custom-control-input"
-                               id="sortByDateOfBirth"
-                               th:field="*{sortByDateOfBirth}" th:value="${{SelectDTO.sortByDateOfBirth}}"><br/>
                     </div>
 
                     <div><b>

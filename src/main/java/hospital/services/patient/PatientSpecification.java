@@ -25,7 +25,7 @@ public class PatientSpecification {
                 predicates.add(criteriaBuilder.equal(root.get("userName"), request.getUserNameDoctor()));
             }
             // Order By
-            if (request.getSortByDateOfBirth() != null) {
+            if (request.getIsSortByDateOfBirth()) {
                 query.orderBy(criteriaBuilder.asc(root.get("birthDate")));
             } else {
                 query.orderBy(criteriaBuilder.asc(root.get("username")));

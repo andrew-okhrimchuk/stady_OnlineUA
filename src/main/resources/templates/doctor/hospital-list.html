@@ -33,12 +33,12 @@
                           method="POST">
 
                         <table class="table" border="0">
-                            <tr>
+                            <tr style="display:none;">
                                 <td></td>
                                 <td></td>
                                 <td><input type="hidden" th:field="*{hospitalListId}"/></td>
                             </tr>
-                            <tr>
+                            <tr style="display:none;">
                                 <td></td>
                                 <td></td>
                                 <td><input type="hidden" th:field="*{dateCreate}"/></td>
@@ -48,10 +48,10 @@
                                 <td>:</td>
                                 <td><input type="text" th:field="*{primaryDiagnosis}"/></td>
                             </tr>
-                            <tr>
-                                <td th:text="#{finalDiagnosis}"></td>
-                                <td>:</td>
-                                <td><input type="text" th:field="*{finalDiagnosis}"/></td>
+                            <tr style="display:none;">
+                                <td></td>
+                                <td></td>
+                                <td><input type="hidden" th:field="*{finalDiagnosis}"/></td>
                             </tr>
                             <tr>
                                 <td th:text="#{medicine}"></td>
@@ -91,6 +91,13 @@
                             </a>
                         </button>
 
+                        <button type="button" class="btn btn-light">
+                            <a
+                                    th:onclick="'javascript:rowClickedDischarge(\'' + ${user_id} + '\');'"
+                                    th:text="#{discharge}"}>
+                            </a>
+                        </button>
+
                     </div>
                 </div>
             </div>
@@ -106,6 +113,16 @@
             if (!isEmpty(value)) {
                 console.log("not isEmpty " + value)
                 location.href = "/doctor/medicationLog/" + value;
+            }
+        }
+        function rowClickedDischarge(value) {
+            if (isEmpty(value)) {
+                console.log("isEmpty " + value)
+                location.href = "/doctor/hospital-list/edit/" + [[${user_id}]];
+            }
+            if (!isEmpty(value)) {
+                console.log("not isEmpty " + value)
+                location.href = "/doctor/discharge/" + value;
             }
         }
         function isEmpty(value) {

@@ -13,4 +13,6 @@ public interface IPatientService extends GenericService <Patient, SelectDTO> {
     Patient save(PatientDTO patientDTO) throws ServiceExeption;
     PatientDTO getPatientById(long id) throws ServiceExeption;
     Page<Patient> findAllPatientsByNameDoctor(String username,Pageable pageable) throws ServiceExeption;
+    Page<Patient> findAllCurrentPatientsByNameDoctor(String username,Pageable pageable) throws ServiceExeption ;
+
 }

@@ -29,6 +29,7 @@ public class HospitalList {
     @JoinColumn(name = "patientId"  )  //, foreignKey = @ForeignKey(name = "patientId_fk", foreignKeyDefinition = "FOREIGN KEY (patientid) REFERENCES HospitalList(hospitalListIid)"))
     private Patient patientId;
     private LocalDateTime dateCreate;
+    private LocalDateTime dateDischarge;
 
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)

@@ -24,7 +24,7 @@ import java.util.stream.IntStream;
 @Slf4j
 @Controller
 @RequestMapping("/doctor")
-public class PatientController {
+public class CurrentPatientController {
 
     @Autowired
     PatientService userService;
@@ -44,7 +44,7 @@ public class PatientController {
 
         String userNameDoctor = SecurityContextHolder.getContext().getAuthentication().getName();
         try {
-            Page<Patient> patients = userService.findAllPatientsByNameDoctor(userNameDoctor, PageRequest.of(currentPage - 1, pageSize));
+            Page<Patient> patients = userService.findAllCurrentPatientsByNameDoctor(userNameDoctor, PageRequest.of(currentPage - 1, pageSize));
             selectDTO.setPage(patients);
             setPageNumbers(model, patients);
             model.addAttribute("SelectDTO", selectDTO);

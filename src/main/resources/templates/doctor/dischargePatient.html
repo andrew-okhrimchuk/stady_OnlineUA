@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
+          integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+    <title th:text="'Edit a HospitalList'"></title>
+
+</head>
+<body>
+<div>
+    <button type="button" class="btn btn-light"><a th:text="#{onMain}" th:href="@{/}" }></a></button>
+    <button type="button" class="btn btn-light"><a href="/doctor/patients" th:text="#{listPatients}"></a></a></button>
+    <button type="button" class="btn btn-light"><a href="/logout" th:text="#{logout}"></a></button>
+
+<div class="container">
+
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+            <div class="panel panel-default" style="margin-top:45px">
+                <div class="panel-heading">
+                    <h3 class="panel-title" th:text="#{discharge}"></h3>
+                </div>
+                <div class="panel-body">
+                    <!--   /*@thymesVar id="hospitalList" type="hospital.domain.HospitalList"*/-->
+
+                    <form th:action="@{/doctor/discharge/{path}(path=${user_id})}" th:object="${hospitalList}"
+                          method="POST">
+
+                        <table class="table" border="0">
+                            <tr style="display:none;">
+                                <td></td>
+                                <td></td>
+                                <td><input type="hidden" th:field="*{hospitalListId}"/></td>
+                            </tr>
+                            <tr style="display:none;">
+                                <td></td>
+                                <td></td>
+                                <td><input type="hidden" th:field="*{dateCreate}"/></td>
+                            </tr>
+                            <tr style="display:none;">
+                                <td></td>
+                                <td></td>
+                                <td><input type="hidden" th:field="*{dateDischarge}"/></td>
+                            </tr>
+                            <tr style="display:none;">
+                                <td></td>
+                                <td></td>
+                                <td><input type="hidden" th:field="*{primaryDiagnosis}"/></td>
+                            </tr>
+                            <tr>
+                                <td th:text="#{finalDiagnosis}"></td>
+                                <td>:</td>
+                                <td><input type="text" th:field="*{finalDiagnosis}"/></td>
+                            </tr>
+                            <tr style="display:none;">
+                                <td></td>
+                                <td></td>
+                                <td><input type="hidden"  th:field="*{medicine}"/></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td><input type="hidden" th:field="*{operations}"/></td>
+                            </tr>
+                        </table>
+                        <div>
+                            <input type="submit" class="btn btn-success" th:value="#{save}"/>
+                            <button type="button" class="btn btn-light"><a th:text="#{cancel}"
+                                                                           th:href="@{/doctor/patients}" }></a>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <br/>
+    <div th:if="${errorMessage}" th:utext="${errorMessage}" class="error"/>
+</div>
+<!--<script th:inline="javascript">
+    function rowClicked() {
+        location.href = "/doctor/hospital-list/edit/" + [[${user_id}]] ;
+    }
+</script>-->
+</body>
+</html>

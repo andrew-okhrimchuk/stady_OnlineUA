@@ -29,9 +29,9 @@
         </encoder>
     </appender>
 
-    <logger name="hospital" level="info"/>
+    <logger name="hospital" level="debug"/>
 
-    <root level="info">
+    <root level="debug">
         <appender-ref ref="file"/>
         <appender-ref ref="console"/>
     </root>

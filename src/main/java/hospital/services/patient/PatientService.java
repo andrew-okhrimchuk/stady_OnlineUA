@@ -102,9 +102,9 @@ public class PatientService implements IPatientService {
         }
     }
     @Override
-    public Page<Patient> findAllCurrentPatientsByNameDoctor(String username,Pageable pageable) throws ServiceExeption {
+    public Page<Patient> findAllCurrentPatientsByNameDoctor(SelectDTO selectDTO,Pageable pageable) throws ServiceExeption {
         try {
-            return patientJPARepository.findAllCurrentPatientsByNameDoctor(username, pageable);
+            return patientJPARepository.findAll(patientSpecification.getCurrentPatientsByDoctorName(selectDTO), pageable);
         } catch (DaoExeption | DataIntegrityViolationException e) {
             log.error("findAllPatientsByNameDoctor {}, {}", env.getProperty("GET_ALL_ERROR_MESSAGE_DOCTOR"), e.getMessage());
             throw new ServiceExeption(e.getMessage(), e);

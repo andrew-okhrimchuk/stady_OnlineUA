@@ -1,4 +1,4 @@
-package hospital.web.admin;
+package hospital.controller.admin;
 
 import hospital.domain.Doctor;
 import hospital.dto.DoctorDTO;
@@ -6,7 +6,7 @@ import hospital.dto.SelectDTO;
 import hospital.services.UserService;
 import hospital.services.doctor.DoctorService;
 import hospital.services.patient.PatientService;
-import hospital.web.config.security.SecurityConfigToTest;
+import hospital.controller.config.security.SecurityConfigToTest;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

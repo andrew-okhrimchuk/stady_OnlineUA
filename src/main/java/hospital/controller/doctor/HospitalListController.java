@@ -1,4 +1,4 @@
-package hospital.web.doctor;
+package hospital.controller.doctor;
 
 import hospital.domain.HospitalList;
 import hospital.domain.Patient;
@@ -7,7 +7,7 @@ import hospital.exeption.ServiceExeption;
 import hospital.services.doctor.DoctorService;
 import hospital.services.hospitalList.HospitalListService;
 import hospital.services.patient.PatientService;
-import hospital.web.MainController;
+import hospital.controller.MainController;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

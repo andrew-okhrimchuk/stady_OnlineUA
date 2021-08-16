@@ -1,4 +1,4 @@
-package hospital.web.doctor;
+package hospital.controller.doctor;
 
 import hospital.domain.Patient;
 import hospital.dto.SelectDTO;
@@ -44,7 +44,14 @@ public class CurrentPatientController {
 
         String userNameDoctor = SecurityContextHolder.getContext().getAuthentication().getName();
         try {
-            Page<Patient> patients = userService.findAllPatientsByNameDoctor(userNameDoctor, PageRequest.of(currentPage - 1, pageSize));
+            Page<Patient> patients = userService.findAllCurrentPatientsByNameDoctor(
+                    SelectDTO.builder()
+                    .userNameDoctor(userNameDoctor)
+                            .isShowAllDischargePatients(false)
+                            .isShowAllCurrentPatients(true)
+                            .isSortByDateOfBirth(false)
+                            .build(),
+                    PageRequest.of(currentPage - 1, pageSize));
             selectDTO.setPage(patients);
             setPageNumbers(model, patients);
             model.addAttribute("SelectDTO", selectDTO);

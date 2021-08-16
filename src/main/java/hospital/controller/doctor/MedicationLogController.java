@@ -1,4 +1,4 @@
-package hospital.web.doctor;
+package hospital.controller.doctor;
 
 import hospital.domain.MedicationLog;
 import hospital.dto.SelectDTO;

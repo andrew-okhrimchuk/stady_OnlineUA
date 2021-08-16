@@ -1,4 +1,4 @@
-package hospital.web.admin;
+package hospital.controller.admin;
 
 import hospital.domain.enums.Speciality;
 import hospital.dto.DoctorDTO;

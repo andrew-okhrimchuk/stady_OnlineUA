@@ -5,6 +5,7 @@ import hospital.dto.PatientDTO;
 import hospital.exeption.ServiceExeption;
 import hospital.services.UserService;
 import hospital.services.doctor.DoctorService;
+import hospital.services.hospitalList.HospitalListService;
 import hospital.services.patient.PatientService;
 import hospital.controller.config.security.SecurityConfigToTest;
 import org.junit.jupiter.api.Test;
@@ -39,6 +40,8 @@ class PatientsControllerTest {
     private DoctorService doctorService;
     @MockBean
     private UserService userService;
+    @MockBean
+    private HospitalListService hospitalListService;
     @Autowired
     private WebApplicationContext webApplicationContext;
     @Autowired

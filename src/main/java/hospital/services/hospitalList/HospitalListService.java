@@ -6,6 +6,7 @@ import hospital.exeption.DaoExeption;
 import hospital.exeption.NotValidExeption;
 import hospital.exeption.ServiceExeption;
 import hospital.persistence.HospitalListJPARepository;
+import hospital.persistence.PatientJPARepository;
 import hospital.persistence.UserJPARepository;
 import hospital.services.hospitalList.excel.ExcelFileExporter;
 import hospital.services.interfaces.IHospitalListService;
@@ -29,6 +30,8 @@ public class HospitalListService implements IHospitalListService {
     @Autowired
     private UserJPARepository userJPARepository;
     @Autowired
+    private PatientJPARepository patientJPARepository;
+    @Autowired
     private HospitalListJPARepository hospitalListJPARepository;
     @Autowired
     private Environment env;
@@ -42,6 +45,7 @@ public class HospitalListService implements IHospitalListService {
             validation(hospitalList);
             if (userId != 0L) {
                 userJPARepository.updateCurrent(userId);
+                patientJPARepository.updateCurrent(userId);
             }
             return hospitalListJPARepository.save(hospitalList);
         } catch (DaoExeption | DateTimeParseException | NotValidExeption e) {

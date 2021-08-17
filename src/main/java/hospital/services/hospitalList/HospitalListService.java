@@ -7,6 +7,7 @@ import hospital.exeption.NotValidExeption;
 import hospital.exeption.ServiceExeption;
 import hospital.persistence.HospitalListJPARepository;
 import hospital.persistence.UserJPARepository;
+import hospital.services.hospitalList.excel.ExcelFileExporter;
 import hospital.services.interfaces.IHospitalListService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,8 +16,10 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.ByteArrayInputStream;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
+import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -24,18 +27,22 @@ import java.util.Optional;
 public class HospitalListService implements IHospitalListService {
 
     @Autowired
-    UserJPARepository userJPARepository;
+    private UserJPARepository userJPARepository;
     @Autowired
     private HospitalListJPARepository hospitalListJPARepository;
     @Autowired
     private Environment env;
+    @Autowired
+    ExcelFileExporter excelFileExporter;
 
     @Transactional
     public HospitalList save(HospitalList hospitalList, Long userId) throws ServiceExeption {
         log.debug("Start saveHospitalList of User. userDTO = {}", hospitalList);
         try {
             validation(hospitalList);
-            if (userId != 0L) {userJPARepository.updateCurrent(userId);}
+            if (userId != 0L) {
+                userJPARepository.updateCurrent(userId);
+            }
             return hospitalListJPARepository.save(hospitalList);
         } catch (DaoExeption | DateTimeParseException | NotValidExeption e) {
             log.error("saveHospitalList {}, {}", env.getProperty("SAVE_NEW_PATIENT"), e.getMessage());
@@ -51,7 +58,7 @@ public class HospitalListService implements IHospitalListService {
         log.debug("Start findByParientIdAndDoctorId. parientId {}, doctorName {}", parientId, doctorName);
         try {
             Optional<HospitalList> result = hospitalListJPARepository.findFirstByDoctorNameAndPatientIdOrderByDateCreateDesc(doctorName, Patient.chilerBuilder().id(Long.parseLong(parientId)).build());
-            if (result.isPresent() && result.get().getDateDischarge()!=null){
+            if (result.isPresent() && result.get().getDateDischarge() != null) {
                 return Optional.of(HospitalList.builder().dateCreate(LocalDateTime.now()).build());
             }
             return result;
@@ -62,6 +69,14 @@ public class HospitalListService implements IHospitalListService {
             log.error("findByParientIdAndDoctorId {}, parientId = {}, {}", env.getProperty("SAVE_NEW_PATIENT_DUPLICATE"), parientId, e.getMessage());
             throw new ServiceExeption(env.getProperty("SAVE_NEW_PATIENT_DUPLICATE"), e);
         }
+    }
+
+    public ByteArrayInputStream ListToExcelFile(String userId) {
+        List<HospitalList> list = hospitalListJPARepository
+                .findAllByPatientId(Patient.chilerBuilder()
+                        .id(Long.valueOf(userId))
+                        .build());
+        return excelFileExporter.callsListToExcelFile(list);
     }
 
     private void validation(HospitalList hospitalList) throws NotValidExeption {

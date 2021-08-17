@@ -6,18 +6,24 @@ import hospital.dto.SelectDTO;
 import hospital.dto.PatientDTO;
 import hospital.exeption.ServiceExeption;
 import hospital.services.doctor.DoctorService;
+import hospital.services.hospitalList.HospitalListService;
 import hospital.services.patient.PatientService;
 import hospital.controller.MainController;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolationException;
 import javax.validation.constraints.NotNull;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -30,6 +36,8 @@ import java.util.stream.IntStream;
 public class PatientsController {
     @Autowired
     PatientService userService;
+    @Autowired
+    HospitalListService hospitalListService;
     @Autowired
     DoctorService doctorService;
 
@@ -103,11 +111,11 @@ public class PatientsController {
 
     @GetMapping("/patients/edit/{user_id}")
     public String showEditPatient(Model model,
-                                  @NotNull @PathVariable("user_id") String user_id) {
+                                  @NotNull @PathVariable("user_id") String userId) {
         log.debug("Start showEditPatient");
         try {  model
                 .addAttribute("edit", true)
-                .addAttribute("user", userService.getPatientById(Long.parseLong(user_id)))
+                .addAttribute("user", userService.getPatientById(Long.parseLong(userId)))
                 .addAttribute("doctors", doctorService.findAllWithCount());
 
         } catch (ServiceExeption e) {
@@ -137,5 +145,15 @@ public class PatientsController {
             model.addAttribute("errorMessage", e.getMessage());
         }
         return "admin/patient-edit";
+    }
+
+    @GetMapping("/download/{user_id}/hospital-list.xlsx")
+    public void downloadLists(@NotNull @PathVariable("user_id") String userId,
+            HttpServletResponse response) throws IOException {
+        log.info("Start downloadLists");
+        response.setContentType("application/octet-stream");
+        response.setHeader("Content-Disposition", "attachment; filename=HospitalList.xlsx");
+        ByteArrayInputStream stream = hospitalListService.ListToExcelFile(userId);
+        IOUtils.copy(stream, response.getOutputStream());
     }
 }

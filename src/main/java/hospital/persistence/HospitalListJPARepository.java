@@ -8,9 +8,11 @@ import lombok.NonNull;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
 public interface HospitalListJPARepository extends CrudRepository<HospitalList, Long>  {
     Optional<HospitalList> findFirstByDoctorNameAndPatientIdOrderByDateCreateDesc(String doctorName, Patient patientId);
+    List<HospitalList> findAllByPatientId(Patient patientId);
 }

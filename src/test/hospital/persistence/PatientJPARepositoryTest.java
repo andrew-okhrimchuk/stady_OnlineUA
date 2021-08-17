@@ -2,7 +2,6 @@ package hospital.persistence;
 
 import hospital.domain.Patient;
 import hospital.domain.enums.Role;
-import hospital.services.patient.PatientSpecification;
 import org.junit.Test;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.runner.RunWith;

@@ -75,7 +75,6 @@
                         <button type="button" class="btn btn-light"><a
                                 th:text="#{appointNurse}"
                                 href="#" }>
-                            <!--th:href="@{/doctor/nurses/{path}(path=${hospitalList.hospitalListId})}"-->
                         </a></button>
                         <button type="button" class="btn btn-light">
                             <a
@@ -87,12 +86,11 @@
                             <a
                                     th:text="#{activityLog}"  href="#"
                              }>
-                                <!-- th:href="@{/doctor/activityLog/{path}(path=${hospitalList.hospitalListId})}"-->
                             </a>
                         </button>
 
                         <button type="button" class="btn btn-light">
-                            <a      onclick=rowClickedDischarge({${user_id}})
+                            <a      th:onclick="|rowClickedDischarge('${user_id}')|"
                                     th:text="#{discharge}"}>
                             </a>
                         </button>
@@ -132,10 +130,6 @@
     <br/>
     <div th:if="${errorMessage}" th:utext="${errorMessage}" class="error"/>
 </div>
-<!--<script th:inline="javascript">
-    function rowClicked() {
-        location.href = "/doctor/hospital-list/edit/" + [[${user_id}]] ;
-    }
-</script>-->
+
 </body>
 </html>

@@ -2,6 +2,7 @@ package hospital.dto;
 
 import hospital.domain.Doctor;
 import hospital.domain.enums.Role;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -18,6 +19,7 @@ import java.util.List;
 @Setter
 @RequestScope
 @ToString
+@EqualsAndHashCode
 public class PatientDTO {
     public static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 

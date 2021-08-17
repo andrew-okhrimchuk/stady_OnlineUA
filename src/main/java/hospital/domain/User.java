@@ -27,9 +27,6 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
-    @NotNull
-    @NotEmpty
-    @NotBlank(message = "Name is mandatory")
     @Column(unique = true)
     private String username;
 

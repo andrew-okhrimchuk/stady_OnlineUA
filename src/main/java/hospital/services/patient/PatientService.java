@@ -102,7 +102,7 @@ public class PatientService implements IPatientService {
         }
     }
 
-    private Patient convertToEntity(PatientDTO patientDTO) throws DateTimeParseException, NotValidExeption {
+    public Patient convertToEntity(PatientDTO patientDTO) throws DateTimeParseException, NotValidExeption {
         if (!patientDTO.isValid()) {
             throw new NotValidExeption(env.getProperty("SAVE_NEW_NOT_VALID"));
         }
@@ -120,7 +120,7 @@ public class PatientService implements IPatientService {
         return new PageImpl<>(doctorDTO);
     }
 
-    private PatientDTO convertToDto(Patient patient) {
+    public PatientDTO convertToDto(Patient patient) {
         PatientDTO patientDTO = modelMapper.map(patient, PatientDTO.class);
         patientDTO.setBirthDate(patientDTO.convertToDatabaseColumn(patient.getBirthDate()));
         patientDTO.setId(String.valueOf(patient.getId()));

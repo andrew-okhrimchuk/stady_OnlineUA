@@ -70,7 +70,7 @@ public class MedicationLogController {
         log.debug("Start addMedicationLogPost, {}", medicationLog);
         String doctorName = SecurityContextHolder.getContext().getAuthentication().getName();
         try {
-            medicationLog.setExecutor(doctorName);
+            medicationLog.setDoctorName(doctorName);
             medicationLogService.save(medicationLog);
             model.addAttribute("errorMessage", "Save Ok.");
             return "redirect:/doctor/medicationLog/"+ medicationLog.getHospitallistid();
@@ -80,6 +80,26 @@ public class MedicationLogController {
         }
         // unsucces ->
         return "doctor/medicationLog-add";
+    }
+
+    @GetMapping("/medicationLog/done/{hospitalListId}/{medicationlogId}")
+    public String doneMedicationLog(Model model,
+                                   @NotNull @PathVariable("hospitalListId") String hospitalListId,
+                                   @NotNull @PathVariable("medicationlogId") String medicationlogId) {
+        log.debug("Start doneMedicationLog, hospitalListId = {}, medicationlogId = {}", hospitalListId, medicationlogId);
+        String executor = SecurityContextHolder.getContext().getAuthentication().getName();
+        try {
+            MedicationLog medicationLog = MedicationLog.builder().medicationlogId(Long.valueOf(medicationlogId)).executor(executor).build();
+            medicationLogService.done(medicationLog);
+            model.addAttribute("errorMessage", "Save Ok.");
+            return "redirect:/doctor/medicationLog/"+ hospitalListId;
+        } catch (ServiceExeption e) {
+            log.error(e.getMessage());
+            model.addAttribute("errorMessage", e.getMessage());
+        }
+        StringBuilder sb = new  StringBuilder();
+        sb.append("/doctor/medicationLog/").append(hospitalListId);
+        return sb.toString();
     }
 
     private void setPageNumbers(Model model, Page<MedicationLog> medicationLogs) {

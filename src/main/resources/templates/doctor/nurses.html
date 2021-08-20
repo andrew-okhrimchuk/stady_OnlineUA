@@ -18,24 +18,46 @@
     <button type="button" class="btn btn-light"><a href="/doctor/patients" th:text="#{listPatients}"></a></a></button>
     <button type="button" class="btn btn-light"><a href="/logout" th:text="#{logout}"></a></button>
 </div>
-
+<!--   /*@thymesVar id="myNurses" type="java.util.List<hospital.domain.Nurse>"*/-->
 <div class="row">
     <div class="col-md-6 col-md-offset-3">
         <div class="panel panel-default" style="margin-top:45px">
             <div class="panel-heading">
-                <h3 class="panel-title" th:text="#{medicationLog}"></h3>
+                <h3 class="panel-title" th:text="#{listOfNurse}"></h3>
             </div>
             <div class="panel-body">
+                <div th:text="#{lisrNursesOfPapients}"></div>
+
+                <table class="table" border="1">
+                    <thead>
+                    <tr>
+                        <th width="8%">#</th>
+                        <th width="8%" th:text="#{FIO}"></th>
+                        <th width="8%" th:text="#{busi}"></th>
+                        <th width="8%" th:text="#{actions}"></th>
+
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="item, iter : ${myNurses}">
+                        <td th:text="${iter.count}"></td>
+                        <td th:text="${item.username}"></td>
+                        <td th:text="${item.countOfPatients}"></td>
+                        <td>
+                            <a th:href="@{/doctor/nurse/delete/{hospitalListId}/{nurseId}/{userId}(hospitalListId=${hospitalListId}, nurseId=${item.id}, userId=${user_id})}"
+                            ><span th:text="#{deleteNurse}"></span></a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                <div th:text="#{lisrFreeNurses}"></div>
                 <!--   /*@thymesVar id="SelectDTO" type="hospital.dto.SelectDTO"*/-->
                 <table class="table" border="1">
                     <thead>
                     <tr>
                         <th width="8%">#</th>
-                        <th width="8%" th:text="#{dateCreate}"></th>
-                        <th width="8%" th:text="#{doctorName}"></th>
-                        <th width="8%" th:text="#{description}"></th>
-                        <th width="8%" th:text="#{dateEnd}"></th>
-                        <th width="8%" th:text="#{executor}"></th>
+                        <th width="8%" th:text="#{FIO}"></th>
+                        <th width="8%" th:text="#{busi}"></th>
                         <th width="8%" th:text="#{actions}"></th>
 
                     </tr>
@@ -43,15 +65,11 @@
                     <tbody>
                     <tr th:each="item, iter : ${SelectDTO.getPage().getContent()}">
                         <td th:text="${iter.count}"></td>
-                        <td th:text="${#strings.equals(#locale, 'ru')} ? ${#temporals.format(item.dateCreate, 'dd-MM-yyyy')} : ${#temporals.format(item.dateCreate, 'MMMM-dd-yyyy:HH-mm')}"></td>
-                        <td th:text="${item.doctorName}"></td>
-                        <td th:text="${item.description}"></td>
-                        <td th:text="${#strings.equals(#locale, 'ru')} ? ${#temporals.format(item.dateEnd, 'dd-MM-yyyy:HH-mm')} : ${#temporals.format(item.dateEnd, 'MMMM-dd-yyyy:HH-mm')}"></td>
-                        <td th:text="${item.executor}"></td>
+                        <td th:text="${item.username}"></td>
+                        <td th:text="${item.countOfPatients}"></td>
                         <td>
-                            <a th:href="@{/doctor/medicationLog/done/{hospitalListId}/{medicationlogId}(hospitalListId=${hospitalListId}, medicationlogId=${item.medicationlogId})}"
-                               th:if="${item.dateEnd == null}"><span th:text="#{execute}"></span></a>
-                            <span th:text="#{done}" th:style="${item.dateEnd ==null} ? 'display:none;'"></span>
+                            <a th:href="@{/doctor/nurse/add/{hospitalListId}/{nurseId}/{userId}(hospitalListId=${hospitalListId}, nurseId=${item.id}, userId=${user_id})}"
+                               ><span th:text="#{appointNurse}"></span></a>
                         </td>
                     </tr>
                     </tbody>
@@ -62,13 +80,6 @@
                        th:text="${pageNumber}"
                        th:class="${pageNumber==SelectDTO.getPage().number + 1} ? active"></a>
                 </div>
-                <div class="xx0"><b>
-                    <button type="button" class="btn btn-warning">
-                        <a th:text="#{addPatient}"
-                           th:href="@{/doctor/medicationLog/add/{path}(path=${hospitalListId})}" }>
-                        </a>
-                    </button>
-                </b></div>
                 <div th:if="${errorMessage}" th:utext="${errorMessage}" class="error"/>
             </div>
         </div>

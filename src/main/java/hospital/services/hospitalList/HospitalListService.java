@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.ByteArrayInputStream;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 import java.util.List;
@@ -38,17 +39,11 @@ public class HospitalListService implements IHospitalListService {
     @Autowired
     ExcelFileExporter excelFileExporter;
 
-    @Transactional
-    public HospitalList save(HospitalList hospitalList, Long userId) throws ServiceExeption {
+    public HospitalList save(HospitalList hospitalList) throws ServiceExeption {
         log.debug("Start saveHospitalList of User. userDTO = {}", hospitalList);
         try {
-            validation(hospitalList);
-            if (userId != 0L) {
-                userJPARepository.updateCurrent(userId);
-                patientJPARepository.updateCurrent(userId);
-            }
             return hospitalListJPARepository.save(hospitalList);
-        } catch (DaoExeption | DateTimeParseException | NotValidExeption e) {
+        } catch (DaoExeption | DateTimeParseException e) {
             log.error("saveHospitalList {}, {}", env.getProperty("SAVE_NEW_PATIENT"), e.getMessage());
             throw new ServiceExeption(e.getMessage(), e);
         } catch (DataIntegrityViolationException e) {
@@ -56,6 +51,24 @@ public class HospitalListService implements IHospitalListService {
             throw new ServiceExeption(env.getProperty("SAVE_NEW_PATIENT_DUPLICATE"), e);
         }
     }
+
+    @Transactional
+    public int updateDateDischarge(HospitalList hospitalList) throws ServiceExeption {
+        log.debug("Start saveHospitalList of User. userDTO = {}", hospitalList);
+        try {
+            userJPARepository.updateCurrent(hospitalList.getPatientId().getId());
+            patientJPARepository.updateCurrent(hospitalList.getPatientId().getId());
+            return hospitalListJPARepository.updateDateDischarge(hospitalList.getHospitalListId(), hospitalList.getFinalDiagnosis(), LocalDateTime.now());
+
+        } catch (DaoExeption | DateTimeParseException e) {
+            log.error("saveHospitalList {}, {}", env.getProperty("SAVE_NEW_PATIENT"), e.getMessage());
+            throw new ServiceExeption(e.getMessage(), e);
+        } catch (DataIntegrityViolationException e) {
+            log.error("saveHospitalList {}, {}, {}", env.getProperty("SAVE_NEW_PATIENT_DUPLICATE"), hospitalList.getHospitalListId(), e.getMessage());
+            throw new ServiceExeption(env.getProperty("SAVE_NEW_PATIENT_DUPLICATE"), e);
+        }
+    }
+
 
     @Override
     public Optional<HospitalList> findByParientIdAndDoctorName(String parientId, String doctorName) throws ServiceExeption {

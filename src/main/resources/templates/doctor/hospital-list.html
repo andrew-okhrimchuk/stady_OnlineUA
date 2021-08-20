@@ -74,7 +74,7 @@
                     <div>
                         <button type="button" class="btn btn-light"><a
                                 th:text="#{appointNurse}"
-                                href="#" }>
+                                th:href="@{/doctor/nurse/{hospitalListId}/{user_id}(hospitalListId=${hospitalList.hospitalListId}, user_id=${user_id})}" }>
                         </a></button>
                         <button type="button" class="btn btn-light">
                             <a
@@ -130,6 +130,6 @@
     <br/>
     <div th:if="${errorMessage}" th:utext="${errorMessage}" class="error"/>
 </div>
-
+</div>
 </body>
 </html>

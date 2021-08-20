@@ -53,12 +53,11 @@ public class DischargeController {
         log.debug("Start saveFinalHospitalList,user_id {}", userId);
         log.debug("Start saveFinalHospitalList,hospitalList {}", hospitalList);
         String userNameDoctor = SecurityContextHolder.getContext().getAuthentication().getName();
-        hospitalList.setDoctorName(userNameDoctor);
         hospitalList.setDateDischarge(LocalDateTime.now());
         hospitalList.setPatientId(Patient.chilerBuilder().id(Long.valueOf(userId)).build());
 
         try {
-            hospitalListService.save(hospitalList, Long.valueOf(userId));
+            hospitalListService.updateDateDischarge(hospitalList);
             model.addAttribute("errorMessage", "Save Ok.");
             return "redirect:/doctor/patients";
         } catch (ServiceExeption e) {

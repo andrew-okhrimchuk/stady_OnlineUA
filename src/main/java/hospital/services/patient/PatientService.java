@@ -1,16 +1,20 @@
 package hospital.services.patient;
 
+import hospital.domain.Nurse;
 import hospital.domain.Patient;
+import hospital.domain.PatientNurse;
 import hospital.domain.enums.Role;
 import hospital.dto.SelectDTO;
 import hospital.dto.PatientDTO;
 import hospital.exeption.DaoExeption;
 import hospital.exeption.NotValidExeption;
 import hospital.exeption.ServiceExeption;
+import hospital.persistence.ParientNurseJPARepository;
 import hospital.persistence.PatientJPARepository;
 import hospital.services.interfaces.IPatientService;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
@@ -27,6 +31,8 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 public class PatientService implements IPatientService {
+    @Autowired
+    ParientNurseJPARepository parientNurseJPARepository;
     private final PatientJPARepository patientJPARepository;
     private final PatientSpecification patientSpecification;
     private final Environment env;
@@ -84,6 +90,8 @@ public class PatientService implements IPatientService {
 
     @Override
     public PatientDTO getPatientById(long id) throws ServiceExeption {
+        log.debug("Start getPatientById of User. id = {}", id);
+
         try {
         return convertToDto(patientJPARepository.getPatientById(id));
         } catch (DaoExeption | DataIntegrityViolationException e) {
@@ -94,10 +102,35 @@ public class PatientService implements IPatientService {
 
     @Override
     public Page<Patient> findAllCurrentPatientsByNameDoctor(SelectDTO selectDTO,Pageable pageable) throws ServiceExeption {
+        log.debug("Start findAllCurrentPatientsByNameDoctor of User. selectDTO = {}", selectDTO);
         try {
             return patientJPARepository.findAll(patientSpecification.getCurrentPatientsByDoctorName(selectDTO), pageable);
         } catch (DaoExeption | DataIntegrityViolationException e) {
             log.error("findAllPatientsByNameDoctor {}, {}", env.getProperty("GET_ALL_ERROR_MESSAGE_DOCTOR"), e.getMessage());
+            throw new ServiceExeption(e.getMessage(), e);
+        }
+    }
+
+    public PatientNurse addNurseById(String nurseId, String userId) throws ServiceExeption {
+        log.debug("Start addNurseById of User. id = {}", userId);
+        try {
+            return parientNurseJPARepository.save(PatientNurse.builder()
+                    .nurses_id(Long.valueOf(nurseId))
+                    .patients_user_id(Long.valueOf(userId))
+                    .build());
+        } catch (DaoExeption | DataIntegrityViolationException e) {
+            log.error("addNurseById {}, {}", env.getProperty("GET_ALL_ERROR_MESSAGE_DOCTOR"), e.getMessage());
+            throw new ServiceExeption(e.getMessage(), e);
+        }
+    }
+
+    public int deleteNurseById(String nurseId, String userId) throws ServiceExeption {
+        log.debug("Start deleteNurseById of User. id = {}", nurseId);
+        try {
+            return parientNurseJPARepository.deleteNurse(
+                    Long.valueOf(nurseId), Long.valueOf(userId));
+        } catch (DaoExeption | DataIntegrityViolationException e) {
+            log.error("deleteNurseById {}, {}", env.getProperty("GET_ALL_ERROR_MESSAGE_DOCTOR"), e.getMessage());
             throw new ServiceExeption(e.getMessage(), e);
         }
     }

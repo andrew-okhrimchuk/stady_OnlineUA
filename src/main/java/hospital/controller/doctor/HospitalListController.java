@@ -59,7 +59,7 @@ public class HospitalListController {
         hospitalList.setDoctorName(userNameDoctor);
         hospitalList.setPatientId(Patient.chilerBuilder().id(Long.valueOf(userId)).build());
         try {
-            hospitalListService.save(hospitalList, 0L);
+            hospitalListService.save(hospitalList);
             model.addAttribute("errorMessage", "Save Ok.");
             return "redirect:/doctor/patients";
         } catch (ServiceExeption e) {

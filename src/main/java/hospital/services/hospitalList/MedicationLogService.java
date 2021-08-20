@@ -14,6 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 
 @Slf4j
@@ -25,12 +26,27 @@ public class MedicationLogService implements IMedicationLogService {
     @Autowired
     private Environment env;
 
+    @Override
     public MedicationLog save(MedicationLog medicationLog) throws ServiceExeption {
         log.debug("Start save MedicationLog, medicationLog = {}", medicationLog);
         try {
             validation(medicationLog);
             return medicationLogJPARepository.save(medicationLog);
         } catch (DaoExeption | DateTimeParseException | NotValidExeption e) {
+            log.error("MedicationLog {}, {}", env.getProperty("SAVE_NEW_MedicationLog"), e.getMessage());
+            throw new ServiceExeption(e.getMessage(), e);
+        } catch (DataIntegrityViolationException e) {
+            log.error("MedicationLog {}, {}, {}", env.getProperty("SAVE_NEW_PATIENT_MedicationLog"), medicationLog.getMedicationlogId(), e.getMessage());
+            throw new ServiceExeption(env.getProperty("SAVE_NEW_PATIENT_MedicationLog"), e);
+        }
+    }
+
+    @Override
+    public int done(MedicationLog medicationLog) throws ServiceExeption {
+        log.debug("Start done MedicationLog, medicationLog = {}", medicationLog);
+        try {
+            return medicationLogJPARepository.done(medicationLog.getMedicationlogId(), medicationLog.getExecutor(), LocalDateTime.now());
+        } catch (DaoExeption | DateTimeParseException e) {
             log.error("MedicationLog {}, {}", env.getProperty("SAVE_NEW_MedicationLog"), e.getMessage());
             throw new ServiceExeption(e.getMessage(), e);
         } catch (DataIntegrityViolationException e) {

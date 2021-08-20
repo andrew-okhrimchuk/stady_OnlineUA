@@ -21,7 +21,9 @@ public class MedicationLog {
     private Long hospitallistid;
     private String description;
     private String executor;
+    private String doctorName;
     private LocalDateTime dateCreate = LocalDateTime.now();
+    private LocalDateTime dateEnd;
 
     public boolean isValid (){
         return this.description !=null

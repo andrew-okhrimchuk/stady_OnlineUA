@@ -39,13 +39,8 @@ public class PatientSpecification {
                 predicates.add(criteriaBuilder.equal(root.get("isactualpatient"), false));
             }
 
-
             // Order By
-            if (request.getIsSortByDateOfBirth()) {
-                query.orderBy(criteriaBuilder.asc(root.get("birthDate")));
-            } else {
-                query.orderBy(criteriaBuilder.asc(root.get("username")));
-            }
+            query.orderBy(criteriaBuilder.asc(root.get(request.getIsSortByDateOfBirth() ? "birthDate" : "username")));
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
         };
     }
@@ -62,9 +57,8 @@ public class PatientSpecification {
             sub.select(subRoot.get("id"));
             sub.where(criteriaBuilder.equal(subRoot.get("username"), request.getUserNameDoctor()));
             predicates.add(criteriaBuilder.equal(root.get("doctor").get("id"), sub));
-
-
             predicates.add(criteriaBuilder.equal(root.get("isactualpatient"), true));
+
             // Order By
             query.orderBy(criteriaBuilder.asc(root.get("birthDate")));
             return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));

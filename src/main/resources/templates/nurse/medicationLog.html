@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html th:with="lang=${#locale.language}" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
+          integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+    <title th:text="'Edit a HospitalList'"></title>
+
+</head>
+<body>
+<div style="text-align: center;">
+    <button type="button" class="btn btn-light"><a th:text="#{onMain}" th:href="@{/}" }></a></button>
+    <button type="button" class="btn btn-light"><a href="/nurse/patients" th:text="#{listPatients}"></a></a></button>
+    <button type="button" class="btn btn-light"><a href="/logout" th:text="#{logout}"></a></button>
+</div>
+
+<div class="row">
+    <div class="col-md-6 col-md-offset-3">
+        <div class="panel panel-default" style="margin-top:45px">
+            <div class="panel-heading">
+                <h3 class="panel-title" th:text="#{medicationLog}"></h3>
+            </div>
+            <div class="panel-body">
+                <!--   /*@thymesVar id="SelectDTO" type="hospital.dto.SelectDTO"*/-->
+                <table class="table" border="1">
+                    <thead>
+                    <tr>
+                        <th width="8%">#</th>
+                        <th width="8%" th:text="#{dateCreate}"></th>
+                        <th width="8%" th:text="#{doctorName}"></th>
+                        <th width="8%" th:text="#{description}"></th>
+                        <th width="8%" th:text="#{dateEnd}"></th>
+                        <th width="8%" th:text="#{executor}"></th>
+                        <th width="8%" th:text="#{actions}"></th>
+
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="item, iter : ${SelectDTO.getPage().getContent()}">
+                        <td th:text="${iter.count}"></td>
+                        <td th:text="${#strings.equals(#locale, 'ru')} ? ${#temporals.format(item.dateCreate, 'dd-MM-yyyy')} : ${#temporals.format(item.dateCreate, 'MMMM-dd-yyyy:HH-mm')}"></td>
+                        <td th:text="${item.doctorName}"></td>
+                        <td th:text="${item.description}"></td>
+                        <td th:text="${#strings.equals(#locale, 'ru')} ? ${#temporals.format(item.dateEnd, 'dd-MM-yyyy:HH-mm')} : ${#temporals.format(item.dateEnd, 'MMMM-dd-yyyy:HH-mm')}"></td>
+                        <td th:text="${item.executor}"></td>
+                        <td>
+                            <a th:href="@{/doctor/medicationLog/done/{hospitalListId}/{medicationlogId}(hospitalListId=${hospitalListId}, medicationlogId=${item.medicationlogId})}"
+                               th:if="${item.dateEnd == null}"><span th:text="#{execute}"></span></a>
+                            <span th:text="#{done}" th:style="${item.dateEnd ==null} ? 'display:none;'"></span>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                <div th:if="${SelectDTO.getPage().totalPages > 0}" class="pagination"
+                     th:each="pageNumber : ${pageNumbers}">
+                    <a th:href="@{/doctor/medicationLog/{path}(path=${hospitalListId}, size=${SelectDTO.getPage().size}, page1=${pageNumber})}"
+                       th:text="${pageNumber}"
+                       th:class="${pageNumber==SelectDTO.getPage().number + 1} ? active"></a>
+                </div>
+                <div th:if="${errorMessage}" th:utext="${errorMessage}" class="error"/>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
+

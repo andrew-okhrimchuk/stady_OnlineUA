@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html th:with="lang=${#locale.language}" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
+          integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+    <title th:text="#{listPatients}"></title>
+    <style>
+
+        tbody tr:hover {
+            background: #c4c7bd; /* Цвет фона */
+        }
+    </style>
+
+</head>
+<body>
+
+<div style="text-align: center;">
+    <button type="button" class="btn btn-light"><a th:text="#{onMain}" th:href="@{/}" }></a></button>
+    <button type="button" class="btn btn-light"><a href="/logout" th:text="#{logout}"></a></button>
+</div>
+<div class="row">
+    <div class="col-md-6 col-md-offset-3">
+        <div class="panel panel-default" style="margin-top:45px">
+            <div class="panel-heading">
+                <h3 class="panel-title" th:text="#{listPatients}"></h3>
+            </div>
+            <div class="panel-body">
+
+
+                <!--   /*@thymesVar id="SelectDTO" type="hospital.dto.SelectDTO"*/-->
+                <form action="/admin/patients" method="get" th:object="${SelectDTO}" id="form">
+
+                    <div class="custom-control custom-checkbox">
+                        <input type="checkbox" th:checked="*{{isSortByDateOfBirth}} ? 'checked'"
+                               class="custom-control-input" id="sortByDateOfBirth"
+                               th:field="*{isSortByDateOfBirth}"
+                               th:value="${{SelectDTO.isSortByDateOfBirth}}">
+                        <label for="sortByDateOfBirth" class="custom-control-label"
+                               th:field="*{{isSortByDateOfBirth}}"
+                               th:text="#{sortByDateOfBirth}"></label>
+                    </div>
+
+                    <div><b>
+                        <input type="submit" th:value="#{listRefresh}" name="submit" onclick="setDefoult()"
+                               style="float:right">
+
+                    </b></div>
+                    <table class="table" border="1">
+                        <thead>
+                        <tr>
+                            <th width="8%">#</th>
+                            <th width="8%" th:text="#{FIO}"></th>
+                            <th width="8%" th:text="#{dateOfBirth}"></th>
+                            <th width="8%" th:text="#{downloadExcel}" th:style="${!SelectDTO.getIsShowAllDischargePatients()} ? 'display:none;'"></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="user, iter : ${SelectDTO.getPage().getContent()}">
+                            <td th:text="${iter.count}"
+                                th:onclick="'javascript:rowClicked(\'' + ${user.id} + '\');'"></td>
+                            <td th:text="${user.getUsername()}"
+                                th:onclick="'javascript:rowClicked(\'' + ${user.id} + '\');'"></td>
+                            <td th:text="${#strings.equals(#locale, 'ru')} ? ${#temporals.format(user.birthDate, 'dd-MM-yyyy')} : ${#temporals.format(user.birthDate, 'MMMM-dd-yyyy')}"
+                                th:onclick="'javascript:rowClicked(\'' + ${user.id} + '\');'"></td>
+                            <td th:style="${!SelectDTO.getIsShowAllDischargePatients()} ? 'display:none;'">
+                                <a th:href="@{|/admin/download/${user.id}/hospital-list.xlsx|}"><span th:text="#{downloadExcel}"></span></a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <div th:if="${SelectDTO.getPage().totalPages > 0}" class="pagination"
+                         th:each="pageNumber : ${pageNumbers}">
+                        <a th:href="@{/admin/patients(size=${SelectDTO.getPage().size}, page1=${pageNumber})}"
+                           th:text="${pageNumber}"
+                           th:class="${pageNumber==SelectDTO.getPage().number + 1} ? active"></a>
+                    </div>
+                </form>
+
+                <div>
+                </div>
+
+                <script>
+                    function rowClicked(value) {
+                        location.href = "/admin/patients/edit/" + value;
+                    }
+                </script>
+
+                <div th:if="${errorMessage}" th:utext="${errorMessage}" class="error"/>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    function setEXEL(value) {
+        console.log("start setEXEL")
+      /*  var action = document.getElementById("form");
+        action.setAttribute("action", "/download/" + value + "/calls.xlsx")
+        console.log("start setEXEL", document.getElementById("form"));*/
+        const url = "/download/" + value + "/hospital-list.xlsx";
+        const a = document.createElement('a')
+        a.href = url
+        a.download = url.split('/').pop()
+        document.body.appendChild(a)
+        a.click()
+        document.body.removeChild(a)
+    }
+</script>
+<script>
+    $(document).ready(function () {
+        $("#link").click(function (e) {
+            e.preventDefault();
+
+            window.location.href
+                = "File/randomfile.docx";
+        });
+    });
+</script>
+
+</body>
+</html>
+

@@ -1,5 +1,6 @@
 package hospital.persistence;
 
+import hospital.domain.Doctor;
 import hospital.domain.MedicationLog;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -22,4 +23,8 @@ public interface MedicationLogJPARepository extends CrudRepository<MedicationLog
             "m.dateEnd = CASE WHEN (m.dateEnd is null) THEN (:date) ELSE (m.dateEnd) END " +
             "where m.medicationlogId = :id")
     int done(@Param("id") Long medicationlogId, @Param("executor") String executor, @Param("date") LocalDateTime date);
+
+    @Query("select m from MedicationLog m where m.hospitallistid = (select h.hospitalListId from HospitalList h where h.dateDischarge is null and h.patientId=:patientId) ")
+    Page<MedicationLog> findByPatientId(Long patientId, Pageable pageable);
+
 }

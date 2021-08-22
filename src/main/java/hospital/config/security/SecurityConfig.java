@@ -49,7 +49,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         response.sendRedirect("/doctor/patients");
                     }
                     if (roles.contains(NURSE)) {
-                        response.sendRedirect("/nurse" );
+                        response.sendRedirect("/nurse/patients" );
                     }
                     if (roles.contains(PATIENT)) {
                         response.sendRedirect("/patient");

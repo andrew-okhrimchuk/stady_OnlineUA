@@ -69,6 +69,20 @@ public class MedicationLogService implements IMedicationLogService {
         }
     }
 
+    @Override
+    public Page<MedicationLog> findByPatientId(Long id, Pageable pageable) throws ServiceExeption {
+        log.debug("Start findByPatientId. id {}", id);
+        try {
+            return medicationLogJPARepository.findByPatientId(id, pageable);
+        } catch (DaoExeption | DateTimeParseException e) {
+            log.error("findByMedicationlogId {}, {}", env.getProperty("SAVE_NEW_PATIENT"), e.getMessage());
+            throw new ServiceExeption(e.getMessage(), e);
+        } catch (DataIntegrityViolationException e) {
+            log.error("findByMedicationlogId {}, hospitalListId = {}, {}", env.getProperty("SAVE_NEW_PATIENT_DUPLICATE"), id, e.getMessage());
+            throw new ServiceExeption(env.getProperty("SAVE_NEW_PATIENT_DUPLICATE"), e);
+        }
+    }
+
     private void validation(MedicationLog medicationLog) throws NotValidExeption {
         if (!medicationLog.isValid()) {
             throw new NotValidExeption(env.getProperty("SAVE_NEW_NOT_VALID_MedicationLog"));

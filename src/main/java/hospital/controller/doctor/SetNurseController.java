@@ -29,7 +29,7 @@ import java.util.stream.IntStream;
 @Slf4j
 @Controller
 @RequestMapping("/doctor")
-public class NurseController {
+public class SetNurseController {
 
 
     @Autowired

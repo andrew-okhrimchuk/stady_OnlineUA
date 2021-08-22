@@ -1,6 +1,5 @@
 package hospital.services.patient;
 
-import hospital.domain.Nurse;
 import hospital.domain.Patient;
 import hospital.domain.PatientNurse;
 import hospital.domain.enums.Role;
@@ -54,6 +53,17 @@ public class PatientService implements IPatientService {
             return patientJPARepository.findAll(patientSpecification.getUsers(selectDTO), pageable);
         } catch (DaoExeption | DataIntegrityViolationException e) {
             log.error("getListPatients {}, {}", env.getProperty("GET_ALL_ERROR_MESSAGE_PATIENT"), e.getMessage());
+            throw new ServiceExeption(e.getMessage(), e);
+        }
+    }
+
+
+    public Page<Patient> getAllByNursesIsContaining(SelectDTO selectDTO, Pageable pageable) throws ServiceExeption {
+        log.debug("Start getAllByNursesIsContaining of SelectDTO");
+        try {
+            return patientJPARepository.findAllByNursename(selectDTO.getUserNameDoctor(), pageable);
+        } catch (DaoExeption | DataIntegrityViolationException e) {
+            log.error("getAllByNursesIsContaining {}, {}", env.getProperty("GET_ALL_ERROR_MESSAGE_PATIENT"), e.getMessage());
             throw new ServiceExeption(e.getMessage(), e);
         }
     }

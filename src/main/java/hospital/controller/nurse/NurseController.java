@@ -1,10 +1,12 @@
 package hospital.controller.nurse;
 
 import hospital.domain.MedicationLog;
+import hospital.domain.Patient;
 import hospital.dto.SelectDTO;
 import hospital.exeption.ServiceExeption;
 import hospital.services.hospitalList.HospitalListService;
 import hospital.services.interfaces.IMedicationLogService;
+import hospital.services.patient.PatientService;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,14 +30,45 @@ import java.util.stream.IntStream;
 @RequestMapping("/nurse")
 public class NurseController {
 
-
+    @Autowired
+    PatientService userService;
     @Autowired
     IMedicationLogService medicationLogService;
     @Autowired
     HospitalListService hospitalListService;
 
 
-    @GetMapping("/medicationLog/{userId}")
+    @GetMapping("/patients")
+    public String getParientsFromDoctor(@RequestParam("page1") Optional<Integer> page1,
+                                        @RequestParam("size") Optional<Integer> size,
+                                        @ModelAttribute @NonNull SelectDTO selectDTO, Model model) {
+        log.debug("Start getParientsFromDoctor");
+        int currentPage = page1.orElse(1);
+        int pageSize = size.orElse(15);
+
+        String userNameDoctor = SecurityContextHolder.getContext().getAuthentication().getName();
+        System.out.println(555 + userNameDoctor);
+        try {
+            Page<Patient> patients = userService.getAllByNursesIsContaining(
+                    SelectDTO.builder()
+                            .userNameDoctor(userNameDoctor)
+                            .isShowAllDischargePatients(false)
+                            .isShowAllCurrentPatients(true)
+                            .isSortByDateOfBirth(false)
+                            .build(),
+                    PageRequest.of(currentPage - 1, pageSize));
+            selectDTO.setPage(patients);
+            setPageNumbersPatient(model, patients);
+            model.addAttribute("SelectDTO", selectDTO);
+        } catch (ServiceExeption | ConstraintViolationException e) {
+            log.error(e.getMessage());
+            model.addAttribute("errorMessage", e.getMessage());
+        }
+        return "nurse/patients";
+    }
+
+
+    @GetMapping("/patients/medicationLog/{userId}")
     public String getMedicationLog(@NotNull @PathVariable("userId") String hospitalListId,
                                    @RequestParam("page1") Optional<Integer> page1,
                                         @RequestParam("size") Optional<Integer> size,
@@ -54,9 +87,9 @@ public class NurseController {
             model.addAttribute("errorMessage", e.getMessage());
         }
         log.debug("End getMedicationLog");
-        return "doctor/medicationLog";
+        return "nurse/medicationLog";
     }
-
+/*
     @GetMapping("/medicationLog/add/{hospitalListId}")
     public String addMedicationLog(Model model,
                                             @NotNull @PathVariable("hospitalListId") String hospitalListId) {
@@ -101,8 +134,17 @@ public class NurseController {
         StringBuilder sb = new  StringBuilder();
         sb.append("/doctor/medicationLog/").append(hospitalListId);
         return sb.toString();
-    }
+    }*/
 
+    private void setPageNumbersPatient(Model model, Page<Patient> medicationLogs) {
+        int totalPages = medicationLogs.getTotalPages();
+        if (totalPages > 0) {
+            List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
+                    .boxed()
+                    .collect(Collectors.toList());
+            model.addAttribute("pageNumbers", pageNumbers);
+        }
+    }
     private void setPageNumbers(Model model, Page<MedicationLog> medicationLogs) {
         int totalPages = medicationLogs.getTotalPages();
         if (totalPages > 0) {

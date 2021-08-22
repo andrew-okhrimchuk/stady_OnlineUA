@@ -11,6 +11,7 @@ import java.util.Optional;
 
 public interface IMedicationLogService {
     Page<MedicationLog> findByMedicationlogId(Long hospitalListId, Pageable pageable) throws ServiceExeption;
+    Page<MedicationLog> findByPatientId(Long id, Pageable pageable) throws ServiceExeption;
     MedicationLog save(MedicationLog medicationLog) throws ServiceExeption;
     int done(MedicationLog medicationLog) throws ServiceExeption;
 }

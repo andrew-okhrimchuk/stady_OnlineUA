@@ -77,7 +77,7 @@ public class NurseController {
         int currentPage = page1.orElse(1);
         int pageSize = size.orElse(15);
         try {
-            Page<MedicationLog> medicationLogs = medicationLogService.findByMedicationlogId(Long.valueOf(hospitalListId), PageRequest.of(currentPage - 1, pageSize));
+            Page<MedicationLog> medicationLogs = medicationLogService.findByPatientId(Long.valueOf(hospitalListId), PageRequest.of(currentPage - 1, pageSize));
             selectDTO.setPage(medicationLogs);
             setPageNumbers(model, medicationLogs);
             model.addAttribute("SelectDTO", selectDTO)
@@ -89,32 +89,7 @@ public class NurseController {
         log.debug("End getMedicationLog");
         return "nurse/medicationLog";
     }
-/*
-    @GetMapping("/medicationLog/add/{hospitalListId}")
-    public String addMedicationLog(Model model,
-                                            @NotNull @PathVariable("hospitalListId") String hospitalListId) {
-        log.debug("Start addMedicationLog, hospitalListId = {}", hospitalListId);
-        model.addAttribute("medicationLog", MedicationLog.builder().hospitallistid(Long.valueOf(hospitalListId)).dateCreate(LocalDateTime.now()).build());
-        return "doctor/medicationLog-add";
-    }
 
-    @PostMapping("/medicationLog/add/{hospitalList}")
-    public String addMedicationLogPost(@ModelAttribute("medicationLog") @NonNull MedicationLog medicationLog,
-                                   Model model) {
-        log.debug("Start addMedicationLogPost, {}", medicationLog);
-        String doctorName = SecurityContextHolder.getContext().getAuthentication().getName();
-        try {
-            medicationLog.setDoctorName(doctorName);
-            medicationLogService.save(medicationLog);
-            model.addAttribute("errorMessage", "Save Ok.");
-            return "redirect:/doctor/medicationLog/"+ medicationLog.getHospitallistid();
-        } catch (ServiceExeption e) {
-            log.error(e.getMessage());
-            model.addAttribute("errorMessage", e.getMessage());
-        }
-        // unsucces ->
-        return "doctor/medicationLog-add";
-    }
 
     @GetMapping("/medicationLog/done/{hospitalListId}/{medicationlogId}")
     public String doneMedicationLog(Model model,
@@ -126,15 +101,15 @@ public class NurseController {
             MedicationLog medicationLog = MedicationLog.builder().medicationlogId(Long.valueOf(medicationlogId)).executor(executor).build();
             medicationLogService.done(medicationLog);
             model.addAttribute("errorMessage", "Save Ok.");
-            return "redirect:/doctor/medicationLog/"+ hospitalListId;
+            return "redirect:/nurse/patients/medicationLog/"+ hospitalListId;
         } catch (ServiceExeption e) {
             log.error(e.getMessage());
             model.addAttribute("errorMessage", e.getMessage());
         }
         StringBuilder sb = new  StringBuilder();
-        sb.append("/doctor/medicationLog/").append(hospitalListId);
+        sb.append("/nurse/patients/medicationLog/").append(hospitalListId);
         return sb.toString();
-    }*/
+    }
 
     private void setPageNumbersPatient(Model model, Page<Patient> medicationLogs) {
         int totalPages = medicationLogs.getTotalPages();

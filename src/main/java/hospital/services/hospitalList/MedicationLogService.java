@@ -1,6 +1,7 @@
 package hospital.services.hospitalList;
 
 import hospital.domain.MedicationLog;
+import hospital.domain.Patient;
 import hospital.exeption.DaoExeption;
 import hospital.exeption.NotValidExeption;
 import hospital.exeption.ServiceExeption;
@@ -73,7 +74,7 @@ public class MedicationLogService implements IMedicationLogService {
     public Page<MedicationLog> findByPatientId(Long id, Pageable pageable) throws ServiceExeption {
         log.debug("Start findByPatientId. id {}", id);
         try {
-            return medicationLogJPARepository.findByPatientId(id, pageable);
+            return medicationLogJPARepository.findByPatientId(Patient.chilerBuilder().id(id).build(), pageable);
         } catch (DaoExeption | DateTimeParseException e) {
             log.error("findByMedicationlogId {}, {}", env.getProperty("SAVE_NEW_PATIENT"), e.getMessage());
             throw new ServiceExeption(e.getMessage(), e);

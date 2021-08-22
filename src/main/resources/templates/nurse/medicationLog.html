@@ -49,7 +49,7 @@
                         <td th:text="${#strings.equals(#locale, 'ru')} ? ${#temporals.format(item.dateEnd, 'dd-MM-yyyy:HH-mm')} : ${#temporals.format(item.dateEnd, 'MMMM-dd-yyyy:HH-mm')}"></td>
                         <td th:text="${item.executor}"></td>
                         <td>
-                            <a th:href="@{/doctor/medicationLog/done/{hospitalListId}/{medicationlogId}(hospitalListId=${hospitalListId}, medicationlogId=${item.medicationlogId})}"
+                            <a th:href="@{/nurse/medicationLog/done/{hospitalListId}/{medicationlogId}(hospitalListId=${hospitalListId}, medicationlogId=${item.medicationlogId})}"
                                th:if="${item.dateEnd == null}"><span th:text="#{execute}"></span></a>
                             <span th:text="#{done}" th:style="${item.dateEnd ==null} ? 'display:none;'"></span>
                         </td>
@@ -58,7 +58,7 @@
                 </table>
                 <div th:if="${SelectDTO.getPage().totalPages > 0}" class="pagination"
                      th:each="pageNumber : ${pageNumbers}">
-                    <a th:href="@{/doctor/medicationLog/{path}(path=${hospitalListId}, size=${SelectDTO.getPage().size}, page1=${pageNumber})}"
+                    <a th:href="@{/nurse/medicationLog/{path}(path=${hospitalListId}, size=${SelectDTO.getPage().size}, page1=${pageNumber})}"
                        th:text="${pageNumber}"
                        th:class="${pageNumber==SelectDTO.getPage().number + 1} ? active"></a>
                 </div>

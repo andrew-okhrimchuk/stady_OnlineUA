@@ -2,6 +2,7 @@ package hospital.persistence;
 
 import hospital.domain.Doctor;
 import hospital.domain.MedicationLog;
+import hospital.domain.Patient;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Modifying;
@@ -24,7 +25,7 @@ public interface MedicationLogJPARepository extends CrudRepository<MedicationLog
             "where m.medicationlogId = :id")
     int done(@Param("id") Long medicationlogId, @Param("executor") String executor, @Param("date") LocalDateTime date);
 
-    @Query("select m from MedicationLog m where m.hospitallistid = (select h.hospitalListId from HospitalList h where h.dateDischarge is null and h.patientId=:patientId) ")
-    Page<MedicationLog> findByPatientId(Long patientId, Pageable pageable);
+    @Query("select m from MedicationLog m where m.hospitallistid = (select h.hospitalListId from HospitalList h where h.dateDischarge is null and h.patientId=:patientId) order by m.dateCreate desc ")
+    Page<MedicationLog> findByPatientId(Patient patientId, Pageable pageable);
 
 }

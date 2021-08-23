@@ -6,6 +6,7 @@ import hospital.dto.SelectDTO;
 import hospital.exeption.DaoExeption;
 import hospital.exeption.NotValidExeption;
 import hospital.exeption.ServiceExeption;
+import hospital.persistence.ParientNurseJPARepository;
 import hospital.persistence.PatientJPARepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -41,6 +42,8 @@ class PatientServiceTest {
     @MockBean
     private Environment env;
     @MockBean
+    ParientNurseJPARepository parientNurseJPARepository;
+    @MockBean
     public PasswordEncoder bcryptPasswordEncoder;
     List<Patient>patientList;
     PatientDTO patientDTO;
@@ -72,6 +75,7 @@ class PatientServiceTest {
         Page<Patient> expect = patientService.getAll(PageRequest.of(0, 15));
         assertEquals(expect.getContent(), patientList);
     }
+
     @Test
     void findNullThenThrowServiceExeption() {
         when(jpaRepository
@@ -97,19 +101,14 @@ class PatientServiceTest {
         Patient expect = patientService.save(patientDTO);
         assertEquals(expect, patientList.get(0));
     }
-    @Test
-    void saveNullThenThrowNullPointerException() {
-        assertThrows(NullPointerException.class, () -> {
-            patientService.save(null);
-        });
-    }
+
     @Test
     void saveDuplicateThenThrowServiceExeption() {
         when(jpaRepository
                 .save(any()))
                 .thenThrow(new DataIntegrityViolationException("Duplicate", new Exception()));
         assertThrows(ServiceExeption.class, () -> {
-           patientService.save(new PatientDTO());
+           patientService.save(patientDTO);
         });
     }
 
@@ -118,51 +117,6 @@ class PatientServiceTest {
         when(jpaRepository.getPatientById(anyLong())).thenReturn(patientList.get(0));
         PatientDTO expect = patientService.getPatientById(1L);
         assertEquals(expect, patientDTO);
-    }
-
-    @Test
-    void convertToEntity() throws NotValidExeption {
-        Patient expect = patientService.convertToEntity(patientDTO);
-        assertEquals(expect, patientList.get(0));
-    }
-
-    @Test
-    void convertToEntityEmptyPatientDTOThenThrowNotValidExeption() {
-        assertThrows(NotValidExeption.class, () -> {
-            patientService.convertToEntity(new PatientDTO());
-        });
-    }
-
-    @Test
-    void convertToEntityPatientDTOWhenUserNameIsNullThenThrowNotValidExeption() {
-        patientDTO.setUsername(null);
-        assertThrows(NotValidExeption.class, () -> {
-            patientService.convertToEntity(patientDTO);
-        });
-    }
-
-    @Test
-    void convertToEntityPatientDTOWhenUserNameIsEmptyThenThrowNotValidExeption() {
-        patientDTO.setUsername("");
-        assertThrows(NotValidExeption.class, () -> {
-            patientService.convertToEntity(patientDTO);
-        });
-    }
-
-    @Test
-    void convertToEntityPatientDTOWhenDateBirdsIsNullThenThrowNotValidExeption() {
-        patientDTO.setBirthDate(null);
-        assertThrows(NotValidExeption.class, () -> {
-            patientService.convertToEntity(patientDTO);
-        });
-    }
-
-    @Test
-    void convertToEntityPatientDTOWhenDateBirdsIsEmptyThenThrowNotValidExeption() {
-        patientDTO.setBirthDate("");
-        assertThrows(NotValidExeption.class, () -> {
-            patientService.convertToEntity(patientDTO);
-        });
     }
 
     @Test

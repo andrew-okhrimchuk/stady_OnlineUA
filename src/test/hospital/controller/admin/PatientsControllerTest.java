@@ -80,11 +80,10 @@ class PatientsControllerTest {
                 .with(csrf())
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 )
-                .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/admin/patients"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("/admin/patients"))
                 .andExpect(redirectedUrl("/admin/patients"))
         ;
-
     }
 
     @Test

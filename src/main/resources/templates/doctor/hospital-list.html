@@ -79,7 +79,7 @@
                     </form>
                     <button type="button" class="btn btn-light"><a
                             th:text="#{appointNurse}"
-                            th:href="@{/doctor/nurse/{hospitalListId}/{user_id}(hospitalListId=${hospitalList.hospitalListId}, user_id=${user_id})}" }>
+                            th:href="@{/doctor/{path}(path=${hospitalList.hospitalListId == null ? 'hospital-list/edit/'+ user_id :  'nurse/' +hospitalList.hospitalListId + '/' + user_id })}"
                     </a></button>
                     <button type="button" class="btn btn-light">
                         <a

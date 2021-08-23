@@ -2,6 +2,8 @@ package hospital.domain;
 
 import lombok.*;
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -12,16 +14,20 @@ import java.util.List;
 @AllArgsConstructor
 @EqualsAndHashCode
 @Entity
-/*@Table(uniqueConstraints={
-        @UniqueConstraint(columnNames = {"patientId", "dateCreate"})
-})*/
+
 public class HospitalList {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long hospitalListId;
+    @NotNull
+    @NotEmpty
     private String primaryDiagnosis;
     private String finalDiagnosis;
+    @NotNull
+    @NotEmpty
     private String medicine;
+    @NotNull
+    @NotEmpty
     private String operations;
     private String doctorName;
 
@@ -38,8 +44,5 @@ public class HospitalList {
     @EqualsAndHashCode.Exclude
     private List<MedicationLog> hospitallistid;
 
-    public boolean isValid (){
-        return this.primaryDiagnosis !=null
-                && !this.primaryDiagnosis.isEmpty();
-    }
+
 }

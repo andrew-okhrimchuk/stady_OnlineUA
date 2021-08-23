@@ -48,6 +48,8 @@
                 <td th:text= "#{description}"></td>
                 <td>:</td>
                 <td><input type="text" th:field="*{description}"/></td>
+                <td th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></td>
+
             </tr>
         </table>
         <div>

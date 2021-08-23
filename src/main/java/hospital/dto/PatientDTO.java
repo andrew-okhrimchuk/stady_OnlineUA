@@ -9,6 +9,9 @@ import lombok.ToString;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.annotation.RequestScope;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -24,8 +27,14 @@ public class PatientDTO {
     public static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     private String id;
+    @NotNull
+    @NotEmpty
     private String username;
+    @NotNull
+    @NotEmpty
     private String birthDate;
+    @NotNull
+    @NotEmpty
     private String password;
     private Boolean isActualPatient;
     private List<Role> authorities = new ArrayList<>();
@@ -39,12 +48,5 @@ public class PatientDTO {
         LocalDate start = LocalDate.parse(databaseDate);
         start.format(formatter);
         return start;
-    }
-    public boolean isValid () {
-        return this.username !=null
-                && this.birthDate !=null
-                && !this.username.isEmpty()
-                && !this.birthDate.isEmpty()
-                && (this.id != null && !this.id.isEmpty() || this.password != null && !this.password.isEmpty());
     }
 }

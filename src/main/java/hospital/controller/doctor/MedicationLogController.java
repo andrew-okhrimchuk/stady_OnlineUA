@@ -13,8 +13,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import javax.validation.ConstraintViolationException;
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -65,10 +67,14 @@ public class MedicationLogController {
     }
 
     @PostMapping("/medicationLog/add/{hospitalList}")
-    public String addMedicationLogPost(@ModelAttribute("medicationLog") @NonNull MedicationLog medicationLog,
+    public String addMedicationLogPost(@ModelAttribute("medicationLog") @Valid MedicationLog medicationLog,
+                                       BindingResult bindingResult,
                                    Model model) {
         log.debug("Start addMedicationLogPost, {}", medicationLog);
         String doctorName = SecurityContextHolder.getContext().getAuthentication().getName();
+        if (bindingResult.hasErrors()) {
+            return "doctor/medicationLog-add";
+        }
         try {
             medicationLog.setDoctorName(doctorName);
             medicationLogService.save(medicationLog);

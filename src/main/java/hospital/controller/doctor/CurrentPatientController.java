@@ -47,7 +47,6 @@ public class CurrentPatientController {
             Page<Patient> patients = userService.findAllCurrentPatientsByNameDoctor(
                     SelectDTO.builder()
                     .userNameDoctor(userNameDoctor)
-                            .isShowAllDischargePatients(false)
                             .isShowAllCurrentPatients(true)
                             .isSortByDateOfBirth(false)
                             .build(),

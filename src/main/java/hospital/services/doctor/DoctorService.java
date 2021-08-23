@@ -79,7 +79,7 @@ public class DoctorService implements IDoctorService {
             user.getAuthorities().add(Role.DOCTOR);
             return doctorJPARepository.save(user);
 
-        } catch (DaoExeption | DateTimeParseException | NotValidExeption e) {
+        } catch (DaoExeption | DateTimeParseException e) {
             log.error("savePatient {}, {}", env.getProperty("SAVE_NEW_PATIENT"), e.getMessage());
             throw new ServiceExeption(e.getMessage(), e);
         } catch (DataIntegrityViolationException e) {
@@ -99,10 +99,7 @@ public class DoctorService implements IDoctorService {
         }
     }
 
-    public Doctor convertToEntity(DoctorDTO doctorDTO) throws DateTimeParseException, NotValidExeption {
-        if (!doctorDTO.isValid()) {
-            throw new NotValidExeption(env.getProperty("SAVE_NEW_NOT_VALID"));
-        }
+    public Doctor convertToEntity(DoctorDTO doctorDTO) throws DateTimeParseException {
         Doctor doctor = modelMapper.map(doctorDTO, Doctor.class);
         doctor.setPassword(bcryptPasswordEncoder.encode(doctor.getPassword()));
         return doctor;

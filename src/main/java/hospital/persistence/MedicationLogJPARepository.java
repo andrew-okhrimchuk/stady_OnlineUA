@@ -1,6 +1,5 @@
 package hospital.persistence;
 
-import hospital.domain.Doctor;
 import hospital.domain.MedicationLog;
 import hospital.domain.Patient;
 import org.springframework.data.domain.Page;
@@ -11,12 +10,12 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.time.LocalDateTime;
 
 @Repository
 public interface MedicationLogJPARepository extends CrudRepository<MedicationLog, Long>  {
     Page<MedicationLog> findAllByHospitallistidOrderByDateCreateDesc (Long hospitalListId, Pageable pageable);
+
     @Modifying
     @Transactional
     @Query("update MedicationLog m " +
@@ -27,5 +26,4 @@ public interface MedicationLogJPARepository extends CrudRepository<MedicationLog
 
     @Query("select m from MedicationLog m where m.hospitallistid = (select h.hospitalListId from HospitalList h where h.dateDischarge is null and h.patientId=:patientId) order by m.dateCreate desc ")
     Page<MedicationLog> findByPatientId(Patient patientId, Pageable pageable);
-
 }

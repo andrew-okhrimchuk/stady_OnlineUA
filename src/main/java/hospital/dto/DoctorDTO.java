@@ -6,6 +6,9 @@ import lombok.ToString;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.annotation.RequestScope;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.List;
 
 @Service
@@ -14,13 +17,15 @@ import java.util.List;
 @RequestScope
 @ToString
 public class DoctorDTO {
-    private Long id;
-    private String username;
-    private String password;
-    private String countOfPatients;
-    private String speciality;
 
-    public boolean isValid () {
-        return this.username !=null && !this.username.isEmpty() && this.password !=null && !this.password.isEmpty() ;
-    }
+    private Long id;
+    private String countOfPatients;
+
+    @NotNull
+    @NotEmpty
+    private String username;
+    @NotNull
+    @NotEmpty
+    private String password;
+    private String speciality;
 }

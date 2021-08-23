@@ -47,6 +47,8 @@
                                 <td th:text="#{primaryDiagnosis}"></td>
                                 <td>:</td>
                                 <td><input type="text" th:field="*{primaryDiagnosis}"/></td>
+                                <td th:if="${#fields.hasErrors('primaryDiagnosis')}" th:errors="*{primaryDiagnosis}"></td>
+
                             </tr>
                             <tr style="display:none;">
                                 <td></td>
@@ -57,11 +59,15 @@
                                 <td th:text="#{medicine}"></td>
                                 <td>:</td>
                                 <td><input type="text" th:field="*{medicine}"/></td>
+                                <td th:if="${#fields.hasErrors('medicine')}" th:errors="*{medicine}"></td>
+
                             </tr>
                             <tr>
                                 <td th:text="#{operations}"></td>
                                 <td>:</td>
                                 <td><input type="text" th:field="*{operations}"/></td>
+                                <td th:if="${#fields.hasErrors('operations')}" th:errors="*{operations}"></td>
+
                             </tr>
                         </table>
                         <div>
@@ -71,31 +77,29 @@
                             </button>
                         </div>
                     </form>
-                    <div>
+                    <button type="button" class="btn btn-light"><a
+                            th:text="#{appointNurse}"
+                            th:href="@{/doctor/nurse/{hospitalListId}/{user_id}(hospitalListId=${hospitalList.hospitalListId}, user_id=${user_id})}" }>
+                    </a></button>
+                    <button type="button" class="btn btn-light">
+                        <a
+                                th:onclick="'javascript:rowClicked(\'' + ${hospitalList.hospitalListId} + '\');'"
+                                th:text="#{medicationLog}" }>
+                        </a>
+                    </button>
+                    <button type="button" class="btn btn-light">
+                        <a
+                                th:text="#{activityLog}"  href="#"
+                                }>
+                        </a>
+
                         <button type="button" class="btn btn-light"><a
-                                th:text="#{appointNurse}"
-                                th:href="@{/doctor/nurse/{hospitalListId}/{user_id}(hospitalListId=${hospitalList.hospitalListId}, user_id=${user_id})}" }>
-                        </a></button>
-                        <button type="button" class="btn btn-light">
-                            <a
-                                    th:onclick="'javascript:rowClicked(\'' + ${hospitalList.hospitalListId} + '\');'"
-                                    th:text="#{medicationLog}" }>
-                            </a>
-                        </button>
-                        <button type="button" class="btn btn-light">
-                            <a
-                                    th:text="#{activityLog}"  href="#"
-                             }>
-                            </a>
+                                th:onclick="'javascript:rowClickedDischarge(\'' + ${user_id} + '\');'"
+                                th:text="#{discharge}">
+                        </a>
                         </button>
 
-                        <button type="button" class="btn btn-light">
-                            <a      th:onclick="|rowClickedDischarge('${user_id}')|"
-                                    th:text="#{discharge}"}>
-                            </a>
-                        </button>
-
-                    </div>
+                </div>
                 </div>
             </div>
         </div>

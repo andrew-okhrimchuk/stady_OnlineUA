@@ -31,9 +31,8 @@ public class MedicationLogService implements IMedicationLogService {
     public MedicationLog save(MedicationLog medicationLog) throws ServiceExeption {
         log.debug("Start save MedicationLog, medicationLog = {}", medicationLog);
         try {
-            validation(medicationLog);
             return medicationLogJPARepository.save(medicationLog);
-        } catch (DaoExeption | DateTimeParseException | NotValidExeption e) {
+        } catch (DaoExeption | DateTimeParseException e) {
             log.error("MedicationLog {}, {}", env.getProperty("SAVE_NEW_MedicationLog"), e.getMessage());
             throw new ServiceExeption(e.getMessage(), e);
         } catch (DataIntegrityViolationException e) {
@@ -81,12 +80,6 @@ public class MedicationLogService implements IMedicationLogService {
         } catch (DataIntegrityViolationException e) {
             log.error("findByMedicationlogId {}, hospitalListId = {}, {}", env.getProperty("SAVE_NEW_PATIENT_DUPLICATE"), id, e.getMessage());
             throw new ServiceExeption(env.getProperty("SAVE_NEW_PATIENT_DUPLICATE"), e);
-        }
-    }
-
-    private void validation(MedicationLog medicationLog) throws NotValidExeption {
-        if (!medicationLog.isValid()) {
-            throw new NotValidExeption(env.getProperty("SAVE_NEW_NOT_VALID_MedicationLog"));
         }
     }
 }

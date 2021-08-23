@@ -89,7 +89,7 @@ public class PatientService implements IPatientService {
             user.getAuthorities().add(Role.PATIENT);
             return patientJPARepository.save(user);
 
-        } catch (DaoExeption | DateTimeParseException | NotValidExeption e) {
+        } catch (DaoExeption | DateTimeParseException e) {
             log.error("savePatient {}, {}", env.getProperty("SAVE_NEW_PATIENT"), e.getMessage());
             throw new ServiceExeption(e.getMessage(), e);
         } catch (DataIntegrityViolationException e) {
@@ -145,10 +145,7 @@ public class PatientService implements IPatientService {
         }
     }
 
-    public Patient convertToEntity(PatientDTO patientDTO) throws DateTimeParseException, NotValidExeption {
-        if (!patientDTO.isValid()) {
-            throw new NotValidExeption(env.getProperty("SAVE_NEW_NOT_VALID"));
-        }
+    public Patient convertToEntity(PatientDTO patientDTO) throws DateTimeParseException {
         Patient user = modelMapper.map(patientDTO, Patient.class);
         user.setBirthDate(patientDTO.convertToEntityAttribute(patientDTO.getBirthDate()));
         user.setPassword(bcryptPasswordEncoder.encode(user.getPassword()));

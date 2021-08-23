@@ -38,6 +38,7 @@
                                 <td th:text="#{Username}"></td>
                                 <td>:</td>
                                 <td><input type="text" th:field="*{username}"/></td>
+                                <td th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></td>
                             </tr>
                             <tr>
                                 <td th:text="#{dateOfBirth}"></td>
@@ -46,8 +47,9 @@
                             </tr>
                             <tr>
                                 <td th:text="#{Password}"></td>
-                                <td></td>
+                                <td>:</td>
                                 <td><input th:type='text' th:field="*{password}"/></td>
+                                <td th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></td>
                             </tr>
                             <tr>
                                 <td th:text="#{isActualPatient}"></td>

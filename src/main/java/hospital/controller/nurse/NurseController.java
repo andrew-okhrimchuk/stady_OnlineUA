@@ -52,7 +52,6 @@ public class NurseController {
             Page<Patient> patients = userService.getAllByNursesIsContaining(
                     SelectDTO.builder()
                             .userNameDoctor(userNameDoctor)
-                            .isShowAllDischargePatients(false)
                             .isShowAllCurrentPatients(true)
                             .isSortByDateOfBirth(false)
                             .build(),

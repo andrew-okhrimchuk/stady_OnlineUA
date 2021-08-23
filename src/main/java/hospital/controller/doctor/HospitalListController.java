@@ -16,8 +16,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
@@ -52,12 +54,16 @@ public class HospitalListController {
 
     @PostMapping("/hospital-list/edit/{user_id}")
     public String editHospitalList(@NotNull @PathVariable("user_id") String userId,
-                                   @ModelAttribute("hospitalList") @NonNull HospitalList hospitalList,
+                                   @ModelAttribute("hospitalList") @Valid HospitalList hospitalList,
+                                   BindingResult bindingResult,
                                    Model model) {
         log.debug("Start editHospitalList, {}", hospitalList);
         String userNameDoctor = SecurityContextHolder.getContext().getAuthentication().getName();
         hospitalList.setDoctorName(userNameDoctor);
         hospitalList.setPatientId(Patient.chilerBuilder().id(Long.valueOf(userId)).build());
+        if (bindingResult.hasErrors()) {
+            return errorHandler(model, userId);
+        }
         try {
             hospitalListService.save(hospitalList);
             model.addAttribute("errorMessage", "Save Ok.");
@@ -67,9 +73,13 @@ public class HospitalListController {
             model.addAttribute("errorMessage", e.getMessage());
         }
         // unsucces ->
+        return errorHandler(model, userId);
+    }
+
+    private String errorHandler(Model model, String userId) {
         try {
             Page<DoctorDTO> doctor = doctorService.getAll(PageRequest.of(0, MainController.countItemOnPage));
-            model.addAttribute("doctors", doctor.getContent());
+            model.addAttribute("doctors", doctor.getContent()).addAttribute("user_id", Long.valueOf(userId));
         } catch (ServiceExeption e) {
             log.error(e.getMessage());
             model.addAttribute("errorMessage", e.getMessage());

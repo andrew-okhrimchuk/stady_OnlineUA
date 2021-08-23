@@ -40,11 +40,14 @@
                                 <td>Full name</td>
                                 <td>:</td>
                                 <td><input type="text" th:field="*{username}"/></td>
+                                <td th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></td>
+
                             </tr>
                             <tr>
                                 <td>password</td>
                                 <td>:</td>
                                 <td><input th:type="${add} ? 'text' : 'hidden'" th:field="*{password}"/></td>
+                                <td th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></td>
                             </tr>
                             <tr>
                                 <td>Select a speciality</td>

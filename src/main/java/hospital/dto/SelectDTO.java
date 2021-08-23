@@ -23,7 +23,6 @@ import java.util.List;
 public class SelectDTO {
     private Page page;
     private Boolean isSortByDateOfBirth = false;
-    private Boolean isShowAllDischargePatients = false;
     private Boolean isShowAllCurrentPatients = true;
     private String userNameDoctor;
     private List<Role> authorities = new ArrayList<>();

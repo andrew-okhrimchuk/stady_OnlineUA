@@ -32,29 +32,14 @@
                 <h3 class="panel-title" th:text="#{listPatients}"></h3>
             </div>
             <div class="panel-body">
-
-
                 <!--   /*@thymesVar id="SelectDTO" type="hospital.dto.SelectDTO"*/-->
                 <form action="/admin/patients" method="get" th:object="${SelectDTO}" id="form">
-                    <div class="custom-control custom-checkbox">
-                        <input type="checkbox" class="custom-control-input" id="showAllCurrentPatients"
-                               th:checked="*{{isShowAllCurrentPatients}} ? 'checked'"
-                               th:field="*{isShowAllCurrentPatients}"
-                               th:value="${{SelectDTO.isShowAllCurrentPatients}}">
-                        <label for="showAllCurrentPatients" class="custom-control-label"
-                               th:field="*{{isShowAllCurrentPatients}}"
-                               th:text="#{showAllCurrentPatients}"></label>
-                    </div>
 
-                    <div class="custom-control custom-checkbox">
-                        <input type="checkbox" th:checked="*{{isShowAllDischargePatients}} ? 'checked'"
-                               class="custom-control-input" id="showAllDischargePatients"
-                               th:field="*{isShowAllDischargePatients}"
-                               th:value="${{SelectDTO.isShowAllDischargePatients}}">
-                        <label for="showAllDischargePatients" class="custom-control-label"
-                               th:field="*{{isShowAllDischargePatients}}"
-                               th:text="#{showAllDischargePatients}"></label>
-                    </div>
+                    <button type="button" class="btn btn-light">
+                        <a th:href="@{/admin/patients/{old}(old=${!SelectDTO.getIsShowAllCurrentPatients() ? '' :  'old'})}"
+                           th:text="${!SelectDTO.getIsShowAllCurrentPatients()} ?  #{showAllCurrentPatients} :  #{showAllDischargePatients}">
+                        </a>
+                    </button>
                     <div class="custom-control custom-checkbox">
                         <input type="checkbox" th:checked="*{{isSortByDateOfBirth}} ? 'checked'"
                                class="custom-control-input" id="sortByDateOfBirth"
@@ -76,7 +61,7 @@
                             <th width="8%">#</th>
                             <th width="8%" th:text="#{FIO}"></th>
                             <th width="8%" th:text="#{dateOfBirth}"></th>
-                            <th width="8%" th:text="#{downloadExcel}" th:style="${!SelectDTO.getIsShowAllDischargePatients()} ? 'display:none;'"></th>
+                            <th width="8%" th:text="#{downloadExcel}" th:style="${SelectDTO.getIsShowAllCurrentPatients()} ? 'display:none;'"></th>
                         </tr>
                         </thead>
                         <tbody>
@@ -87,7 +72,7 @@
                                 th:onclick="'javascript:rowClicked(\'' + ${user.id} + '\');'"></td>
                             <td th:text="${#strings.equals(#locale, 'ru')} ? ${#temporals.format(user.birthDate, 'dd-MM-yyyy')} : ${#temporals.format(user.birthDate, 'MMMM-dd-yyyy')}"
                                 th:onclick="'javascript:rowClicked(\'' + ${user.id} + '\');'"></td>
-                            <td th:style="${!SelectDTO.getIsShowAllDischargePatients()} ? 'display:none;'">
+                            <td th:style="${SelectDTO.getIsShowAllCurrentPatients()} ? 'display:none;'">
                                 <a th:href="@{|/admin/download/${user.id}/hospital-list.xlsx|}"><span th:text="#{downloadExcel}"></span></a>
                             </td>
                         </tr>

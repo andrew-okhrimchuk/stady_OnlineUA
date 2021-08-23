@@ -14,8 +14,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
 import javax.validation.ConstraintViolationException;
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.Optional;
 
@@ -56,16 +59,25 @@ public class DoctorsController {
         selectDTO.getSpecialities().remove(Speciality.ALL);
         model.addAttribute("add", true)
                 .addAttribute("user", new DoctorDTO())
-        .addAttribute("SelectDTO", selectDTO);
+                .addAttribute("SelectDTO", selectDTO);
         return "admin/doctor-edit";
     }
 
     @PostMapping("/doctors/add")
-    public String addDoctor(@ModelAttribute @NonNull SelectDTO selectDTO,
-                            @ModelAttribute("user") @NonNull DoctorDTO doctorDTO, Model model) {
+    public String addDoctor(@ModelAttribute("user") @Valid DoctorDTO doctorDTO,
+                            BindingResult bindingResult,
+                            Model model,
+                            @ModelAttribute @NonNull SelectDTO selectDTO) {
         log.debug("Start addDoctor, Username = {}", doctorDTO.getUsername());
+        selectDTO.setSpecialities(Speciality.getAllSpeciality());
+        selectDTO.getSpecialities().remove(Speciality.ALL);
         model.addAttribute("user", doctorDTO)
-             .addAttribute("add", true);
+                .addAttribute("add", true)
+                .addAttribute("SelectDTO", selectDTO);
+
+        if (bindingResult.hasErrors()) {
+            return "admin/doctor-edit";
+        }
         try {
             doctorService.save(doctorDTO);
             return "redirect:/admin/doctors";
@@ -73,9 +85,6 @@ public class DoctorsController {
             log.error(e.getMessage());
             model.addAttribute("errorMessage", e.getMessage());
         }
-        selectDTO.setSpecialities(Speciality.getAllSpeciality());
-        selectDTO.getSpecialities().remove(Speciality.ALL);
-        model.addAttribute("SelectDTO", selectDTO);
         return "admin/doctor-edit";
     }
 
@@ -92,12 +101,18 @@ public class DoctorsController {
     }
 
     @PostMapping("/doctors/edit")
-    public String editDoctor(@ModelAttribute("user") @NonNull PatientDTO patientDTO, Model model) {
-        log.debug("Start editDoctor, id = {}", patientDTO.getId());
-        model.addAttribute("user", patientDTO).
+    public String editDoctor(@ModelAttribute("user") @Valid PatientDTO user,
+                             BindingResult bindingResult,
+                             Model model) {
+        log.debug("Start editDoctor, id = {}", user.getId());
+        model.addAttribute("user", user).
                 addAttribute("edit", true);
+
+        if (bindingResult.hasErrors()) {
+            return "admin/doctor-edit";
+        }
         try {
-            userService.save(patientDTO);
+            userService.save(user);
             return "redirect:/admin/doctors";
         } catch (ServiceExeption e) {
             log.error(e.getMessage());

@@ -95,10 +95,4 @@ public class HospitalListService implements IHospitalListService {
                         .build());
         return excelFileExporter.callsListToExcelFile(list);
     }
-
-    private void validation(HospitalList hospitalList) throws NotValidExeption {
-        if (!hospitalList.isValid()) {
-            throw new NotValidExeption(env.getProperty("SAVE_NEW_NOT_VALID_HOSPITAL_LIST"));
-        }
-    }
 }

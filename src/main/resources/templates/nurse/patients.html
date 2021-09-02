@@ -79,9 +79,6 @@
 <script type="text/javascript">
     function setEXEL(value) {
         console.log("start setEXEL")
-        /*  var action = document.getElementById("form");
-          action.setAttribute("action", "/download/" + value + "/calls.xlsx")
-          console.log("start setEXEL", document.getElementById("form"));*/
         const url = "/download/" + value + "/hospital-list.xlsx";
         const a = document.createElement('a')
         a.href = url

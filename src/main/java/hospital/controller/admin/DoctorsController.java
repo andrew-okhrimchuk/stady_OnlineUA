@@ -89,10 +89,10 @@ public class DoctorsController {
     }
 
     @GetMapping(value = {"/doctors/edit/{user_id}"})
-    public String showEditDoctor(Model model, @NotNull @PathVariable("user_id") String user_id) {
+    public String showEditDoctor(Model model, @NotNull @PathVariable("user_id") String userId) {
         log.debug("Start showEditDoctor");
         try {
-            model.addAttribute("edit", true).addAttribute("user", doctorService.getDoctorById(Long.parseLong(user_id)));
+            model.addAttribute("edit", true).addAttribute("user", doctorService.getDoctorById(Long.parseLong(userId)));
         } catch (ServiceExeption e) {
             log.error(e.getMessage());
             model.addAttribute("errorMessage", e.getMessage());
@@ -101,18 +101,18 @@ public class DoctorsController {
     }
 
     @PostMapping("/doctors/edit")
-    public String editDoctor(@ModelAttribute("user") @Valid PatientDTO user,
+    public String editDoctor(@ModelAttribute("user") @Valid PatientDTO dto,
                              BindingResult bindingResult,
                              Model model) {
-        log.debug("Start editDoctor, id = {}", user.getId());
-        model.addAttribute("user", user).
+        log.debug("Start editDoctor, id = {}", dto.getId());
+        model.addAttribute("user", dto).
                 addAttribute("edit", true);
 
         if (bindingResult.hasErrors()) {
             return "admin/doctor-edit";
         }
         try {
-            userService.save(user);
+            userService.save(dto);
             return "redirect:/admin/doctors";
         } catch (ServiceExeption e) {
             log.error(e.getMessage());

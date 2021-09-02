@@ -32,7 +32,7 @@ public class HospitalList {
     private String doctorName;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "patientId"  )  //, foreignKey = @ForeignKey(name = "patientId_fk", foreignKeyDefinition = "FOREIGN KEY (patientid) REFERENCES HospitalList(hospitalListIid)"))
+    @JoinColumn(name = "patientId"  )
     private Patient patientId;
     private LocalDateTime dateCreate;
     private LocalDateTime dateDischarge;

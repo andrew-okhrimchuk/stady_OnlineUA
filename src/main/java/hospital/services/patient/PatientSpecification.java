@@ -25,19 +25,7 @@ public class PatientSpecification {
 
         return (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
-            // Where
 
-          /*  if (!request.getIsShowAllDischargePatients() && !request.getIsShowAllCurrentPatients()) {
-                predicates.add(criteriaBuilder.equal(root.get("username"), ""));
-            }
-
-            if (!request.getIsShowAllDischargePatients() && request.getIsShowAllCurrentPatients()) {
-                predicates.add(criteriaBuilder.equal(root.get("isactualpatient"), true));
-            }
-
-            if (request.getIsShowAllDischargePatients() && !request.getIsShowAllCurrentPatients()) {
-                predicates.add(criteriaBuilder.equal(root.get("isactualpatient"), false));
-            }*/
             predicates.add(criteriaBuilder.equal(root.get("isactualpatient"), request.getIsShowAllCurrentPatients()));
             // Order By
             query.orderBy(criteriaBuilder.asc(root.get(request.getIsSortByDateOfBirth() ? "birthDate" : "username")));

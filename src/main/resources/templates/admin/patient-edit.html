@@ -25,7 +25,7 @@
         <div class="col-md-6 col-md-offset-3">
             <div class="panel panel-default" style="margin-top:45px">
                 <div class="panel-heading">
-                    <h3 class="panel-title" th:text="${add} ? 'Create a Patient:' : 'Edit a Patient:'"></h3>
+                    <h3 class="panel-title" th:text="${add} ? #{addPatient} : 'Edit a Patient:'"></h3>
                 </div>
                 <div class="panel-body">
                     <form th:action="@{/admin/patients/add}" th:object="${user}" method="POST">
@@ -62,7 +62,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td>Select a doctor</td>
+                                <td th:text="#{selectDoctor}"></td>
                                 <td>:</td>
                                 <td>
                                     <select th:field="*{doctorDTO}"/>

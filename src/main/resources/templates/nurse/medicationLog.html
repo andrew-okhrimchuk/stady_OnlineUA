@@ -58,7 +58,7 @@
                 </table>
                 <div th:if="${SelectDTO.getPage().totalPages > 0}" class="pagination"
                      th:each="pageNumber : ${pageNumbers}">
-                    <a th:href="@{/nurse/medicationLog/{path}(path=${hospitalListId}, size=${SelectDTO.getPage().size}, page1=${pageNumber})}"
+                    <a th:href="@{/nurse/patients/medicationLog/{path}(path=${userId}, size=${SelectDTO.getPage().size}, page1=${pageNumber})}"
                        th:text="${pageNumber}"
                        th:class="${pageNumber==SelectDTO.getPage().number + 1} ? active"></a>
                 </div>

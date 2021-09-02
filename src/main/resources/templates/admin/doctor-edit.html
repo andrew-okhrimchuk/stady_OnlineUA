@@ -27,7 +27,7 @@
         <div class="col-md-6 col-md-offset-3">
             <div class="panel panel-default" style="margin-top:45px">
                 <div class="panel-heading">
-                    <h3 class="panel-title" th:text="${add} ? 'Create a Doctor:' : 'Edit a Doctor:'"></h3>
+                    <h3 class="panel-title" th:text="${add} ? #{addDoctor} : 'Edit a Doctor:'"></h3>
                 </div>
                 <div class="panel-body">
                     <form th:action="@{/admin/doctors/add}" th:object="${user}" method="POST">
@@ -37,20 +37,20 @@
                                 <td><input type="hidden" th:field="*{id}"/></td>
                             </tr>
                             <tr>
-                                <td>Full name</td>
+                                <td th:text="#{Username}"></td>
                                 <td>:</td>
                                 <td><input type="text" th:field="*{username}"/></td>
                                 <td th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></td>
 
                             </tr>
                             <tr>
-                                <td>password</td>
+                                <td th:text="#{Password}"></td>
                                 <td>:</td>
                                 <td><input th:type="${add} ? 'text' : 'hidden'" th:field="*{password}"/></td>
                                 <td th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></td>
                             </tr>
                             <tr>
-                                <td>Select a speciality</td>
+                                <td th:text="#{speciality}"></td>
                                 <td>:</td>
                                 <td>
                                     <select th:field="*{speciality}"/>

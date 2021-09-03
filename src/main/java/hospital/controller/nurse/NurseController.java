@@ -47,7 +47,6 @@ public class NurseController {
         int pageSize = size.orElse(15);
 
         String userNameDoctor = SecurityContextHolder.getContext().getAuthentication().getName();
-        System.out.println(555 + userNameDoctor);
         try {
             Page<Patient> patients = userService.getAllByNursesIsContaining(
                     SelectDTO.builder()
